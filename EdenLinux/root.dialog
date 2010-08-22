@@ -1,0 +1,14 @@
+mainmenu	"EdenLinux build configuration 0.1"
+
+menu "Global settings"
+
+config	HOST
+	string "Build host settings"
+	source "host.dialog"
+	help
+	  "Usually, modules have to be recompiled whenever you switch to a new
+	  kernel."
+
+config TARGET
+	string "Target system settings"
+	source "target.dialog"

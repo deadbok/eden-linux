@@ -1,0 +1,10 @@
+mainmenu	"EdenLinux build configuration 0.1"
+
+menu "Global settings"
+
+config	CROSS
+	string "cross compiler prefix"
+
+config TOOLCHAIN_DIR
+	string "Location of the cross compiler toolchain"
+

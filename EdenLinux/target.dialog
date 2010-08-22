@@ -1,0 +1,9 @@
+mainmenu	"EdenLinux build configuration 0.1"
+
+menu "Global settings"
+
+config	TARGET_ARCH
+	string "Target architecture"
+
+config TARGET_CPU
+	string "Target cpu gcc march name"
