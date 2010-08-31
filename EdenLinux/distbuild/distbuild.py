@@ -2,21 +2,23 @@
 import optparse
 import os.path
 from logger import logger
-from parser import parser
+from configparser import parser
+from makefilebuilder import builder
 
 def print_tree(tree, level = 0):
-    for key, var in tree.var.iteritems():
+    for key, var in tree.vars.iteritems():
         logger.info((" " * level) + "Variable: " + key + " = " + str(var))
 
-    for key, var in tree.function.iteritems():
-        logger.info((" " * level) + "Function: " + key + "(" + var + ")")
+    for key, var in tree.functions.iteritems():
+        logger.info((" " * level) + "Function: " + str(var))
 
-    for target in tree.target:
+    for target in tree.targets:
         logger.info((" " * level) + "Target: " + target)
 
-    for key, var in tree.section.iteritems():
+    for key, var in tree.sections.iteritems():
         logger.info((" " * level) + "Section: " + key)
-        print_tree(var, level + 1)
+        for section in var:
+            print_tree(section, level + 1)
 
 
 def parse_buildtree(path, conf_parser):
@@ -29,13 +31,13 @@ def parse_buildtree(path, conf_parser):
                 conf_file = open(path + "/" + entry)
                 conf_parser.parse(conf_file.read().splitlines())
 
-        if os.path.isdir(entry):
+        if os.path.isdir(path + "/" + entry):
             if entry.strip().find(".") != 0:
                 parse_buildtree(path + "/" + entry, conf_parser)
 
 
 def main():
-    """Main function"""
+    """Main functions"""
 
     logger.debug("Entering main.")
 
@@ -60,6 +62,12 @@ def main():
     logger.info("Build tree:")
     print_tree(config_parser.tree)
 
+    makefile_path = config_parser.tree.getVar("build_dir")
+    if not os.path.exists(makefile_path):
+        os.makedirs(makefile_path)
+
+    makefile_builder = builder.Builder(config_parser.tree, makefile_path)
+    makefile_builder.build()
 
 if __name__ == "__main__":
     main()

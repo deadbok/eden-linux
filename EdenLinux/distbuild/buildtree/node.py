@@ -1,34 +1,44 @@
-'''
+"""
 Created on Aug 25, 2010
 
 @author: oblivion
-'''
+"""
 import os
 import urlparse
 from logger import logger
 
-class Node(dict):
-    """
-    name = linux-kernel
-    version = 2.6.30
-    url = ftp://ftp.dk.kernel.org/pub/linux/kernel/v2.6/linux-2.6.30.tar.bz2
-    
-    build:
-        download()
-        unpack()
-        config()
-        build()
-        install()
-    """
+class Node(object):
 
-    def __init__(self):
+    def __init__(self, root = None):
+        """Constructor"""
         logger.debug("Entering Section.__init__")
-        dict.__init__(self)
 
-        self.section = dict()
-        self.var = dict()
-        self.target = list()
-        self.function = dict()
+        self.sections = dict()
+        self.vars = dict()
+        self.targets = list()
+        self.functions = dict()
+        self.root = root
+
+    def getSection(self, name):
+        """Get a named section"""
+        if name in self.sections:
+            return(self.sections[name])
+        else:
+            logger.error('Section "' + name + '" not found')
+
+    def getVar(self, name):
+        """Get a named variable"""
+        if name in self.vars:
+            return(self.vars[name])
+        else:
+            logger.error('Variable "' + name + '" not found')
+
+    def getFunction(self, name):
+        """Get a nemed function"""
+        if name in self.functions:
+            return(self.functions[name])
+        else:
+            logger.error('Function "' + name + '" not found')
 
     def download(self):
         if os.path.exists("download-" + self.name + ".mk"):

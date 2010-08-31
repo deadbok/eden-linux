@@ -1,0 +1,12 @@
+IMAGES_DIR = images
+TARGET = x86
+DOWNLOAD_DIR = dl
+BUILD_DIR = build
+TOOLCHAIN_DIR = toolchain
+ROOTFS_DIR = rootfs
+ARCH = i686
+BUILD_TYPE = x86
+PACKAGES_DIR = packages
+TOOLCHAIN_BUILD_DIR = toolchain_i686
+TARGET_BUILD_DIR = target_i686
+PACKAGE_BUILD_DIR = package_i686

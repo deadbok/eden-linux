@@ -12,7 +12,7 @@ LOG_FILENAME = './conf.log'
 try:
     logger = logging.getLogger("distbuild")
 
-    file_handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes = 16384,
+    file_handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes = 64000,
                                                    backupCount = 5)
     file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(pathname)s - %(levelname)s - %(message)s")
     file_handler.setFormatter(file_formatter)
