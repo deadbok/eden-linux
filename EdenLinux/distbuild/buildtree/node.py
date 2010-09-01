@@ -10,7 +10,7 @@ from logger import logger
 class Node(object):
 
     def __init__(self, root = None):
-        """Constructor"""
+        """Constructor."""
         logger.debug("Entering Section.__init__")
 
         self.sections = dict()
@@ -19,26 +19,58 @@ class Node(object):
         self.functions = dict()
         self.root = root
 
+    def hasSection(self, name):
+        if name in self.sections:
+            return(True)
+        else:
+            return(False)
+
     def getSection(self, name):
-        """Get a named section"""
+        """Get a named section."""
         if name in self.sections:
             return(self.sections[name])
         else:
-            logger.error('Section "' + name + '" not found')
+            logger.debug('Section "' + name + '" not found')
+
+    def hasVar(self, name):
+        if name in self.vars:
+            return(True)
+        else:
+            return(False)
 
     def getVar(self, name):
-        """Get a named variable"""
+        """Get a named variable."""
         if name in self.vars:
             return(self.vars[name])
         else:
-            logger.error('Variable "' + name + '" not found')
+            logger.debug('Variable "' + name + '" not found')
+
+    def getAllVar(self, name):
+        """Get all variables of the name, from self, and every subsection."""
+        var_dict = dict()
+
+        for key, var in  self.sections.iteritems():
+            for section in var:
+                var_dict.update(section.getAllVar(name))
+
+        if self.hasVar("name"):
+            if self.hasVar("url"):
+                var_dict[self.getVar("name")] = self.getVar("url")
+
+        return(var_dict)
+
+    def hasFunction(self, name):
+        if name in self.functions:
+            return(True)
+        else:
+            return(False)
 
     def getFunction(self, name):
-        """Get a nemed function"""
+        """Get a named function."""
         if name in self.functions:
             return(self.functions[name])
         else:
-            logger.error('Function "' + name + '" not found')
+            logger.debug('Function "' + name + '" not found')
 
     def download(self):
         if os.path.exists("download-" + self.name + ".mk"):

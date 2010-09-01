@@ -62,11 +62,7 @@ def main():
     logger.info("Build tree:")
     print_tree(config_parser.tree)
 
-    makefile_path = config_parser.tree.getVar("build_dir")
-    if not os.path.exists(makefile_path):
-        os.makedirs(makefile_path)
-
-    makefile_builder = builder.Builder(config_parser.tree, makefile_path)
+    makefile_builder = builder.Builder(config_parser.tree)
     makefile_builder.build()
 
 if __name__ == "__main__":
