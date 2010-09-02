@@ -3,6 +3,7 @@ Created on Aug 25, 2010
 
 @author: oblivion
 '''
+import os
 from logger import logger
 from buildtree.node import Node
 from buildtree.function import Function
@@ -104,5 +105,7 @@ class Parser(object):
                     self.parseSection(lines)
                 else:
                     self.parseTarget(lines)
+
+        self.tree.vars["root"] = os.getcwd()
 
         return(self.tree)
