@@ -19,6 +19,54 @@ class Node(object):
         self.functions = dict()
         self.root = root
 
+    def parseVar(self, line, pos):
+        i = pos
+        ret = ""
+        done = False
+        while not done:
+            i += 1
+            if i == len(line):
+                done = True
+            else:
+                if line[i].isalnum() or line[i] == "-" or line[i] == "_":
+                    ret += line[i]
+                else:
+                    done = True
+
+        return(ret, i)
+
+
+    def expandVars(self, line, vars):
+        """Replace variable names, with their values"""
+        logger.debug("Expanding variables from globals...")
+        i = line.find("$")
+        var_name = ""
+        logger.debug("Input string: " + line)
+
+        if i > -1:
+            ret = line[0:i]
+            var_name, i = self.parseVar(line, i)
+
+            logger.debug("Found variable: " + var_name.strip())
+            if var_name.strip() in vars:
+                value = vars[var_name.strip()]
+                logger.debug("Value: " + value)
+                ret += value
+            else:
+                logger.debug("Not in given dictionary")
+                ret += "$" + var_name.strip()
+
+            ret += self.expandVars(line[i:len(line)], vars)
+        else:
+            logger.debug("No variables")
+            ret = line
+
+        logger.debug("Expanded string: " + ret)
+        return(ret)
+
+        logger.debug("Converted string: " + ret)
+        return(ret)
+
     def hasSection(self, name):
         if name in self.sections:
             return(True)
@@ -38,10 +86,13 @@ class Node(object):
         else:
             return(False)
 
-    def getVar(self, name):
+    def getVar(self, name, vars = None):
         """Get a named variable."""
         if name in self.vars:
-            return(self.vars[name])
+            if not vars == None:
+                return(self.expandVars(self.vars[name], vars))
+            else:
+                return(self.vars[name])
         else:
             logger.debug('Variable "' + name + '" not found')
 
@@ -72,40 +123,3 @@ class Node(object):
         else:
             logger.debug('Function "' + name + '" not found')
 
-    def download(self):
-        if os.path.exists("download-" + self.name + ".mk"):
-            self.download_script = "download-" + self.name + ".mk"
-        else:
-            self.download_script = "download.mk"
-        logger.info("Download script: " + self.download_script)
-
-    def unpack(self):
-        split_url = urlparse.urlsplit(self.url)
-        self.archive_type = (os.path.splitext(split_url[2]))[1].replace(".", "")
-
-        if os.path.exists("unpack-" + self.name + ".mk"):
-            self.unpack_script = "unpack-" + self.name + ".mk"
-        else:
-            self.unpack_script = "unpack-" + self.archive_type
-        logger.info("Unpack script: " + self.unpack_script)
-
-    def config(self):
-        if os.path.exists("config-" + self.name + ".mk"):
-            self.config_script = "config-" + self.name + ".mk"
-        else:
-            self.config_script = "config.mk"
-        logger.info("Config script: " + self.config_script)
-
-    def build(self):
-        if os.path.exists("build-" + self.name + ".mk"):
-            self.build_script = "build-" + self.name + ".mk"
-        else:
-            self.build_script = "build.mk"
-        logger.info("Build script: " + self.config_script)
-
-    def install(self):
-        if os.path.exists("install-" + self.name + ".mk"):
-            self.install_script = "install-" + self.name + ".mk"
-        else:
-            self.install_script = "install.mk"
-        logger.info("Install script: " + self.config_script)

@@ -20,7 +20,6 @@ def print_tree(tree, level = 0):
         for section in var:
             print_tree(section, level + 1)
 
-
 def parse_buildtree(path, conf_parser):
     logger.info("Entering path: " + path)
 
@@ -29,7 +28,9 @@ def parse_buildtree(path, conf_parser):
             if os.path.splitext(entry)[1] == ".conf":
                 logger.info("Parsing: " + entry)
                 conf_file = open(path + "/" + entry)
-                conf_parser.parse(conf_file.read().splitlines())
+                lines = conf_file.read().splitlines()
+                if conf_parser.IsDistBuildConf(lines):
+                    conf_parser.parse(lines)
 
         if os.path.isdir(path + "/" + entry):
             if entry.strip().find(".") != 0:
@@ -38,7 +39,6 @@ def parse_buildtree(path, conf_parser):
 
 def main():
     """Main functions"""
-
     logger.debug("Entering main.")
 
     usage = "usage: %prog [options] config_path"
@@ -63,7 +63,7 @@ def main():
     print_tree(config_parser.tree)
 
     makefile_builder = builder.Builder(config_parser.tree)
-    makefile_builder.build()
+    makefile_builder.Build()
 
 if __name__ == "__main__":
     main()

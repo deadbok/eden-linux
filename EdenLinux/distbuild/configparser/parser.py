@@ -15,6 +15,9 @@ class Parser(object):
 
         self.tree = Node(root)
 
+        if root == None:
+            self.tree.vars["root"] = os.getcwd()
+
     def parseVariable(self, lines):
         """Parse a variable from a config file"""
         logger.debug("Parsing variable.")
@@ -80,6 +83,15 @@ class Parser(object):
         self.tree.targets.append(target)
         del lines[0]
 
+    def IsDistBuildConf(self, lines):
+        if lines[0].strip() == "#distbuild":
+            logger.debug("This is a distbuild configuration file")
+            return(True)
+
+        logger.debug("This is not a distuild configuration file")
+        return(False)
+
+
     def parse(self, lines):
         logger.debug("Parsing " + str(len(lines)) + " lines.")
 
@@ -105,7 +117,5 @@ class Parser(object):
                     self.parseSection(lines)
                 else:
                     self.parseTarget(lines)
-
-        self.tree.vars["root"] = os.getcwd()
 
         return(self.tree)
