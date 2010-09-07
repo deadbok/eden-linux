@@ -15,12 +15,16 @@ class Function(object):
         '''
         self.name = ""
         self.file = ""
+        self.target = ""
         self.param = dict()
 
     def __str__(self):
         """Return a string representation"""
         temp = self.name + "(" + self.file
-
+        if not self.target == "":
+            if not self.file == "":
+                temp += ", "
+            temp += self.target
         for name, value in self.param.iteritems():
             temp += ", " + name + " = " + value
 
@@ -33,3 +37,4 @@ class Function(object):
             return(self.param[name])
         else:
             logger.error('Parameter "' + name + '" not found in function "' + self.name + '"')
+

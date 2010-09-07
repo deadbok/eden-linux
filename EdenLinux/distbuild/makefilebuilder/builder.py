@@ -21,13 +21,13 @@ class Builder(object):
         self.tree = tree
         self.globals = dict()
 
-    def CreateDir(self, dir):
-        """Create dir if it does not exist"""
-        if not os.path.exists(dir):
-            logger.debug("Creating directory: " + dir)
-            os.makedirs(dir)
+    def create_dir(self, directory):
+        """Create directory if it does not exist"""
+        if not os.path.exists(directory):
+            logger.debug("Creating directory: " + directory)
+            os.makedirs(directory)
 
-    def GlobalVars(self):
+    def global_vars(self):
         """Create a dictionary of all global vars"""
         logger.debug("Processing global variables in buildtree...")
 
@@ -45,29 +45,49 @@ class Builder(object):
                          + self.tree.getVar("build_dir") + "/" + name + "_"
                          + self.tree.getVar("arch"))
 
-    def GlobalMK(self):
+    def globals_mk(self):
         """Create a Makefile holding all global variables."""
         filename = self.tree.getVar("build_dir", self.globals) + "/globals.mk"
         logger.info('Creating: ' + filename)
-        global_mk = Makefile(filename)
+        global_makefile = Makefile(filename)
         #Write global variables
         for name, var in self.globals.iteritems():
-            global_mk.addVar(name.upper(), str(global_mk.toMakeLine(var)))
+            global_makefile.addVar(name.upper(), str(global_makefile.toMakeLine(var)))
 
         logger.debug("Closing: " + filename)
-        global_mk.write()
+        global_makefile.write()
 
-    def DownloadMK(self):
+    def directories_mk(self):
+        """Create a Makefile with rules to create the needed directories"""
+        filename = self.tree.getVar("build_dir", self.globals) + "/directories.mk"
+        logger.info('Creating: ' + filename)
+        directories_makefile = Makefile(filename)
+
+        #Open the template Makefile
+        template = MakefileTemplate(self.tree.getVar("template_dir",
+                                                     self.globals)
+                                                     + "/mkdir.mk")
+
+        #Get all targets
+        vars = dict()
+        for name, value in self.globals.iteritems():
+            if name.find("_dir") > -1:
+                vars.update({"target": value})
+                rule = template.combine(vars)
+                directories_makefile.addTarget(rule[0], rule[1], rule[2])
+
+        directories_makefile.write()
+
+    def download_mk(self):
         """Create a Makefile with rules to download all needed files."""
         download_dir = self.tree.getVar("download_dir", self.globals)
 
         logger.info('Creating: ' + download_dir + "/download.mk")
 
-        self.CreateDir(download_dir)
+        self.create_dir(download_dir)
         #Create file
-
-        download_mk = Makefile(download_dir + "/download.mk")
-        download_mk.addInclude(self.tree.getVar("root") + "/"
+        download = Makefile(download_dir + "/download.mk")
+        download.addInclude(self.tree.getVar("root") + "/"
                                + self.tree.getVar("build_dir")
                                + "/globals.mk")
 
@@ -78,8 +98,7 @@ class Builder(object):
         all_targets = ""
         for target in urls:
             all_targets += " $(DOWNLOAD_DIR)/" + os.path.basename(target)
-
-        download_mk.addTarget("download-all", all_targets)
+        download.addTarget("download-all", all_targets)
 
         #Open the template Makefile
         template = MakefileTemplate(self.tree.getVar("template_dir",
@@ -93,9 +112,9 @@ class Builder(object):
                                                 + os.path.basename(url))})
 
             rule = template.combine(vars)
-            download_mk.addTarget(rule[0], rule[1], rule[2])
+            download.addTarget(rule[0], rule[1], rule[2])
 
-        download_mk.write()
+        download.write()
 
     def Makefile(self):
         """Create the global Makefile"""
@@ -112,10 +131,21 @@ class Builder(object):
         """Build the Makefiles for all sections"""
         logger.debug("Creating section directories")
         for section_name, section in self.tree.sections.iteritems():
-            path = self.tree.getVar("build_dir", self.globals) + "/" + section_name
+            path = (self.tree.getVar("build_dir", self.globals)
+                    + "/" + section_name)
+            logger.debug("Creating Makefile for section: " + section_name)
+            makefile = Makefile(path + "/" + section_name + ".mk")
+            makefile.addInclude(self.tree.getVar("root") + "/"
+                                + self.tree.getVar("build_dir") + "/"
+                                + section_name + "/*/*.mk")
+            makefile.write()
+
             for entry in section:
-                self.CreateDir(path + "/" + entry.getVar("name"))
-                makefile = Makefile(path + "/" + entry.getVar("name") + "/" + entry.getVar("name") + ".mk")
+                self.create_dir(path + "/" + entry.getVar("name"))
+                logger.info("Creating: " + path + "/" + entry.getVar("name")
+                            + "/" + entry.getVar("name") + ".mk")
+                makefile = Makefile(path + "/" + entry.getVar("name") + "/"
+                                    + entry.getVar("name") + ".mk")
 
                 #Include globals
                 makefile.addInclude(self.tree.getVar("root") + "/"
@@ -124,7 +154,38 @@ class Builder(object):
 
                 #Add local variables
                 for name, value in entry.vars.iteritems():
-                    makefile.addVar(name.upper(), value)
+                    makefile.addVar(entry.getVar("name").upper() + "_"
+                                    + name.upper(), value)
+
+                #Add function/rule
+                if entry.hasSection("build"):
+                    build_sections = entry.getSection("build")
+                    for build in build_sections:
+                        for name, func in build.functions.iteritems():
+                            #Ignore download function, as it is taken care of
+                            if name == "download":
+                                logger.debug("Ignoring download function")
+                            elif name == "unpack":
+                                packed_filename = os.path.basename(entry.getVar("url"))
+                                logger.debug("Creating decompression rule for: " + packed_filename)
+
+                                vars = dict()
+                                vars["packed_filename"] = packed_filename
+                                vars["unpack_dir"] = "$" + section_name + "_build_dir/"
+                                vars["target"] = func.target
+
+                                template = MakefileTemplate(self.tree.getVar("template_dir",
+                                                     self.globals)
+                                    + "/unpack.mk")
+                                rule = template.combine(vars)
+                                makefile.addTarget(rule[0], rule[1], rule[2])
+                            else:
+                                logger.debug("Converting function: " + str(func))
+                                template_filename = func.file
+                                if template_filename == "":
+                                    template_filename = func.name + ".mk"
+                                template = MakefileTemplate(template_filename)
+
                 #Write Makefile
                 makefile.write()
 
@@ -132,11 +193,12 @@ class Builder(object):
         """Build the Makefiles from the buildtree"""
         logger.info("Creating Makefiles...")
         makefile_path = self.tree.getVar("build_dir")
-        self.CreateDir(makefile_path)
+        self.create_dir(makefile_path)
 
         #Get all global variables
-        self.GlobalVars()
-        self.GlobalMK()
-        self.DownloadMK()
+        self.global_vars()
+        self.globals_mk()
+        self.directories_mk()
+        self.download_mk()
         self.SectionMK()
         self.Makefile()

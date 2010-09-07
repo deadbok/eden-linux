@@ -47,12 +47,17 @@ class Parser(object):
                 if param.find("=") > 0:
                     #This is a variable
                     param_split = param.partition("=")
-                    logger.debug("Variable: " + param_split[0] + " = " + param_split[2])
+                    logger.debug("Variable: " + param_split[0] + " = "
+                                 + param_split[2])
                     function.param[param_split[0].strip()] = param_split[2].strip()
-                else:
+                elif param.find(".mk") > 0:
                     #This is a Makefile
                     logger.debug("Makefile: " + param)
                     function.file = param.strip()
+                else:
+                    logger.debug("Target: " + param)
+                    function.target = param
+
 
         self.tree.functions[func[0]] = function
         del lines[0]
@@ -72,6 +77,8 @@ class Parser(object):
 
         if section[0] not in self.tree.sections:
             self.tree.sections[section[0]] = list()
+        else:
+            logger.warning("Duplicate section: " + section[0])
 
         self.tree.sections[section[0]].append(parser.parse(lines))
 
@@ -109,7 +116,7 @@ class Parser(object):
                     del lines[0]
                     logger.debug("Ending section: " + line[1:len(line)])
                     end = True
-                elif line.find("(") > -1:
+                elif ((line.find("(") > -1) and not ((line.find("$(") + 1) == line.find("("))):
                     self.parseFunction(lines)
                 elif line.find("=") > -1:
                     self.parseVariable(lines)

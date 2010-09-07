@@ -121,8 +121,9 @@ class Makefile(object):
                     logger.warning("Cannot parse: " + lines[i])
 
                 i += 1
-        except IOError:
-            logger.error("IO exception accessing file: " + self.filename)
+        except IOError as e:
+            logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
+
 
 
     def write(self):
@@ -150,5 +151,5 @@ class Makefile(object):
             makefile.writelines(self.lines)
 
             makefile.close()
-        except IOError:
-            logger.error("IO exception accessing file: " + self.filename)
+        except IOError as e:
+            logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
