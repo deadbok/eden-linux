@@ -51,7 +51,7 @@ class MakefileTemplate(Makefile):
             if var_name.strip() in vars:
                 value = vars[var_name.strip()]
                 logger.debug("Value: " + value)
-                ret += value
+                ret += self.expandVars(value, vars)
             else:
                 logger.debug("Not in given dictionary")
                 ret += "$" + var_name.strip()
@@ -64,12 +64,9 @@ class MakefileTemplate(Makefile):
         logger.debug("Expanded string: " + ret)
         return(ret)
 
-        logger.debug("Converted string: " + ret)
-        return(ret)
-
-    def combine(self, vars):
-        target = self.toMakeLine(self.expandVars(self.targets[0].target, vars))
-        prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, vars))
+    def combine(self, vars, var_prefix = ""):
+        target = self.toMakeLine(self.expandVars(self.targets[0].target, vars), var_prefix)
+        prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, vars), var_prefix)
         recipe = list()
         for line in self.targets[0].recipe:
             recipe.append(self.toMakeLine(self.expandVars(line, vars)))

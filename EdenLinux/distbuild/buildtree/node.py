@@ -6,6 +6,7 @@ Created on Aug 25, 2010
 import os
 import urlparse
 from logger import logger
+from ordereddict.ordereddict import OrderedDict
 
 class Node(object):
 
@@ -14,9 +15,9 @@ class Node(object):
         logger.debug("Entering Section.__init__")
 
         self.sections = dict()
-        self.vars = dict()
+        self.vars = OrderedDict()
         self.targets = list()
-        self.functions = dict()
+        self.functions = OrderedDict()
         self.root = root
 
     def parseVar(self, line, pos):
@@ -38,7 +39,7 @@ class Node(object):
 
     def expandVars(self, line, vars):
         """Replace variable names, with their values"""
-        logger.debug("Expanding variables from globals...")
+        logger.debug("Expanding variables...")
         i = line.find("$")
         var_name = ""
         logger.debug("Input string: " + line)
@@ -95,6 +96,7 @@ class Node(object):
                 return(self.vars[name])
         else:
             logger.debug('Variable "' + name + '" not found')
+            return
 
     def getAllVar(self, name):
         """Get all variables of the name, from self, and every subsection."""

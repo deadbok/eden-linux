@@ -122,24 +122,22 @@ class Builder(object):
 
         makefile = Makefile("Makefile")
         makefile.addInclude(self.tree.getVar("build_dir", self.globals)
+                            + "/globals.mk")
+        makefile.addInclude(self.tree.getVar("build_dir", self.globals)
                             + "/*.mk")
         makefile.addInclude(self.tree.getVar("build_dir", self.globals)
                             + "/*/*.mk")
+
+        makefile.addTarget("all", "$(TOOLCHAIN_TARGETS)")
         makefile.write()
 
     def SectionMK(self):
         """Build the Makefiles for all sections"""
         logger.debug("Creating section directories")
+        section_targets = dict()
         for section_name, section in self.tree.sections.iteritems():
             path = (self.tree.getVar("build_dir", self.globals)
                     + "/" + section_name)
-            logger.debug("Creating Makefile for section: " + section_name)
-            makefile = Makefile(path + "/" + section_name + ".mk")
-            makefile.addInclude(self.tree.getVar("root") + "/"
-                                + self.tree.getVar("build_dir") + "/"
-                                + section_name + "/*/*.mk")
-            makefile.write()
-
             for entry in section:
                 self.create_dir(path + "/" + entry.getVar("name"))
                 logger.info("Creating: " + path + "/" + entry.getVar("name")
@@ -155,39 +153,85 @@ class Builder(object):
                 #Add local variables
                 for name, value in entry.vars.iteritems():
                     makefile.addVar(entry.getVar("name").upper() + "_"
-                                    + name.upper(), value)
+                                    + name.upper(), makefile.toMakeLine(value, entry.getVar("name")))
 
                 #Add function/rule
                 if entry.hasSection("build"):
                     build_sections = entry.getSection("build")
                     for build in build_sections:
+                        entry_targets = dict()
                         for name, func in build.functions.iteritems():
                             #Ignore download function, as it is taken care of
                             if name == "download":
                                 logger.debug("Ignoring download function")
                             elif name == "unpack":
                                 packed_filename = os.path.basename(entry.getVar("url"))
-                                logger.debug("Creating decompression rule for: " + packed_filename)
+                                logger.debug("Creating decompression rule for: "
+                                             + packed_filename)
+                                entry_targets["current_unpack_target"] = func.target
 
                                 vars = dict()
                                 vars["packed_filename"] = packed_filename
                                 vars["unpack_dir"] = "$" + section_name + "_build_dir/"
-                                vars["target"] = func.target
-
+                                vars["current_package_dir"] = ("$"
+                                                               + section_name
+                                                               + "_build_dir/"
+                                                               + "$("
+                                                               + entry.getVar("name").upper()
+                                                               + "_DIR)")
+                                if func.target == "":
+                                    vars["target"] = vars["current_package_dir"] + "/.unpacked"
+                                else:
+                                    vars["target"] = func.target
                                 template = MakefileTemplate(self.tree.getVar("template_dir",
-                                                     self.globals)
-                                    + "/unpack.mk")
-                                rule = template.combine(vars)
+                                                                             self.globals)
+                                                                             + "/unpack.mk")
+                                rule = template.combine(vars, entry.getVar("name"))
                                 makefile.addTarget(rule[0], rule[1], rule[2])
+                                entry_targets["current_unpack_target"] = vars["target"]
                             else:
                                 logger.debug("Converting function: " + str(func))
+                                vars = dict()
+                                vars["packed_filename"] = os.path.basename(entry.getVar("url"))
+                                vars["unpack_dir"] = "$" + section_name + "_build_dir/"
+                                vars["current_package_dir"] = ("$"
+                                                               + section_name
+                                                               + "_build_dir/"
+                                                               + "$("
+                                                               + entry.getVar("name").upper()
+                                                               + "_DIR)")
+                                if func.target == "":
+                                    vars["target"] = vars["current_package_dir"] + "/." + func.name
+                                else:
+                                    vars["target"] = func.target
+                                entry_targets["current_" + func.name + "_target"] = "$(" + (entry.getVar("name") + "_" + section_name + "_" + func.name).upper() + ")"
+                                vars.update(func.param)
+                                vars.update(entry_targets)
                                 template_filename = func.file
                                 if template_filename == "":
                                     template_filename = func.name + ".mk"
-                                template = MakefileTemplate(template_filename)
+                                template = MakefileTemplate(self.tree.getVar("template_dir",
+                                                     self.globals)
+                                                     + "/" + template_filename)
 
+                                rule = template.combine(vars, entry.getVar("name"))
+                                makefile.addTarget(rule[0], rule[1], rule[2], (entry.getVar("name") + "_" + section_name + "_" + func.name).upper())
+                                if name == "install":
+                                    if not section_name in section_targets:
+                                        section_targets[section_name] = ""
+                                    section_targets[section_name] += " " + makefile.toMakeLine(func.target)
                 #Write Makefile
                 makefile.write()
+
+            logger.debug("Creating Makefile for section: " + section_name)
+            makefile = Makefile(path + "/" + section_name + ".mk")
+            makefile.addInclude(self.tree.getVar("root") + "/"
+                                + self.tree.getVar("build_dir") + "/"
+                                + section_name + "/*/*.mk")
+
+            if section_name in section_targets:
+                makefile.addVar(section_name.upper() + "_TARGETS", section_targets[section_name])
+            makefile.write()
 
     def Build(self):
         """Build the Makefiles from the buildtree"""

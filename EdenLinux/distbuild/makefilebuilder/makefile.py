@@ -32,30 +32,43 @@ class Makefile(object):
         logger.debug("Adding variable: " + name + " = " + value)
         self.vars.append(variable.Variable(name, value))
 
-    def addTarget(self, mktarget, prerequisites = "", recipe = list()):
+    def addTarget(self, mktarget, prerequisites = "", recipe = list(), target_var_name = ""):
         logger.debug("Adding target: " + mktarget + ": " + prerequisites)
         for line in recipe:
             logger.debug("    " + line)
 
-        self.targets.append(target.Target(mktarget, prerequisites, recipe))
+        if target_var_name == "":
+            self.targets.append(target.Target(mktarget, prerequisites, recipe))
+        else:
+            logger.debug("Using target variable: " + target_var_name)
+            self.addVar(target_var_name, mktarget)
+            self.targets.append(target.Target("$(" + target_var_name + ")", prerequisites, recipe))
 
     def parseVar(self, line, pos):
+        logger.debug("Converting to make syntax")
+        """Return the variable name and position in a line"""
+        #Start position
         i = pos
         ret = ""
         done = False
         while not done:
+            #Advance one character
             i += 1
+            #If we've reached the end
             if i == len(line):
                 done = True
             else:
+                #Check if this is a character acceptable in a variable name
                 if line[i].isalnum() or line[i] == "-" or line[i] == "_":
+                    #Add to return
                     ret += line[i]
                 else:
+                    #We've reached the end of the variable
                     done = True
 
         return(ret, i)
 
-    def toMakeLine(self, line):
+    def toMakeLine(self, line, var_prefix = ""):
         """Convert variables to make syntax"""
         logger.debug("Converting to make syntax")
         pos = line.find("$")
@@ -71,11 +84,23 @@ class Makefile(object):
 
                 logger.debug("Found variable: " + var_name.strip())
 
-                ret += "$(" + var_name.upper() + ")"
-                ret += self.toMakeLine(line[i:len(line)])
+                ret += "$("
+                ret += var_name.upper() + ")"
+                ret += self.toMakeLine(line[i:len(line)], var_prefix)
             else:
-                ret += "$"
-                ret += self.toMakeLine(line[i + 1:len(line)])
+                ret += "$("
+                i = line.find(")")
+                if i > -1:
+                    if line[pos + 2:i + 1].isupper():
+                        ret += line[pos + 2:i + 1]
+                        ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
+                    else:
+                        logger.debug("Found local variable: " + line[pos + 2:i + 1])
+                        ret += var_prefix.upper() + "_" + line[pos + 2:i + 1].upper()
+                        ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
+                else:
+                    logger.warning("No ')' character found in line: "
+                                   + line)
         else:
             logger.debug("No variable found")
             ret = line
@@ -113,7 +138,7 @@ class Makefile(object):
                     while len(lines) > i:
                         if not lines[i].strip() == "\n":
                             logger.debug("Processing recipe line: " + lines[i])
-                            recipe_lines.append(lines[i])
+                            recipe_lines.append(lines[i].strip("\n"))
                             i += 1
 
                     self.addTarget(target_line[0], target_line[2], recipe_lines)

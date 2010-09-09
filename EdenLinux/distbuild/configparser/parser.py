@@ -35,7 +35,7 @@ class Parser(object):
         logger.debug("Parsing function.")
 
         func = lines[0].strip().partition("(")
-        params = func[2].strip(")")
+        params = func[2][0:func[2].rfind(")")]
         logger.debug("Function: " + func[0] + "(" + params + ")")
 
         function = Function()
@@ -56,7 +56,7 @@ class Parser(object):
                     function.file = param.strip()
                 else:
                     logger.debug("Target: " + param)
-                    function.target = param
+                    function.target = param.strip()
 
 
         self.tree.functions[func[0]] = function
@@ -97,7 +97,6 @@ class Parser(object):
 
         logger.debug("This is not a distuild configuration file")
         return(False)
-
 
     def parse(self, lines):
         logger.debug("Parsing " + str(len(lines)) + " lines.")
