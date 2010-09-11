@@ -7,9 +7,10 @@ from logger import logger
 
 class Target(object):
     """Makefile target"""
-    def __init__(self, target = "", prerequisites = "", recipe = list()):
+    def __init__(self, target = "", prerequisites = "", recipe = list(), phony = False):
         logger.debug("Entering Target.__init__")
 
         self.target = target
         self.prerequisites = prerequisites
         self.recipe = recipe
+        self.phony = phony

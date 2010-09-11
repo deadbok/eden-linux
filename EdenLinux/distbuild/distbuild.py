@@ -23,19 +23,23 @@ def print_tree(tree, level = 0):
 def parse_buildtree(path, conf_parser):
     logger.info("Entering path: " + path)
 
-    for entry in os.listdir(path):
-        if os.path.isfile(path + "/" + entry):
-            if os.path.splitext(entry)[1] == ".conf":
-                logger.info("Parsing: " + entry)
-                conf_file = open(path + "/" + entry)
-                lines = conf_file.read().splitlines()
-                if conf_parser.IsDistBuildConf(lines):
-                    conf_parser.parse(lines)
+    try:
+        for entry in os.listdir(path):
+            if os.path.isfile(path + "/" + entry):
+                if os.path.splitext(entry)[1] == ".conf":
+                    logger.info("Parsing: " + entry)
+                    conf_file = open(path + "/" + entry)
+                    lines = conf_file.read().splitlines()
+                    if conf_parser.IsDistBuildConf(lines):
+                        conf_parser.parse(lines)
 
-        if os.path.isdir(path + "/" + entry):
-            if entry.strip().find(".") != 0:
-                parse_buildtree(path + "/" + entry, conf_parser)
-
+            if os.path.isdir(path + "/" + entry):
+                if entry.strip().find(".") != 0:
+                    parse_buildtree(path + "/" + entry, conf_parser)
+    except IOError as e:
+        logger.error('Exception: "' + e.strerror + '" accessing file: ' + path + "/" + entry)
+    except OSError as e:
+        logger.error('Exception: "' + e.strerror + '" accessing file: ' + path)
 
 def main():
     """Main functions"""
@@ -59,11 +63,11 @@ def main():
     config_parser = parser.Parser()
     parse_buildtree(config_path, config_parser)
 
-    logger.info("Build tree:")
+    logger.info("build tree:")
     print_tree(config_parser.tree)
 
     makefile_builder = builder.Builder(config_parser.tree)
-    makefile_builder.Build()
+    makefile_builder.build()
 
 if __name__ == "__main__":
     main()

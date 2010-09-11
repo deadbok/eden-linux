@@ -25,14 +25,17 @@ class Makefile(object):
         self.filename = filename
 
     def addInclude(self, filename):
+        """Add an include statement to the Makefile"""
         logger.debug("Adding include file: " + filename)
         self.includes.append(include.Include(filename))
 
     def addVar(self, name, value):
+        """Add a variable to the Makefile"""
         logger.debug("Adding variable: " + name + " = " + value)
         self.vars.append(variable.Variable(name, value))
 
     def addTarget(self, mktarget, prerequisites = "", recipe = list(), target_var_name = ""):
+        """Add a target rule to the Makefile"""
         logger.debug("Adding target: " + mktarget + ": " + prerequisites)
         for line in recipe:
             logger.debug("    " + line)
@@ -44,9 +47,17 @@ class Makefile(object):
             self.addVar(target_var_name, mktarget)
             self.targets.append(target.Target("$(" + target_var_name + ")", prerequisites, recipe))
 
+    def addPhonyTarget(self, mktarget, prerequisites = "", recipe = list()):
+        """Add a phony target rule to the Makefile"""
+        logger.debug("Adding phony target: " + mktarget + ": " + prerequisites)
+        for line in recipe:
+            logger.debug("    " + line)
+
+        self.targets.append(target.Target(mktarget, prerequisites, recipe, True))
+
     def parseVar(self, line, pos):
-        logger.debug("Converting to make syntax")
         """Return the variable name and position in a line"""
+        logger.debug("Parsing variable in '" + line + "' at position: " + str(pos))
         #Start position
         i = pos
         ret = ""
@@ -91,11 +102,13 @@ class Makefile(object):
                 ret += "$("
                 i = line.find(")")
                 if i > -1:
+                    #If this is a regular Makefile variable copy it
                     if line[pos + 2:i + 1].isupper():
                         ret += line[pos + 2:i + 1]
                         ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
                     else:
-                        logger.debug("Found local variable: " + line[pos + 2:i + 1])
+                        #else add the local prefix
+                        logger.debug("Found local variable: " + line[pos + 2:i])
                         ret += var_prefix.upper() + "_" + line[pos + 2:i + 1].upper()
                         ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
                 else:
@@ -165,6 +178,8 @@ class Makefile(object):
         self.lines.append("\n")
 
         for t in self.targets:
+            if t.phony:
+                self.lines.append(".PHONY: " + t.target + " " + t.prerequisites + "\n")
             self.lines.append(t.target + ": " + t.prerequisites + "\n")
             for line in t.recipe:
                 self.lines.append(line + "\n")

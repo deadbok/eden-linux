@@ -9,8 +9,6 @@ class Include(object):
     """
     Makefile includes
     """
-
-
     def __init__(self, filename = ""):
         """
         Constructor

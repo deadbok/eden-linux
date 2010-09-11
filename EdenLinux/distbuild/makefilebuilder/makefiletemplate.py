@@ -69,6 +69,6 @@ class MakefileTemplate(Makefile):
         prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, vars), var_prefix)
         recipe = list()
         for line in self.targets[0].recipe:
-            recipe.append(self.toMakeLine(self.expandVars(line, vars)))
+            recipe.append(self.toMakeLine(self.expandVars(line, vars), var_prefix))
 
         return(target, prerequisites, recipe)

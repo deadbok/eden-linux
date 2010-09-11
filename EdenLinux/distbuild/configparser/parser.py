@@ -9,6 +9,7 @@ from buildtree.node import Node
 from buildtree.function import Function
 
 class Parser(object):
+    """Parse a config file and populate tree"""
     def __init__(self, root = None):
         """Constructor"""
         logger.debug("Entering Parser.__init__")
@@ -42,6 +43,7 @@ class Parser(object):
         function.name = func[0]
         #Parse parameters
         if len(params) != 0:
+            #Split at every comma
             for param in params.split(","):
                 logger.debug("Parsing parameter: " + param)
                 if param.find("=") > 0:

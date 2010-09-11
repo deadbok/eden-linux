@@ -8,4 +8,7 @@
 <path>/EdenLinux/distbuild</path>
 <path>/EdenLinux/tools</path>
 </pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>/usr/share/sip/PyQt4</path>
+</pydev_pathproperty>
 </pydev_project>

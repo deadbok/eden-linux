@@ -3,8 +3,6 @@ Created on Aug 25, 2010
 
 @author: oblivion
 """
-import os
-import urlparse
 from logger import logger
 from ordereddict.ordereddict import OrderedDict
 
