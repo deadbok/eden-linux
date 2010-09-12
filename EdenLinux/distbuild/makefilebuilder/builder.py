@@ -125,7 +125,7 @@ class Builder(object):
         makefile.addInclude(self.tree.getVar("build_dir", self.globals)
                             + "/*/*.mk")
 
-        makefile.addTarget("all", "$(GCC-STATIC_TOOLCHAIN)")
+        makefile.addTarget("all", "$(UCLIBC_TOOLCHAIN)")
         makefile.addPhonyTarget("source-clean", "$(TOOLCHAIN_CLEAN_TARGETS)")
         makefile.addPhonyTarget("source-distclean", "$(TOOLCHAIN_DISTCLEAN_TARGETS)")
         makefile.write()
@@ -195,7 +195,12 @@ class Builder(object):
                                                            + "$("
                                                            + entry.getVar("name").upper()
                                                            + "_DIR)")
+                            _vars["package_file_dir"] = ("conf/" + section_name
+                                                         + "/"
+                                                         + entry.getVar("name"))
                             _vars["url"] = "$(url)"
+
+                            _vars["dependencies"] = func.dependencies
                             #Add target to local variables
                             if func.name.find("clean") > -1:
                                 #Clean target
@@ -255,6 +260,7 @@ class Builder(object):
             makefile.addInclude(self.tree.getVar("root") + "/"
                                 + self.tree.getVar("build_dir") + "/"
                                 + section_name + "/*/*.mk")
+            makefile.addVar(section_name.upper() + "_DIR", "$(BUILD_DIR)/" + section_name)
             if section_name in section_targets:
                 for func_name in section_targets[section_name]:
                     makefile.addVar(section_name.upper() + "_"

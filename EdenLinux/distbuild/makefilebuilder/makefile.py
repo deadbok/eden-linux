@@ -91,13 +91,16 @@ class Makefile(object):
             i = pos
             ret = line[0:i]
             if not pos == line.find("$("):
-                var_name, i = self.parseVar(line, i)
+                if line[pos + 1].isalpha():
+                    var_name, i = self.parseVar(line, i)
+                    logger.debug("Found variable: " + var_name.strip())
+                    ret += "$("
+                    ret += var_name.upper() + ")"
+                    ret += self.toMakeLine(line[i:len(line)], var_prefix)
+                else:
+                    ret += "$"
+                    ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
 
-                logger.debug("Found variable: " + var_name.strip())
-
-                ret += "$("
-                ret += var_name.upper() + ")"
-                ret += self.toMakeLine(line[i:len(line)], var_prefix)
             else:
                 ret += "$("
                 i = line.find(")")
@@ -109,7 +112,10 @@ class Makefile(object):
                     else:
                         #else add the local prefix
                         logger.debug("Found local variable: " + line[pos + 2:i])
-                        ret += var_prefix.upper() + "_" + line[pos + 2:i + 1].upper()
+                        if var_prefix == "":
+                            ret += line[pos + 2:i + 1].upper()
+                        else:
+                            ret += var_prefix.upper() + "_" + line[pos + 2:i + 1].upper()
                         ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
                 else:
                     logger.warning("No ')' character found in line: "

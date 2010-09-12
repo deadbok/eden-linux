@@ -16,6 +16,7 @@ class Function(object):
         self.name = ""
         self.file = ""
         self.target = ""
+        self.dependencies = ""
         self.param = dict()
 
     def __str__(self):
@@ -28,7 +29,10 @@ class Function(object):
         for name, value in self.param.iteritems():
             temp += ", " + name + " = " + value
 
-        temp += ")"
+        if self.dependencies == "":
+            temp += ")"
+        else:
+            temp += "," + self.dependencies + ")"
         return(temp)
 
     def getParam(self, name):

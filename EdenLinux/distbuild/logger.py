@@ -4,7 +4,6 @@
 """
 
 import sys
-#import logging
 import logging.handlers
 
 LOG_FILENAME = './conf.log'
@@ -16,6 +15,7 @@ try:
                                                    backupCount = 5)
     file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(pathname)s - %(levelname)s - %(message)s")
     file_handler.setFormatter(file_formatter)
+    file_handler.setLevel(logging.DEBUG)
     file_handler.doRollover()
     logger.setLevel(logging.DEBUG)
     logger.addHandler(file_handler)
@@ -26,9 +26,15 @@ try:
     console_handler.setLevel(logging.INFO)
     logger.addHandler(console_handler)
 
-    logger.debug("logger enabled.")
+    logger.info("logger enabled.")
 
 
 except:
     print sys.exc_info()
     raise
+
+def set_console_loglevel(lvl):
+    console_handler.setLevel(lvl)
+
+def set_file_loglevel(lvl):
+    file_handler.setLevel(lvl)

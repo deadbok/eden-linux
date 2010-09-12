@@ -57,8 +57,12 @@ class Parser(object):
                     logger.debug("Makefile: " + param)
                     function.file = param.strip()
                 else:
-                    logger.debug("Target: " + param)
-                    function.target = param.strip()
+                    if function.target == "":
+                        logger.debug("Target: " + param)
+                        function.target = param.strip()
+                    else:
+                        logger.debug("Dependency: " + param)
+                        function.dependencies += " " + param.strip()
 
 
         self.tree.functions[func[0]] = function

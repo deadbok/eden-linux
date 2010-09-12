@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import optparse
 import os.path
+import logging
 from logger import logger
+from logger import set_file_loglevel
+from logger import set_console_loglevel
 from configparser import parser
 from makefilebuilder import builder
 
@@ -43,19 +46,38 @@ def parse_buildtree(path, conf_parser):
 
 def main():
     """Main functions"""
-    logger.debug("Entering main.")
-
     usage = "usage: %prog [options] config_path"
     arg_parser = optparse.OptionParser(usage = usage)
     arg_parser.add_option("-v", "--verbose",
-                      action = "store_true", dest = "verbose", default = True,
-                      help = "Print detailed progress [default]")
-
+                          action = "store_true", dest = "verbose",
+                          default = False,
+                          help = "Print detailed progress [default]")
+    arg_parser.add_option("-l", "--log-level",
+                          type = "int", default = 2,
+                          help = "Set the logging level for the log files (0-5)"
+                          )
     (options, args) = arg_parser.parse_args()
-
     if len(args) == 0:
         arg_parser.print_help()
         return
+
+    if options.log_level == 0:
+        set_file_loglevel(logging.NOTSET)
+    elif options.log_level == 1:
+        set_file_loglevel(logging.DEBUG)
+    elif options.log_level == 2:
+        set_file_loglevel(logging.INFO)
+    elif options.log_level == 3:
+        set_file_loglevel(logging.WARNING)
+    elif options.log_level == 4:
+        set_file_loglevel(logging.ERROR)
+    elif options.log_level == 5:
+        set_file_loglevel(logging.CRITICAL)
+    else:
+        set_file_loglevel(logging.INFO)
+
+    if options.verbose:
+        set_console_loglevel(logging.DEBUG)
 
     #Save the config path
     config_path = args[0]
