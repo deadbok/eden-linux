@@ -5,27 +5,19 @@ import logging
 from logger import logger
 from logger import set_file_loglevel
 from logger import set_console_loglevel
-from configparser import parser
 from makefilebuilder import builder
+import buildtree.base
+import buildtree.section
 
-def print_tree(tree, level = 0):
-    for key, var in tree.vars.iteritems():
-        logger.info((" " * level) + "Variable: " + key + " = " + str(var))
+tree = buildtree.section.Section("global")
 
-    for key, var in tree.functions.iteritems():
-        logger.info((" " * level) + "Function: " + str(var))
+def print_tree(node, level = 0):
+    logger.info(("*" * level) + " " + str(node))
+    for sub_node in node.nodes.itervalues():
+        print_tree(sub_node, level + 1)
 
-    for target in tree.targets:
-        logger.info((" " * level) + "Target: " + target)
-
-    for key, var in tree.sections.iteritems():
-        logger.info((" " * level) + "Section: " + key)
-        for section in var:
-            print_tree(section, level + 1)
-
-def parse_buildtree(path, conf_parser):
+def parse_buildtree(path):
     logger.info("Entering path: " + path)
-
     try:
         for entry in os.listdir(path):
             if os.path.isfile(path + "/" + entry):
@@ -33,19 +25,18 @@ def parse_buildtree(path, conf_parser):
                     logger.info("Parsing: " + entry)
                     conf_file = open(path + "/" + entry)
                     lines = conf_file.read().splitlines()
-                    if conf_parser.IsDistBuildConf(lines):
-                        conf_parser.parse(lines)
-
-            if os.path.isdir(path + "/" + entry):
+                    if buildtree.base.IsDistBuildConf(lines):
+                        tree.Parse(lines)
+            elif os.path.isdir(path + "/" + entry):
                 if entry.strip().find(".") != 0:
-                    parse_buildtree(path + "/" + entry, conf_parser)
+                    parse_buildtree(path + "/" + entry)
     except IOError as e:
         logger.error('Exception: "' + e.strerror + '" accessing file: ' + path + "/" + entry)
     except OSError as e:
         logger.error('Exception: "' + e.strerror + '" accessing file: ' + path)
 
 def main():
-    """Main functions"""
+    """Main function"""
     usage = "usage: %prog [options] config_path"
     arg_parser = optparse.OptionParser(usage = usage)
     arg_parser.add_option("-v", "--verbose",
@@ -82,13 +73,12 @@ def main():
     #Save the config path
     config_path = args[0]
 
-    config_parser = parser.Parser()
-    parse_buildtree(config_path, config_parser)
+    parse_buildtree(config_path)
 
-    logger.info("build tree:")
-    print_tree(config_parser.tree)
+    logger.info("Build tree:")
+    print_tree(tree)
 
-    makefile_builder = builder.Builder(config_parser.tree)
+    makefile_builder = builder.Builder(tree)
     makefile_builder.build()
 
 if __name__ == "__main__":

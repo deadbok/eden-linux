@@ -3,7 +3,7 @@ include build/*.mk
 include build/*/*.mk
 
 
-all: $(GCC-STATIC_TOOLCHAIN)
+all: $(GCC-CROSS_TOOLCHAIN)
 
 .PHONY: source-clean $(TOOLCHAIN_CLEAN_TARGETS)
 source-clean: $(TOOLCHAIN_CLEAN_TARGETS)

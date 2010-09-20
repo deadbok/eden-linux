@@ -30,7 +30,7 @@ try:
 
 
 except:
-    print sys.exc_info()
+    print(sys.exc_info())
     raise
 
 def set_console_loglevel(lvl):

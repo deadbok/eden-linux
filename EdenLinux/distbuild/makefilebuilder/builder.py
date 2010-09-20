@@ -125,7 +125,7 @@ class Builder(object):
         makefile.addInclude(self.tree.getVar("build_dir", self.globals)
                             + "/*/*.mk")
 
-        makefile.addTarget("all", "$(UCLIBC_TOOLCHAIN)")
+        makefile.addTarget("all", "$(GCC-CROSS_TOOLCHAIN)")
         makefile.addPhonyTarget("source-clean", "$(TOOLCHAIN_CLEAN_TARGETS)")
         makefile.addPhonyTarget("source-distclean", "$(TOOLCHAIN_DISTCLEAN_TARGETS)")
         makefile.write()

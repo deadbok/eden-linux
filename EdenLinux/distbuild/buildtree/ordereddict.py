@@ -3,8 +3,8 @@ Created on Sep 9, 2010
 
 @author: oblivion
 '''
-from itertools import izip, imap
-
+from itertools import izip
+from itertools import imap
 class OrderedDict(dict):
     """Ordered dict implementation.
     
