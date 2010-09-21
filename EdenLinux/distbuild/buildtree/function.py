@@ -49,33 +49,30 @@ class Function(Base):
                 if len(sub_tokens) > 0:
                     #Makefile template
                     if "mk" in sub_tokens:
-                        node = Variable("makefile")
+                        node = self.Add(Variable("makefile"))
                         while len(sub_tokens) > 0:
                             token = sub_tokens.pop()
                             if not token == " ":
-                                node.value += token
+                                node.Set(token)
                         self.Add(node)
                     #Variable
                     elif "=" in sub_tokens:
                         name = sub_tokens.pop()
                         logger.debug("Found variable: " + name)
-                        node = Variable(name)
-                        lines = node.Consume(sub_tokens, lines)
-                        self.Add(node)
+                        node = self.Add(Variable(name))
+                        (sub_tokens, lines) = node.Consume(sub_tokens, lines)
                     #Check for comments
                     elif sub_tokens[0] == "#":
                         logger.debug("Found comment")
-                        node = Comment("")
-                        lines = node.Consume(sub_tokens[1:len(sub_tokens)], lines)
-                        self.Add(node)
+                        node = self.Add(Comment(""))
+                        (sub_tokens, lines) = node.Consume(sub_tokens[1:len(sub_tokens)], lines)
                     #Target or dependencies
                     else:
                         #If a target exists, this is a dependency
                         if "target" in self.nodes:
                             #Create variable if it isn't there
                             if not "dependencies" in self.nodes:
-                                node = Variable("dependencies")
-                                self.Add(node)
+                                node = self.Add(Variable("dependencies"))
                             #Add tokens
                             self.nodes["dependencies"].value += " "
                             while len(sub_tokens) > 0:
@@ -83,11 +80,10 @@ class Function(Base):
                                 self.nodes["dependencies"].value += token.lstrip()
                         else:
                             #Create variable
-                            node = Variable("target")
-                            self.Add(node)
+                            node = self.Add(Variable("target"))
                             #Add tokens                            
                             self.nodes["target"].value += " "
                             while len(sub_tokens) > 0:
                                 token = sub_tokens.pop()
                                 self.nodes["target"].value += token.lstrip()
-        return(lines)
+        return(tokens, lines)

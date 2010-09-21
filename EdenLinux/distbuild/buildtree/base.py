@@ -23,7 +23,10 @@ class Base(object):
         """
         Constructor
         """
-        logger.debug("Constructing Base object named: " + name)
+        if len(name.strip(string.printable)) > 0:
+            logger.debug("Constructing Base object with an unspeakable name")
+        else:
+            logger.debug("Constructing Base object named: " + name)
         self.name = name
         self.parent = None
         self.nodes = OrderedDict()
@@ -87,14 +90,25 @@ class Base(object):
             return(Base.Root(node.parent))
 
     def Add(self, node):
+        from data import Data
+        from reference import Reference
         if isinstance(node, Base):
-            logger.debug("Adding node: " + node.name + " to: " + self.name)
+            if isinstance(node, Data):
+                logger.debug("Adding data node to: " + self.name)
+            elif isinstance(node, Reference):
+                logger.debug("Adding reference node to: " + self.name)
+            elif isinstance(self, Reference):
+                logger.debug("Adding node: " + node.name + " to: (unspeakable name)")
+            else:
+                logger.debug("Adding node: " + node.name + " to: " + self.name)
             logger.debug("Node type: " + str(type(node)))
+            logger.debug("Parent type: " + str(type(self)))
             logger.debug("Setting parent to: " + str(self))
             node.parent = self
             self.nodes[node.name] = node
         else:
             logger.warning('Wrong type "' + str(type(node)) + '" of node, cannot add')
+        return(node)
 
     def GetNode(self, name, root = None):
         if root == None:
@@ -103,3 +117,29 @@ class Base(object):
             node = root.nodes[name]
             return(node)
         return(None)
+
+    def GetLocalVar(self, name):
+        if name in self.nodes:
+            node = self.nodes[name]
+            return(node)
+        if self.parent == None:
+            return(None)
+        else:
+            node = self.parent.GetLocalVar(name)
+            return(node)
+        return(None)
+
+    def GetGlobalVar(self, name):
+        if name in self.Root().nodes:
+            node = self.Root().nodes[name]
+            return(node)
+        return(None)
+
+    def Link(self):
+        from data import Data
+        from reference import Reference
+        if not isinstance(self, (Reference, Data)):
+            logger.debug("Linking in: " + self.name)
+        for node in self.nodes.itervalues():
+            node.Link()
+

@@ -9,7 +9,8 @@ from base import Base
 from function import Function
 from variable import Variable
 from comment import Comment
-from garbage import Garbage
+from reference import Reference
+from data import Data
 
 class Section(Base):
     """
@@ -49,40 +50,42 @@ class Section(Base):
                         if name == "":
                             name = tokens.pop().strip()
                             logger.debug("Ending section: " + name)
-                            return(lines)
+                            return(tokens, lines)
                         else:
                             logger.debug("Found section: " + name)
                             node = self.GetNode(name)
                             if node == None:
                                 logger.debug("Section does not exists")
-                                node = Section(name)
+                                node = self.Add(Section(name))
                             else:
                                 if type(node) is Section:
                                     logger.debug("Section exists")
                                 else:
                                     logger.warning("Overwriting node:")
                                     logger.warning("Node type: " + str(type(node)) + ". Value: " + node.value)
-                                    node = Section(name)
+                                    node = self.Add(Section(name))
 
                     #if this is a variable declaration
                     elif token == "=":
                         logger.debug("Found variable: " + name)
-                        node = Variable(name)
+                        node = self.Add(Variable(name))
                     elif token == "(":
                         logger.debug("Found function: " + name)
-                        node = Function(name)
+                        node = self.Add(Function(name))
                     elif token == "#":
                         logger.debug("Found comment")
-                        node = Comment("")
+                        node = self.Add(Comment())
+                    elif token == "$":
+                        logger.debug("Found reference")
+                        node = self.Add(Reference())
                     #Check if we've found someone to parse the line 
                     if not node == None:
                         #Call the right parser
-                        lines = node.Consume(tokens, lines)
+                        (tokens, lines) = node.Consume(tokens, lines)
 
                     else:
-                        #Pass anything unknown along
-                        node = Garbage(self)
+                        #Save anything unknown as data
+                        node = self.Add(Data())
                         tokens.append(name)
                         name = ""
                         lines = node.Consume(tokens, lines)
-                    self.Add(node)

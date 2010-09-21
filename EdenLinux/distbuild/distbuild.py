@@ -2,16 +2,21 @@
 import optparse
 import os.path
 import logging
+import string
 from logger import logger
 from logger import set_file_loglevel
 from logger import set_console_loglevel
 from makefilebuilder import builder
 import buildtree.base
 import buildtree.section
+import buildtree.data
+import buildtree.variable
 
 tree = buildtree.section.Section("global")
 
 def print_tree(node, level = 0):
+    if len(node.name.strip(string.printable)) > 0:
+        return
     logger.info(("*" * level) + " " + str(node))
     for sub_node in node.nodes.itervalues():
         print_tree(sub_node, level + 1)
@@ -74,6 +79,9 @@ def main():
     config_path = args[0]
 
     parse_buildtree(config_path)
+    node = tree.Add(buildtree.variable.Variable("root"))
+    node.Set(os.getcwd())
+    tree.Link()
 
     logger.info("Build tree:")
     print_tree(tree)
