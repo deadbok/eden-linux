@@ -15,6 +15,8 @@ To reference a variable add a dollar sign ($) in front of the name like this::
 	
 In the example eggs is set to equal the value of spam, which is 1.
 
+\, = ,
+
 Sections:
 =========
 A section is a namespace, that can access all global variables, but export the local

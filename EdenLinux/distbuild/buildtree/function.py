@@ -42,22 +42,39 @@ class Function(Base):
         while len(tokens) > 0:
             token = tokens.pop()
             if not token == ")":
-                while (not (token == ",")) and (len(tokens) > 0):
+                while (token != ",") and (len(tokens) > 0):
+                    #transform  \, to ,
+                    if token == "\\":
+                        if len(tokens) > 0:
+                            token = tokens.pop()
+                            if token != ",":
+                                sub_tokens.append("\\")
                     sub_tokens.append(token)
                     token = tokens.pop()
                 sub_tokens.reverse()
                 if len(sub_tokens) > 0:
                     #Makefile template
                     if "mk" in sub_tokens:
+                        filename = ""
                         node = self.Add(Variable("makefile"))
                         while len(sub_tokens) > 0:
                             token = sub_tokens.pop()
                             if not token == " ":
-                                node.Set(token)
+                                filename += token
+                        node.Set(filename)
                         self.Add(node)
                     #Variable
                     elif "=" in sub_tokens:
-                        name = sub_tokens.pop()
+                        token = sub_tokens.pop()
+                        #Skip spaces
+                        while token == " ":
+                            token = sub_tokens.pop()
+                        #Get variable name
+                        name = token
+                        token = sub_tokens.pop()
+                        #Pop the equal sign
+                        while not token == "=":
+                            token = sub_tokens.pop()
                         logger.debug("Found variable: " + name)
                         node = self.Add(Variable(name))
                         (sub_tokens, lines) = node.Consume(sub_tokens, lines)
@@ -68,22 +85,26 @@ class Function(Base):
                         (sub_tokens, lines) = node.Consume(sub_tokens[1:len(sub_tokens)], lines)
                     #Target or dependencies
                     else:
+                        dependencies = ""
+                        target = ""
                         #If a target exists, this is a dependency
                         if "target" in self.nodes:
                             #Create variable if it isn't there
                             if not "dependencies" in self.nodes:
                                 node = self.Add(Variable("dependencies"))
                             #Add tokens
-                            self.nodes["dependencies"].value += " "
+                            dependencies += " "
                             while len(sub_tokens) > 0:
                                 token = sub_tokens.pop()
-                                self.nodes["dependencies"].value += token.lstrip()
+                                dependencies += token.lstrip()
+                            node.Set(dependencies)
                         else:
                             #Create variable
                             node = self.Add(Variable("target"))
                             #Add tokens                            
-                            self.nodes["target"].value += " "
+                            target += " "
                             while len(sub_tokens) > 0:
                                 token = sub_tokens.pop()
-                                self.nodes["target"].value += token.lstrip()
+                                target += token.lstrip()
+                            node.Set(target)
         return(tokens, lines)

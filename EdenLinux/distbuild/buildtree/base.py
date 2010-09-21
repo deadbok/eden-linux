@@ -135,6 +135,15 @@ class Base(object):
             return(node)
         return(None)
 
+    def GetPath(self):
+        """Get the name of the nodes from the root of the tree to this node"""
+        ret = list()
+        node = self
+        while node.parent != None:
+            ret.append(node.name)
+            node = node.parent
+        return(ret)
+
     def Link(self):
         from data import Data
         from reference import Reference

@@ -18,7 +18,6 @@ class Builder(object):
         '''
         logger.debug("Entering Builder.__init__")
         self.tree = tree
-        self.globals = dict()
 
     def create_dir(self, directory):
         """Create directory if it does not exist"""
@@ -26,25 +25,9 @@ class Builder(object):
             logger.debug("Creating directory: " + directory)
             os.makedirs(directory)
 
-    def global_vars(self):
-        """Create a dictionary of all global vars"""
-        logger.debug("Processing global variables in buildtree...")
-
-        #Get globals from root
-        for name, value in self.tree.vars.iteritems():
-            self.globals[name] = value
-            logger.debug("Variable: " + name + " = " + value)
-
-        #Get globals for all sections
-        for name in self.tree.sections.iterkeys():
-            value = (self.tree.getVar("build_dir") + "/" + name + "_"
-                     + self.tree.getVar("arch"))
-            self.globals[name + "_build_dir"] = value
-            logger.debug("Variable: " + name + "_build_dir" + " = " + value)
-
     def globals_mk(self):
         """Create a makefile holding all global variables."""
-        filename = self.tree.getVar("build_dir", self.globals) + "/globals.mk"
+        filename = str(self.tree.GetGlobalVar("build_dir")) + "/globals.mk"
         logger.info('Creating: ' + filename)
         global_makefile = Makefile(filename)
         #Write global variables
@@ -135,8 +118,11 @@ class Builder(object):
         logger.debug("Creating section directories")
         section_targets = dict()
 
+        node = self.tree
+        while
+
         for section_name, section in self.tree.sections.iteritems():
-            path = (self.tree.getVar("build_dir", self.globals)
+            path = (str(self.tree.GetGlobalVar("build_dir"))
                     + "/" + section_name)
             for entry in section:
                 self.create_dir(path + "/" + entry.getVar("name"))
