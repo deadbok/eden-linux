@@ -8,6 +8,13 @@ import variable
 import target
 import include
 
+class MakefileSyntaxError(SyntaxError):
+    def __init__(self, msg = ""):
+        SyntaxError()
+        self.msg = msg
+
+    def __str__(self):
+        return(self.msg)
 
 class Makefile(object):
     """
@@ -41,7 +48,6 @@ class Makefile(object):
         logger.debug("Adding target: " + mktarget + ": " + prerequisites)
         for line in recipe:
             logger.debug("    " + line)
-
         if target_var_name == "":
             self.targets.append(target.Target(mktarget, prerequisites, recipe))
         else:
@@ -92,7 +98,7 @@ class Makefile(object):
         if not pos == -1:
             i = pos
             ret = line[0:i]
-            if not pos == line.find("$("):
+            if not pos == line.find("${"):
                 if line[pos + 1].isalpha():
                     var_name, i = self.parseVar(line, i)
                     logger.debug("Found variable: " + var_name.strip())
@@ -105,7 +111,7 @@ class Makefile(object):
 
             else:
                 ret += "$("
-                i = line.find(")")
+                i = line.find("}")
                 if i > -1:
                     #If this is a regular Makefile variable copy it
                     if line[pos + 2:i + 1].isupper():
@@ -115,13 +121,16 @@ class Makefile(object):
                         #else add the local prefix
                         logger.debug("Found local variable: " + line[pos + 2:i])
                         if var_prefix == "":
-                            ret += line[pos + 2:i + 1].upper()
+                            ret += line[pos + 2:i].upper()
                         else:
-                            ret += var_prefix.upper() + "_" + line[pos + 2:i + 1].upper()
+                            ret += var_prefix.upper() + "_" + line[pos + 2:i].upper()
+                        ret += ")"
                         ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
                 else:
-                    logger.warning("No ')' character found in line: "
+                    logger.warning("No '}' character found in line: "
                                    + line)
+                    raise MakefileSyntaxError("No '}' character found in line: "
+                                              + line)
         else:
             logger.debug("No variable found")
             ret = line

@@ -72,3 +72,4 @@ class Template(Makefile):
             recipe.append(self.toMakeLine(self.expandVars(line, vars), var_prefix))
 
         return(target, prerequisites, recipe)
+

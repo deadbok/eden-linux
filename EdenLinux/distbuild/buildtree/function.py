@@ -105,6 +105,6 @@ class Function(Base):
                             target += " "
                             while len(sub_tokens) > 0:
                                 token = sub_tokens.pop()
-                                target += token.lstrip()
+                                target += token #.lstrip()
                             node.Set(target)
         return(tokens, lines)

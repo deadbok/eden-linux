@@ -22,10 +22,10 @@ class Reference(Base):
     def __str__(self):
         ret = "$"
         if self.local:
-            ret += "("
+            ret += "{"
         ret += self.reference
-        if self.       local:
-            ret += ")"
+        if self.local:
+            ret += "}"
         return(ret)
 
     def Consume(self, tokens, lines):
@@ -44,7 +44,7 @@ class Reference(Base):
                         (tokens, lines) = node.Consume(tokens, lines)
                         done = True
                 #Local variable reference
-                elif token == "(":
+                elif token == "{":
                     self.local = True
                     self.reference = tokens.pop()
                     #Pop the ")"

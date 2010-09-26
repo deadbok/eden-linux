@@ -7,11 +7,12 @@ import os.path
 from logger import logger
 import buildtree
 from makefile import Makefile
+from makefile import MakefileSyntaxError
 from template import Template
 
-class BuilderError(IOError):
+class BuilderError(Exception):
     def __init__(self, msg = ""):
-        IOError()
+        Exception()
         self.msg = msg
 
     def __str__(self):
@@ -20,7 +21,7 @@ class BuilderError(IOError):
 
 class Builder(object):
     '''
-    classdocs
+    Class that builds a Makefile based build system from the buildtree 
     '''
     def __init__(self, tree):
         '''
@@ -51,10 +52,15 @@ class Builder(object):
         logger.info('Creating: ' + filename)
         global_makefile = Makefile(filename)
         #Write global variables
-        for node in self.tree.nodes.itervalues():
-            if isinstance(node, buildtree.variable.Variable):
-                global_makefile.addVar(node.name.upper(),
-                                       str(global_makefile.toMakeLine(node.Get())))
+        try:
+            for node in self.tree.nodes.itervalues():
+                if isinstance(node, buildtree.variable.Variable):
+                    global_makefile.addVar(node.name.upper(),
+                                           str(global_makefile.toMakeLine(node.Get())))
+        except MakefileSyntaxError as e:
+            raise BuilderError("Syntax error: "
+                               + e.msg + " in node: "
+                               + node.name + " value: " + str(node.Get()))
 
         logger.debug("Closing: " + filename)
         global_makefile.write()
@@ -258,6 +264,10 @@ class Builder(object):
                                 rule = template.combine(_vars, node.name + sections)
                             except IOError:
                                 raise BuilderError("Error during file access cannot continue")
+                            except MakefileSyntaxError as e:
+                                raise BuilderError("Template syntax error: "
+                                                   + e.msg + " in file: "
+                                                   + template_filename)
 
                             #Add rule to makefile
                             if func.name.find("clean") > -1:
