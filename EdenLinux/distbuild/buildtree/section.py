@@ -11,6 +11,7 @@ from variable import Variable
 from comment import Comment
 from reference import Reference
 from data import Data
+from target import Target
 
 class Section(Base):
     """
@@ -39,7 +40,6 @@ class Section(Base):
                     token = tokens.pop()
                 logger.debug("Consuming token: " + token)
                 node = None
-                #if this is not a variable declaration
                 if len(token) > 1:
                     #Save string, if the token is longer than one character
                     name = token.strip()
@@ -82,10 +82,25 @@ class Section(Base):
                     if not node == None:
                         #Call the right parser
                         (tokens, lines) = node.Consume(tokens, lines)
-
-                    else:
-                        #Save anything unknown as data
-                        node = self.Add(Data())
-                        tokens.append(name)
                         name = ""
-                        lines = node.Consume(tokens, lines)
+            #Anything else is a target
+            if len(name) > 0:
+                logger.debug("Found target")
+                node = self.Add(Target(name))
+                (tokens, lines) = node.Consume(tokens, lines)
+
+    def HasSection(self, name):
+        """Check if section has subsection name"""
+        for node in self.IterNodes():
+            if isinstance(node, Section):
+                if node.name == name:
+                    return(True)
+        return(False)
+
+    def GetSection(self, name):
+        """Get a named section node"""
+        for node in self.IterNodes():
+            if isinstance(node, Section):
+                if node.name == name:
+                    return(node)
+        return(None)

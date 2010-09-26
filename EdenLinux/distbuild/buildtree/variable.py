@@ -56,3 +56,20 @@ class Variable(Base):
         node = self.Add(Data())
         node.value = value
 
+    def GetDeref(self):
+        ret = ""
+        for node in self.nodes.itervalues():
+            if not isinstance(node, Comment):
+                if isinstance(node, Reference):
+                    ret += node.Get()
+                else:
+                    ret += str(node)
+        return(ret)
+
+    def Get(self):
+        ret = ""
+        for node in self.nodes.itervalues():
+            if not isinstance(node, Comment):
+                ret += str(node)
+        return(ret)
+

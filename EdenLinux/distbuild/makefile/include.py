@@ -16,4 +16,5 @@ class Include(object):
         logger.debug("Entering Include.__init__")
 
         self.filename = filename
+        self.ignore_missing = False
 

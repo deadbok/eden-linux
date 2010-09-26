@@ -56,7 +56,7 @@ class Function(Base):
                     #Makefile template
                     if "mk" in sub_tokens:
                         filename = ""
-                        node = self.Add(Variable("makefile"))
+                        node = self.Add(Variable("func_makefile"))
                         while len(sub_tokens) > 0:
                             token = sub_tokens.pop()
                             if not token == " ":
@@ -88,19 +88,19 @@ class Function(Base):
                         dependencies = ""
                         target = ""
                         #If a target exists, this is a dependency
-                        if "target" in self.nodes:
+                        if "func_target" in self.nodes:
                             #Create variable if it isn't there
-                            if not "dependencies" in self.nodes:
-                                node = self.Add(Variable("dependencies"))
+                            if not "func_dependencies" in self.nodes:
+                                node = self.Add(Variable("func_dependencies"))
                             #Add tokens
                             dependencies += " "
                             while len(sub_tokens) > 0:
                                 token = sub_tokens.pop()
-                                dependencies += token.lstrip()
+                                dependencies += token
                             node.Set(dependencies)
                         else:
                             #Create variable
-                            node = self.Add(Variable("target"))
+                            node = self.Add(Variable("func_target"))
                             #Add tokens                            
                             target += " "
                             while len(sub_tokens) > 0:

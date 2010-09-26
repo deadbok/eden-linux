@@ -1,9 +1,9 @@
-include build/globals.mk
+include build/global.mk
 include build/*.mk
 include build/*/*.mk
 
 
-all: $(GCC-CROSS_TOOLCHAIN)
+all:  $(PACKAGES) $(TARGET) $(TOOLCHAIN)
 
 .PHONY: source-clean $(TOOLCHAIN_CLEAN_TARGETS)
 source-clean: $(TOOLCHAIN_CLEAN_TARGETS)

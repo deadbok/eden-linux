@@ -6,7 +6,7 @@ import string
 from logger import logger
 from logger import set_file_loglevel
 from logger import set_console_loglevel
-from makefilebuilder import builder
+from makefile import builder
 import buildtree.base
 import buildtree.section
 import buildtree.data
@@ -17,7 +17,8 @@ tree = buildtree.section.Section("global")
 def print_tree(node, level = 0):
     if len(node.name.strip(string.printable)) > 0:
         return
-    logger.info(("*" * level) + " " + str(node))
+    if isinstance(node, buildtree.section.Section):
+        logger.info(("*" * level) + " " + str(node))
     for sub_node in node.nodes.itervalues():
         print_tree(sub_node, level + 1)
 
@@ -28,8 +29,8 @@ def parse_buildtree(path):
             if os.path.isfile(path + "/" + entry):
                 if os.path.splitext(entry)[1] == ".conf":
                     logger.info("Parsing: " + entry)
-                    conf_file = open(path + "/" + entry)
-                    lines = conf_file.read().splitlines()
+                    with file(path + "/" + entry) as conf_file:
+                        lines = conf_file.read().splitlines()
                     if buildtree.base.IsDistBuildConf(lines):
                         tree.Parse(lines)
             elif os.path.isdir(path + "/" + entry):
@@ -87,7 +88,11 @@ def main():
     print_tree(tree)
 
     makefile_builder = builder.Builder(tree)
-    makefile_builder.build()
+    try:
+        makefile_builder.build()
+    except Exception as e:
+        logger.critical("Error creating Makefiles: " + str(e))
+
 
 if __name__ == "__main__":
     main()

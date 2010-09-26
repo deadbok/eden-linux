@@ -75,3 +75,8 @@ class Reference(Base):
                     self.Add(node)
                 else:
                     logger.warning("Cannot find global variable: " + self.reference)
+
+    def Get(self):
+        if self.reference in self.nodes:
+            return(self.nodes[self.reference].Get())
+        return(None)

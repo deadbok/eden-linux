@@ -4,9 +4,9 @@ Created on Sep 4, 2010
 @author: oblivion
 '''
 from logger import logger
-from makefilebuilder.makefile import Makefile
+from makefile import Makefile
 
-class MakefileTemplate(Makefile):
+class Template(Makefile):
     """
     Class to handle Makefile templates
     """
@@ -14,7 +14,7 @@ class MakefileTemplate(Makefile):
         """
         Constructor, read in template
         """
-        logger.debug("Entering MakefileTemplate.__init__")
+        logger.debug("Entering Template.__init__")
         Makefile.__init__(self, filename)
         self.read()
 

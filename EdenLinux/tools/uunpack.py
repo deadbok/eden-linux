@@ -31,7 +31,7 @@ def main():
     filename = args[0]
     destination = args[1]
 
-    print('uunpack unpacking "' + filename + '" to "' + destination)
+    print('uunpack unpacking "' + filename + '" to "' + destination + '"')
     extension = os.path.splitext(filename)
     if options.verbose:
         print('Determining archive format from extension: ' + extension[1])

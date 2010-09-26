@@ -152,3 +152,23 @@ class Base(object):
         for node in self.nodes.itervalues():
             node.Link()
 
+    def IterNodes(self):
+        """Iterate through first level of sub-nodes"""
+        for node in self.nodes.itervalues():
+            yield node
+
+    def IterTree(self, root = None):
+        """Iterate through all the nodes in the tree"""
+        if root == None:
+            root = self
+        yield root
+        last = root
+        for node in root.IterTree():
+            for child in node.IterNodes():
+                yield child
+                last = child
+            if last == node:
+                return
+
+
+

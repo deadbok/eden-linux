@@ -4,9 +4,9 @@ Created on Sep 3, 2010
 @author: oblivion
 '''
 from logger import logger
-from makefilebuilder import variable
-from makefilebuilder import target
-from makefilebuilder import include
+import variable
+import target
+import include
 
 
 class Makefile(object):
@@ -24,10 +24,12 @@ class Makefile(object):
         self.targets = list()
         self.filename = filename
 
-    def addInclude(self, filename):
+    def addInclude(self, filename, ignore_missing = False):
         """Add an include statement to the Makefile"""
         logger.debug("Adding include file: " + filename)
-        self.includes.append(include.Include(filename))
+        inc = include.Include(filename)
+        inc.ignore_missing = ignore_missing
+        self.includes.append(inc)
 
     def addVar(self, name, value):
         """Add a variable to the Makefile"""
@@ -131,9 +133,8 @@ class Makefile(object):
         logger.debug("Reading Makefile: " + self.filename)
 
         try:
-            makefile = open(self.filename, "r")
-
-            lines = makefile.readlines()
+            with file(self.filename, "r") as makefile:
+                lines = makefile.readlines()
 
             i = 0
             while len(lines) > i:
@@ -167,6 +168,7 @@ class Makefile(object):
                 i += 1
         except IOError as e:
             logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
+            raise
 
 
 
@@ -174,7 +176,10 @@ class Makefile(object):
         logger.debug("Writing Makefile: " + self.filename)
 
         for i in self.includes:
-            self.lines.append("include " + i.filename + "\n")
+            prefix = ""
+            if i.ignore_missing:
+                prefix = "-"
+            self.lines.append(prefix + "include " + i.filename + "\n")
 
         self.lines.append("\n")
 
