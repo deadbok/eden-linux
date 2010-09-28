@@ -3,6 +3,7 @@ Created on Sep 3, 2010
 
 @author: oblivion
 '''
+import os.path
 from logger import logger
 import variable
 import target
@@ -206,10 +207,20 @@ class Makefile(object):
             self.lines.append("\n")
 
         try:
-            makefile = open(self.filename, "w")
+            file_lines = None
+            if os.path.exists(self.filename):
+                with file(self.filename, "r") as makefile:
+                    file_lines = makefile.readlines()
 
-            makefile.writelines(self.lines)
+            if file_lines == None or file_lines != self.lines:
+                makefile = open(self.filename, "w")
+                makefile.writelines(self.lines)
+                makefile.close()
+            else:
+                logger.debug(self.filename + " skipped, the file is up to date.")
+                return(False)
 
-            makefile.close()
         except IOError as e:
             logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
+
+        return(True)

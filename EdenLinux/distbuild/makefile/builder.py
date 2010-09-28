@@ -144,12 +144,15 @@ class Builder(object):
         """build the Makefiles for all sections"""
         logger.debug("Creating section Makefiles")
         section_targets = dict()
+        urls = set()
 
         for node in self.tree.IterTree():
+            #If this is a user defined section
             if (isinstance(node, buildtree.section.Section) and
                 (node.name not in ["global", "build", "dependencies"])):
                 path = self.tree.GetGlobalVar("build_dir").GetDeref()
                 path += self.TreetToFilePath(node.GetPath())
+                #Create director for the Makefile
                 self.create_dir(path)
                 logger.info("Creating: " + path + "/" + node.name + ".mk")
                 makefile = Makefile(path + "/" + node.name + ".mk")
@@ -161,6 +164,7 @@ class Builder(object):
                                     + path + "/" + "*/*.mk", True)
                 #Add variable to build the package and dependencies
                 global_dependencies = ""
+                #Create section prefix
                 sections = ""
                 for section_name in node.GetPath():
                     if section_name != node.name:
@@ -191,101 +195,108 @@ class Builder(object):
                     #Run through all functions in the build section
                     for name, func in build.nodes.iteritems():
                         if isinstance(func, buildtree.function.Function):
-#                            Ignore download function, as it is taken care of
-#                            if name == "download":
-#                                logger.debug("Ignoring download function")
-#                            else:
+                            #Ignore the download function, if another package
+                            #has downloaded the file
+                            if ((name == "download") and
+                                (node.GetLocalVar("url").GetDeref() in urls)):
+                                logger.debug("Ignoring duplicate download function")
+                            else:
                                 #Create a Makefile rule for the function
-                            logger.debug("Converting function: "
-                                         + str(func))
-                            #Create a dict of local variables
-                            _vars = dict()
-                            _vars["packed_filename"] = os.path.basename(node.GetLocalVar("url").Get())
-                            _vars["unpack_dir"] = ("$" + sections[1:len(sections)]
-                                                  + "_build_dir")
-                            _vars["current_package_dir"] = ("$"
-                                                           + sections[1:len(sections)]
-                                                           + "_build_dir/"
-                                                           + "$("
-                                                           + node.name.upper()
-                                                           + sections.upper()
-                                                           + "_DIR)")
-                            _vars["package_file_dir"] = ("conf/" + sections[1:len(sections)]
-                                                         + "/"
-                                                         + node.name)
-                            _vars["url"] = "$(url)"
+                                logger.debug("Converting function: "
+                                             + str(func))
+                                #Create a dict of local variables
+                                _vars = dict()
+                                _vars["packed_filename"] = os.path.basename(node.GetLocalVar("url").Get())
+                                _vars["unpack_dir"] = ("$" + sections[1:len(sections)]
+                                                      + "_build_dir")
+                                _vars["current_package_dir"] = ("$"
+                                                               + sections[1:len(sections)]
+                                                               + "_build_dir/"
+                                                               + "$("
+                                                               + node.name.upper()
+                                                               + sections.upper()
+                                                               + "_DIR)")
+                                _vars["package_file_dir"] = ("conf/" + sections[1:len(sections)]
+                                                             + "/"
+                                                             + node.name)
+                                _vars["url"] = "${url}"
 
-                            dependencies = func.GetLocalVar("func_dependencies")
-                            if dependencies == None:
-                                _vars["dependencies"] = ""
-                            else:
-                                _vars["dependencies"] = dependencies.Get()
-                            #Add target to local variables
-                            if func.name.find("clean") > -1:
-                                #Clean target
-                                _vars["target"] = (node.name.upper()
-                                                   + "_"
-                                                   + sections[1:len(sections)].upper()
-                                                   + "_"
-                                                   + func.name.upper())
-                            elif func.name.find("download") > -1:
-                                #Download target
-                                _vars["target"] = node.GetGlobalVar("download_dir").Get() + "/" + os.path.basename(node.GetLocalVar("url").Get())
-                            elif func.GetLocalVar("func_target") == None:
-                                #Default target
-                                _vars["target"] = _vars["current_package_dir"] + "/." + func.name
-                            else:
-                                #Custom target
-                                _vars["target"] = func.GetLocalVar("func_target").Get()
-
-                            #Create variables for local targets
-                            entry_targets["current_" + func.name + "_target"] = "$(" + (node.name + "_" + sections[1:len(sections)] + "_" + func.name).upper() + ")"
-
-                            #Add function parameters to local variables
-                            for func_node in func.IterNodes():
-                                if func_node.name.find("func_") == -1:
-                                    if isinstance(func_node, buildtree.variable.Variable):
-                                        _vars[func_node.name] = func_node.Get()
-                            #Add target variables for local targets, to local variables
-                            _vars.update(entry_targets)
-                            try:
-                                #Get template filename 
-                                template_filename = func.GetLocalVar("func_makefile")
-                                #If the template filename is empty supply a default template
-                                if template_filename == None:
-                                    template_filename = (sections[1:len(sections)] + "-"
-                                                         + func.name + ".mk")
+                                dependencies = func.GetLocalVar("func_dependencies")
+                                if dependencies == None:
+                                    _vars["dependencies"] = ""
                                 else:
-                                    template_filename = template_filename.GetDeref()
-                                #Load the template
-                                template = Template(node.GetGlobalVar("template_dir").GetDeref()
-                                                     + "/" + template_filename)
-                                #Create rule from template
-                                rule = template.combine(_vars, node.name + sections)
-                            except IOError:
-                                raise BuilderError("Error during file access cannot continue")
-                            except MakefileSyntaxError as e:
-                                raise BuilderError("Template syntax error: "
-                                                   + e.msg + " in file: "
-                                                   + template_filename)
+                                    _vars["dependencies"] = dependencies.Get()
+                                #Add target to local variables
+                                if func.name.find("clean") > -1:
+                                    #Clean target
+                                    _vars["target"] = (node.name.upper()
+                                                       + "_"
+                                                       + sections[1:len(sections)].upper()
+                                                       + "_"
+                                                       + func.name.upper())
+                                elif func.name.find("download") > -1:
+                                    #Download target
+                                    _vars["target"] = node.GetGlobalVar("download_dir").Get() + "/" + os.path.basename(node.GetLocalVar("url").Get())
+                                elif func.GetLocalVar("func_target") == None:
+                                    #Default target
+                                    _vars["target"] = _vars["current_package_dir"] + "/." + func.name
+                                else:
+                                    #Custom target
+                                    _vars["target"] = func.GetLocalVar("func_target").Get()
 
-                            #Add rule to makefile
-                            if func.name.find("clean") > -1:
-                                makefile.addPhonyTarget(rule[0], rule[1], rule[2])
-                            else:
-                                makefile.addTarget(rule[0], rule[1], rule[2],
-                                                   (node.name
-                                                    + sections + "_"
-                                                    + func.name).upper())
-                            #Add target to section global target list
-                            if not sections[1:len(sections)] in section_targets:
-                                section_targets[sections[1:len(sections)]] = dict()
-                            if not func.name in section_targets[sections[1:len(sections)]]:
-                                section_targets[sections[1:len(sections)]][func.name] = ""
-                            section_targets[sections[1:len(sections)]][func.name] += " " + rule[0]
-                            #Add clean targets to section global target list                    
+                                #Create variables for local targets
+                                entry_targets["current_" + func.name + "_target"] = "$(" + (node.name + "_" + sections[1:len(sections)] + "_" + func.name).upper() + ")"
+
+                                #Add function parameters to local variables
+                                for func_node in func.IterNodes():
+                                    if func_node.name.find("func_") == -1:
+                                        if isinstance(func_node, buildtree.variable.Variable):
+                                            _vars[func_node.name] = func_node.Get()
+                                #Add target variables for local targets, to local variables
+                                _vars.update(entry_targets)
+                                try:
+                                    #Get template filename 
+                                    template_filename = func.GetLocalVar("func_makefile")
+                                    #If the template filename is empty supply a default template
+                                    if template_filename == None:
+                                        template_filename = (sections[1:len(sections)] + "-"
+                                                             + func.name + ".mk")
+                                    else:
+                                        template_filename = template_filename.GetDeref()
+                                    #Load the template
+                                    template = Template(node.GetGlobalVar("template_dir").GetDeref()
+                                                         + "/" + template_filename)
+                                    #Create rule from template
+                                    rule = template.combine(_vars, node.name + sections)
+                                except IOError:
+                                    raise BuilderError("Error during file access cannot continue")
+                                except MakefileSyntaxError as e:
+                                    raise BuilderError("Template syntax error: "
+                                                       + e.msg + " in file: "
+                                                       + template_filename)
+
+                                #Add rule to makefile
+                                if func.name.find("clean") > -1:
+                                    makefile.addPhonyTarget(rule[0], rule[1], rule[2])
+                                else:
+                                    makefile.addTarget(rule[0], rule[1], rule[2],
+                                                       (node.name
+                                                        + sections + "_"
+                                                        + func.name).upper())
+                                #Add target to section global target list
+                                if not sections[1:len(sections)] in section_targets:
+                                    section_targets[sections[1:len(sections)]] = dict()
+                                if not func.name in section_targets[sections[1:len(sections)]]:
+                                    section_targets[sections[1:len(sections)]][func.name] = ""
+                                section_targets[sections[1:len(sections)]][func.name] += " " + rule[0]
+                                #Add clean targets to section global target list  
+                    #Save the url in the set to check for duplicates later
+                    urls.add(node.GetLocalVar("url").GetDeref())
                 #Write Makefile
-                makefile.write()
+                if not makefile.write():
+                    logger.info("...Already up to date.")
+
+
 
 #            logger.debug("Creating makefile for section: " + section_name)
 #            makefile = Makefile(path + "/" + section_name + ".mk")

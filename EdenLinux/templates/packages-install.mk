@@ -1,2 +1,2 @@
 $target: $current_build_target
-	$make -C $current_package_dir install
+	$toolchain_env $make -C $current_package_dir install $make_opts

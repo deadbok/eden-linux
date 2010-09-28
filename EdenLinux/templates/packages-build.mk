@@ -1,2 +1,2 @@
 $target: $dependencies
-	$make -C $current_package_dir
+	$toolchain_env $make -C $current_package_dir $make_opts
