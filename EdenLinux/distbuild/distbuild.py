@@ -9,7 +9,6 @@ from logger import set_console_loglevel
 from makefile import builder
 import buildtree.base
 import buildtree.section
-import buildtree.data
 import buildtree.variable
 
 tree = buildtree.section.Section("global")
@@ -23,16 +22,18 @@ def print_tree(node, level = 0):
         print_tree(sub_node, level + 1)
 
 def parse_buildtree(path):
-    logger.info("Entering path: " + path)
     try:
         for entry in os.listdir(path):
             if os.path.isfile(path + "/" + entry):
                 if os.path.splitext(entry)[1] == ".conf":
-                    logger.info("Parsing: " + entry)
+                    logger.info("Parsing: " + path + "/" + entry)
                     with file(path + "/" + entry) as conf_file:
                         lines = conf_file.read().splitlines()
                     if buildtree.base.IsDistBuildConf(lines):
-                        tree.Parse(lines)
+                        try:
+                            tree.Parse(lines)
+                        except Exception as e:
+                            raise e
             elif os.path.isdir(path + "/" + entry):
                 if entry.strip().find(".") != 0:
                     parse_buildtree(path + "/" + entry)
@@ -79,16 +80,12 @@ def main():
     #Save the config path
     config_path = args[0]
 
-    parse_buildtree(config_path)
-    node = tree.Add(buildtree.variable.Variable("root"))
-    node.Set(os.getcwd())
-    tree.Link()
-
-    logger.info("Build tree:")
-    print_tree(tree)
-
-    makefile_builder = builder.Builder(tree)
     try:
+        parse_buildtree(config_path)
+
+        logger.info("Build tree:")
+        print_tree(tree)
+        makefile_builder = builder.Builder(tree)
         makefile_builder.build()
     except Exception as e:
         logger.critical("Error creating Makefiles: " + str(e))

@@ -15,6 +15,14 @@ def IsDistBuildConf(lines):
     logger.debug("This is not a distuild configuration file")
     return(False)
 
+class SyntaxError(Exception):
+    def __init__(self, msg = ""):
+        Exception()
+        self.msg = msg
+
+    def __str__(self):
+        return(self.msg)
+
 class Base(object):
     """
     Base class for the buildtree classes
@@ -63,6 +71,10 @@ class Base(object):
             tokens.append(token)
         logger.debug("Tokens in line: " + str(tokens))
         return(tokens)
+
+    def Consume(self, tokens, lines):
+        """Consume nothing"""
+        return(tokens, lines)
 
     def Parse(self, lines):
         """Eat up lines, and fill in the tree"""
@@ -130,9 +142,23 @@ class Base(object):
         return(None)
 
     def GetGlobalVar(self, name):
-        if name in self.Root().nodes:
-            node = self.Root().nodes[name]
-            return(node)
+        from variable import Variable
+        from reference import Reference
+        for node in self.Root().IterTree():
+            if isinstance(node, Variable):
+                sections = ""
+                node_name = ""
+                section_names = node.GetPath()
+                section_names.reverse()
+                section_names.pop()
+                for section_name in section_names:
+                    node_name += section_name + "_"
+                node_name += node.name
+                if name == node_name:
+                    return(node)
+#        if name in self.Root().nodes:
+#            node = self.Root().nodes[name]
+#            return(node)
         return(None)
 
     def GetPath(self):
@@ -145,6 +171,7 @@ class Base(object):
         return(ret)
 
     def Link(self):
+        """Link references to their variables"""
         from data import Data
         from reference import Reference
         if not isinstance(self, (Reference, Data)):
@@ -155,20 +182,29 @@ class Base(object):
     def IterNodes(self):
         """Iterate through first level of sub-nodes"""
         for node in self.nodes.itervalues():
+            if len(node.name.strip(string.printable)) > 0:
+                logger.debug("Yielding unspeakable node" + " type " + str(type(node)))
+            else:
+                logger.debug("Yielding: " + node.name + " type " + str(type(node)))
             yield node
 
     def IterTree(self, root = None):
         """Iterate through all the nodes in the tree"""
         if root == None:
             root = self
+        if len(root.name.strip(string.printable)) > 0:
+            logger.debug("Yielding unspeakable node" + " type " + str(type(root)))
+        else:
+            logger.debug("Yielding: " + root.name + " type " + str(type(root)))
         yield root
         last = root
         for node in root.IterTree():
             for child in node.IterNodes():
+                if len(child.name.strip(string.printable)) > 0:
+                    logger.debug("Yielding unspeakable node" + " type " + str(type(child)))
+                else:
+                    logger.debug("Yielding: " + child.name + " type " + str(type(child)))
                 yield child
                 last = child
             if last == node:
                 return
-
-
-

@@ -39,10 +39,10 @@ class Reference(Base):
             if not (strip_spaces and token == " "):
                 #Check for comments
                 if token == "#":
-                        logger.debug("Found comment")
-                        node = self.Add(Comment(""))
-                        (tokens, lines) = node.Consume(tokens, lines)
-                        done = True
+                    logger.debug("Found comment")
+                    node = self.Add(Comment(""))
+                    (tokens, lines) = node.Consume(tokens, lines)
+                    done = True
                 #Local variable reference
                 elif token == "{":
                     self.local = True
@@ -61,6 +61,7 @@ class Reference(Base):
         return(tokens, lines)
 
     def Link(self):
+        logger.debug("Linking: " + str(self))
         if self.reference.islower():
             from variable import Variable
             if self.local:
@@ -68,15 +69,21 @@ class Reference(Base):
                 if isinstance(node, Variable):
                     self.Add(node)
                 else:
-                    logger.warning("Cannot find local variable: " + self.reference)
+                    logger.debug("Cannot find local variable: " + self.reference)
+                    raise SyntaxError("Cannot find local variable: "
+                                      + self.reference)
             else:
                 node = self.parent.GetGlobalVar(self.reference)
                 if isinstance(node, Variable):
                     self.Add(node)
                 else:
-                    logger.warning("Cannot find global variable: " + self.reference)
+                    logger.debug("Cannot find global variable: " + self.reference)
+                    raise SyntaxError("Cannot find global variable: "
+                                      + self.reference)
 
     def Get(self):
-        if self.reference in self.nodes:
-            return(self.nodes[self.reference].Get())
-        return(None)
+        if not self.reference in self.nodes:
+            self.Link()
+            if not self.reference in self.nodes:
+                return(None)
+        return(self.nodes[self.reference].Get())

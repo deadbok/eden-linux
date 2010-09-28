@@ -18,7 +18,6 @@ class BuilderError(Exception):
     def __str__(self):
         return(self.msg)
 
-
 class Builder(object):
     '''
     Class that builds a Makefile based build system from the buildtree 
@@ -29,6 +28,11 @@ class Builder(object):
         '''
         logger.debug("Entering Builder.__init__")
         self.tree = tree
+        #Create a node with the current work directory
+        node = self.tree.Add(buildtree.variable.Variable("root"))
+        node.Set(os.getcwd())
+        #self.tree.Link()
+
 
     def create_dir(self, directory):
         """Create directory if it does not exist"""
