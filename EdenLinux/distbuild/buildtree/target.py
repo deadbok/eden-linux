@@ -19,7 +19,7 @@ class Target(Base):
         Construct
         """
         logger.debug("Constructing Target object")
-        Base.__init__(self, name)
+        Base.__init__(self, name.lstrip())
 
     def __str__(self):
         return(self.value)

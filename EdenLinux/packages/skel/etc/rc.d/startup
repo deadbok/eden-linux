@@ -11,8 +11,6 @@ echo -n "Setting system clock: "
 hwclock --hctosys --utc
 check_status
 
-
-
 echo -n "Mounting devpts: "
 mount /dev/pts
 check_status

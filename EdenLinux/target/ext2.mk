@@ -12,7 +12,9 @@
 #mknod /home/oblivion/src/EdenLinux/rootfs/dev/tty1 c 4 1
 #touch /home/oblivion/src/EdenLinux/rootfs/dev/*
 #make: Circular ext2 <- ext2 dependency dropped.
+ifeq ($(UID), 0)
 LOOP_DEVICE := $(shell losetup -f)
+endif
 
 ext2: $(EDEN_IMAGE_FILE)
 	parted -s $(EDEN_IMAGE_FILE) mklabel msdos

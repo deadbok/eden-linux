@@ -1,2 +1,2 @@
-$target: $current_build_target
+$target: $dependencies $current_build_target
 	$make -C $current_package_dir install

@@ -40,7 +40,7 @@ class Builder(object):
             logger.debug("Creating directory: " + directory)
             os.makedirs(directory)
 
-    def TreetToFilePath(self, path):
+    def TreeToFilePath(self, path):
         if path == None:
             return None
         rev_path = path
@@ -134,28 +134,62 @@ class Builder(object):
         makefile.addInclude(self.tree.GetGlobalVar("build_dir").GetDeref()
                             + "/*.mk")
         makefile.addInclude(self.tree.GetGlobalVar("build_dir").GetDeref()
-                            + "/*/*.mk")
+                            + "/packages/*.mk")
         dependencies = ""
         for node in self.tree.IterNodes():
             if isinstance(node, buildtree.section.Section):
-                dependencies += " $(" + node.name.upper() + ")"
-        makefile.addTarget("all", dependencies)
+                dependencies += "$(BUILD_TARGETS_" + node.name.upper() + ") "
+        #makefile.addPhonyTarget("all", dependencies)
+        makefile.addTarget("all", "$(INSTALL_PACKAGES)")
         makefile.addPhonyTarget("source-clean", "$(TOOLCHAIN_CLEAN_TARGETS)")
         makefile.addPhonyTarget("source-distclean", "$(TOOLCHAIN_DISTCLEAN_TARGETS)")
         makefile.write()
+
+    def expandName(self, node = None, name = ""):
+        if node == None:
+            node = self.tree
+        sections = ""
+        for section_name in node.GetPath():
+            if section_name != node.name:
+                sections += "_"
+            sections += section_name
+        ret = ""
+        if len(name) > 0:
+            ret += name + "_"
+        ret += sections
+        return(ret)
+
+    def getSectionIncludeFiles(self, node = None):
+        if node == None:
+            node = self
+        ret = list()
+        dependencies = node.GetSection("dependencies")
+        if not dependencies == None:
+            for target in dependencies.nodes.itervalues():
+                sections = ""
+                target_sections = target.value.split("_")
+                #Pop prefix of the target, to get only sections
+                target_sections.pop(0)
+                for section in reversed(target_sections):
+                    sections += section + "/"
+                ret.append(node.GetGlobalVar("root").GetDeref() + "/"
+                           + node.GetGlobalVar("build_dir").GetDeref() + "/"
+                           + sections + "*.mk")
+        return(ret)
 
     def section_mk(self):
         """build the Makefiles for all sections"""
         logger.debug("Creating section Makefiles")
         section_targets = dict()
         urls = set()
+        included_files = set()
 
         for node in self.tree.IterTree():
             #If this is a user defined section
             if (isinstance(node, buildtree.section.Section) and
                 (node.name not in ["global", "build", "dependencies"])):
                 path = self.tree.GetGlobalVar("build_dir").GetDeref()
-                path += self.TreetToFilePath(node.GetPath())
+                path += self.TreeToFilePath(node.GetPath())
                 #Create director for the Makefile
                 self.create_dir(path)
                 logger.info("Creating: " + path + "/" + node.name + ".mk")
@@ -164,8 +198,12 @@ class Builder(object):
 #                makefile.addInclude(node.GetGlobalVar("root").GetDeref() + "/"
 #                                    + node.GetGlobalVar("build_dir").GetDeref()
 #                                    + "/" + node.parent.name + ".mk")
-                makefile.addInclude(node.GetGlobalVar("root").GetDeref() + "/"
-                                    + path + "/" + "*/*.mk", True)
+                #makefile.addInclude(node.GetGlobalVar("root").GetDeref() + "/"
+                #                    + path + "/" + "*/*.mk", True)
+                for include_file in self.getSectionIncludeFiles(node):
+                    if not include_file in included_files:
+                        makefile.addInclude(include_file)
+                        included_files.add(include_file)
                 #Add variable to build the package and dependencies
                 global_dependencies = ""
                 #Create section prefix
@@ -176,20 +214,20 @@ class Builder(object):
                 dependencies = node.GetSection("dependencies")
                 if not dependencies == None:
                     for target in dependencies.nodes.itervalues():
-                        global_dependencies += (" $(" + target.value.upper() + sections.upper() + ")")
+                        global_dependencies += (" $(" + target.value.upper() + ")")
                         logger.debug("Adding dependency: " + target.value)
-                makefile.addVar(node.name.upper() + sections.upper(),
-                                global_dependencies +
-                                " $(" + node.name.upper()
-                                + sections.upper()
-                                + "_INSTALL)")
+#                makefile.addVar(self.expandName(node).upper(),
+#                                global_dependencies
+#                                + " $("
+#                                + "INSTALL_"
+#                                + self.expandName(node).upper()
+#                                + ")")
                 #Add local variables
                 for var in node.IterNodes():
                     if isinstance(var, buildtree.variable.Variable):
-                        makefile.addVar(node.name.upper() + sections.upper()
-                                        + "_" + var.name.upper(),
+                        makefile.addVar(self.expandName(node, var.name).upper(),
                                         makefile.toMakeLine(var.Get(),
-                                        node.name + sections))
+                                        self.expandName(node)))
                 #Add function/rule
                 build = node.GetSection("build")
                 if not build == None:
@@ -216,28 +254,22 @@ class Builder(object):
                                 _vars["current_package_dir"] = ("$"
                                                                + sections[1:len(sections)]
                                                                + "_build_dir/"
-                                                               + "$("
-                                                               + node.name.upper()
-                                                               + sections.upper()
-                                                               + "_DIR)")
+                                                               + "$(DIR_"
+                                                               + self.expandName(node).upper()
+                                                               + ")")
                                 _vars["package_file_dir"] = ("conf/" + sections[1:len(sections)]
                                                              + "/"
                                                              + node.name)
                                 _vars["url"] = "${url}"
 
+                                _vars["dependencies"] = global_dependencies
                                 dependencies = func.GetLocalVar("func_dependencies")
-                                if dependencies == None:
-                                    _vars["dependencies"] = ""
-                                else:
-                                    _vars["dependencies"] = dependencies.Get()
+                                if not dependencies == None:
+                                    _vars["dependencies"] += dependencies.Get()
                                 #Add target to local variables
                                 if func.name.find("clean") > -1:
                                     #Clean target
-                                    _vars["target"] = (node.name.upper()
-                                                       + "_"
-                                                       + sections[1:len(sections)].upper()
-                                                       + "_"
-                                                       + func.name.upper())
+                                    _vars["target"] = (self.expandName(node, func.name).upper())
                                 elif func.name.find("download") > -1:
                                     #Download target
                                     _vars["target"] = node.GetGlobalVar("download_dir").Get() + "/" + os.path.basename(node.GetLocalVar("url").Get())
@@ -249,7 +281,7 @@ class Builder(object):
                                     _vars["target"] = func.GetLocalVar("func_target").Get()
 
                                 #Create variables for local targets
-                                entry_targets["current_" + func.name + "_target"] = "$(" + (node.name + "_" + sections[1:len(sections)] + "_" + func.name).upper() + ")"
+                                entry_targets["current_" + func.name + "_target"] = "$(" + self.expandName(node, func.name).upper() + ")"
 
                                 #Add function parameters to local variables
                                 for func_node in func.IterNodes():
@@ -271,7 +303,7 @@ class Builder(object):
                                     template = Template(node.GetGlobalVar("template_dir").GetDeref()
                                                          + "/" + template_filename)
                                     #Create rule from template
-                                    rule = template.combine(_vars, node.name + sections)
+                                    rule = template.combine(_vars, self.expandName(node))
                                 except IOError:
                                     raise BuilderError("Error during file access cannot continue")
                                 except MakefileSyntaxError as e:
@@ -284,9 +316,7 @@ class Builder(object):
                                     makefile.addPhonyTarget(rule[0], rule[1], rule[2])
                                 else:
                                     makefile.addTarget(rule[0], rule[1], rule[2],
-                                                       (node.name
-                                                        + sections + "_"
-                                                        + func.name).upper())
+                                                       (self.expandName(node, func.name).upper()))
                                 #Add target to section global target list
                                 if not sections[1:len(sections)] in section_targets:
                                     section_targets[sections[1:len(sections)]] = dict()

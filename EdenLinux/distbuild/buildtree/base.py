@@ -151,9 +151,9 @@ class Base(object):
                 section_names = node.GetPath()
                 section_names.reverse()
                 section_names.pop()
-                for section_name in section_names:
-                    node_name += section_name + "_"
                 node_name += node.name
+                for section_name in section_names:
+                    node_name += "_" + section_name
                 if name == node_name:
                     return(node)
 #        if name in self.Root().nodes:

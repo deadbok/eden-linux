@@ -1,0 +1,23 @@
+#distbuild
+packages:
+	udev:
+		version = 161
+		dir = udev-${version}
+		group = basesystem
+		url = http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-${version}.tar.bz2
+	
+		build:
+			download()
+			unpack($packages_build_dir/udev-${version}/configure)
+			config(config_opts = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc-html --datarootdir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc, $current_package_dir/Makefile, $current_package_dir/configure)
+			build($current_package_dir/udev/udevd, make_opts = DESTDIR=$root/$rootfs_dir CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc", $current_package_dir/Makefile)
+			install(install-udev.mk, make_opts = DESTDIR=$root/$rootfs_dir, $root_fs/sbin/udevd, $current_package_dir/udev/udevd)
+			clean()
+			distclean()
+		:build
+			
+		dependencies:
+			install_toolchain
+		:dependencies
+	:udev
+:packages

@@ -1,3 +1,3 @@
 $target: $dependencies
-	$mkdir $(dir $target)
-	$cp $dependencies $target
+	$mkdir $(dir $rootfs_dir/$target)
+	$cp $source $target

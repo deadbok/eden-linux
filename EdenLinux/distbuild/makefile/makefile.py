@@ -88,7 +88,7 @@ class Makefile(object):
 
         return(ret, i)
 
-    def toMakeLine(self, line, var_prefix = ""):
+    def toMakeLine(self, line, var_suffix = ""):
         """Convert variables to make syntax"""
         logger.debug("Converting to make syntax")
         pos = line.find("$")
@@ -105,10 +105,10 @@ class Makefile(object):
                     logger.debug("Found variable: " + var_name.strip())
                     ret += "$("
                     ret += var_name.upper() + ")"
-                    ret += self.toMakeLine(line[i:len(line)], var_prefix)
+                    ret += self.toMakeLine(line[i:len(line)], var_suffix)
                 else:
                     ret += "$"
-                    ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
+                    ret += self.toMakeLine(line[i + 1:len(line)], var_suffix)
 
             else:
                 ret += "$("
@@ -117,16 +117,16 @@ class Makefile(object):
                     #If this is a regular Makefile variable copy it
                     if line[pos + 2:i + 1].isupper():
                         ret += line[pos + 2:i + 1]
-                        ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
+                        ret += self.toMakeLine(line[i + 1:len(line)], var_suffix)
                     else:
                         #else add the local prefix
                         logger.debug("Found local variable: " + line[pos + 2:i])
-                        if var_prefix == "":
+                        if var_suffix == "":
                             ret += line[pos + 2:i].upper()
                         else:
-                            ret += var_prefix.upper() + "_" + line[pos + 2:i].upper()
+                            ret += line[pos + 2:i].upper() + "_" + var_suffix.upper()
                         ret += ")"
-                        ret += self.toMakeLine(line[i + 1:len(line)], var_prefix)
+                        ret += self.toMakeLine(line[i + 1:len(line)], var_suffix)
                 else:
                     logger.warning("No '}' character found in line: "
                                    + line)
@@ -201,7 +201,7 @@ class Makefile(object):
         for t in self.targets:
             if t.phony:
                 self.lines.append(".PHONY: " + t.target + " " + t.prerequisites + "\n")
-            self.lines.append(t.target + ": " + t.prerequisites + "\n")
+            self.lines.append(t.target + ":" + t.prerequisites + "\n")
             for line in t.recipe:
                 self.lines.append(line + "\n")
             self.lines.append("\n")

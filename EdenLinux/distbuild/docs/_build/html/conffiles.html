@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    '#',
         VERSION:     '0.5.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
@@ -48,23 +48,11 @@
   <div class="section" id="conf-configuration-files">
 <h1>.conf configuration files<a class="headerlink" href="#conf-configuration-files" title="Permalink to this headline">¶</a></h1>
 <p>The configuration files are for adding variables, and packages to the build system.</p>
-</div>
-<div class="section" id="variables">
-<h1>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h1>
-<p>Variables are handled much like in Makefiles. A variable is defined like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">variable_name</span> <span class="o">=</span> <span class="n">value</span>
-</pre></div>
-</div>
-<p>To reference a variable add a dollar sign ($) in front of the name like this:</p>
-<div class="highlight-python"><pre>spam = 1
-eggs = $spam</pre>
-</div>
-<p>In the example eggs is set to equal the value of spam, which is 1.</p>
-</div>
 <div class="section" id="sections">
-<h1>Sections:<a class="headerlink" href="#sections" title="Permalink to this headline">¶</a></h1>
+<h2>Sections:<a class="headerlink" href="#sections" title="Permalink to this headline">¶</a></h2>
 <p>A section is a namespace, that can access all global variables, but export the local
-variables, prefixed by the section name.</p>
+variables to globals, postfixed by the section name. A .conf file, with no section definition,
+is added to the global namespace.</p>
 <p>A section is defined like this:</p>
 <div class="highlight-python"><pre>section_name:</pre>
 </div>
@@ -72,25 +60,60 @@ variables, prefixed by the section name.</p>
 The section definition is ended like this:</p>
 <div class="highlight-python"><pre>:section_name</pre>
 </div>
-<p>Sections work by prefixing the variables in the section, with the section name. A section definition
+<p>Sections work by postfixing the variables in the section, with the section name. A section definition
 like this:</p>
-<div class="highlight-python"><pre>package:
+<div class="highlight-python"><pre>cc = i686-pc-linux-uclibc
+package:
         name = gcc
         version = 4.4.1
         dependencies = $toolchain
 :package</pre>
 </div>
+<p>will generate the following code:</p>
+<div class="highlight-python"><pre>CC = i686-pc-linux-uclibc
+NAME_PACKAGE = gcc
+VERSION_PACKAGE = 4.4.1
+DEPENDENCIES_PACKAGE = $(TOOLCHAIN)</pre>
+</div>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<p>Variables are handled much like in Makefiles. A variable is defined like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">variable_name</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>Since the comma, &#8220;,&#8221;, character is used in function definitions, to split function
+parameters, the substitution in a variable value is &#8220;,&#8221;</p>
+<div class="section" id="variable-scope">
+<h3>Variable scope<a class="headerlink" href="#variable-scope" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="global-variables">
+<h4>Global variables<a class="headerlink" href="#global-variables" title="Permalink to this headline">¶</a></h4>
+<p>When a variable is defined outside a section, it is global. To reference a global
+variable add a dollar sign ($) in front of the name like this:</p>
+<div class="highlight-python"><pre>spam = 1
+eggs = $spam</pre>
+</div>
+<p>In the example eggs is set to equal the value of spam, which is 1.</p>
 </div>
 <div class="section" id="local-variables">
-<h1>Local variables<a class="headerlink" href="#local-variables" title="Permalink to this headline">¶</a></h1>
-<p>$(variable_name) the scope of a local variable is within the file in which it is defined</p>
+<h4>Local variables<a class="headerlink" href="#local-variables" title="Permalink to this headline">¶</a></h4>
+<p>Variables defined inside a section, is local to that section the are referenced
+by inclosing them in {} characters like this:</p>
+<div class="highlight-python"><pre>package:
+        version = 1.0
+        filename = package-${version}
+:package</pre>
+</div>
+</div>
+</div>
 </div>
 <div class="section" id="build-tasks">
-<h1>build tasks<a class="headerlink" href="#build-tasks" title="Permalink to this headline">¶</a></h1>
+<h2>build tasks<a class="headerlink" href="#build-tasks" title="Permalink to this headline">¶</a></h2>
 <p>unpack($current_package_dir/configure)
 config(config-gmp.mk, config_opts = &#8211;prefix=$root/$toolchain_root_dir &#8211;enable-shared &#8211;with-gmp=$root/$toolchain_root_dir, $current_package_dir/Makefile)
 build($current_package_dir/libmpfr.la)
 install($toolchain_root_dir/lib/libmpfr.a)</p>
+</div>
 </div>
 
 
@@ -101,11 +124,19 @@ install($toolchain_root_dir/lib/libmpfr.a)</p>
         <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="">.conf configuration files</a></li>
-<li><a class="reference external" href="#variables">Variables</a></li>
+<li><a class="reference external" href="#">.conf configuration files</a><ul>
 <li><a class="reference external" href="#sections">Sections:</a></li>
+<li><a class="reference external" href="#variables">Variables</a><ul>
+<li><a class="reference external" href="#variable-scope">Variable scope</a><ul>
+<li><a class="reference external" href="#global-variables">Global variables</a></li>
 <li><a class="reference external" href="#local-variables">Local variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference external" href="#build-tasks">build tasks</a></li>
+</ul>
+</li>
 </ul>
 
             <h4>Previous topic</h4>
@@ -153,7 +184,7 @@ install($toolchain_root_dir/lib/libmpfr.a)</p>
     </div>
     <div class="footer">
       &copy; Copyright 2010, Martin Groenholdt.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
     </div>
   </body>
 </html>

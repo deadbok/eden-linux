@@ -141,8 +141,7 @@ install: check-root $(INSTALL_TARGETS)
 .PHONY check-root:
 check-root:
 ifneq ($(UID), 0)
-	@echo You must be root to install EdenLinux
-	$(shell exit) 
+	$(error You must be root to install EdenLinux)
 endif	
 
 .PHONY clean:

@@ -93,7 +93,6 @@ class Function(Base):
                             if not "func_dependencies" in self.nodes:
                                 node = self.Add(Variable("func_dependencies"))
                             #Add tokens
-                            dependencies += " "
                             while len(sub_tokens) > 0:
                                 token = sub_tokens.pop()
                                 dependencies += token
