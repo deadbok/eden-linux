@@ -33,7 +33,7 @@ def parse_buildtree(path):
                         try:
                             tree.Parse(lines)
                         except Exception as e:
-                            raise e
+                            raise
             elif os.path.isdir(path + "/" + entry):
                 if entry.strip().find(".") != 0:
                     parse_buildtree(path + "/" + entry)
@@ -87,8 +87,10 @@ def main():
         print_tree(tree)
         makefile_builder = builder.Builder(tree)
         makefile_builder.build()
+    except SyntaxError as e:
+        logger.exception("Syntax error in: " + e.filename)
     except Exception as e:
-        logger.critical("Error creating Makefiles: " + str(e))
+        logger.exception("Error creating Makefiles: " + str(e))
 
 
 if __name__ == "__main__":

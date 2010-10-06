@@ -1,5 +1,6 @@
 include build/global.mk
 include build/*.mk
+include build/target/*.mk
 include build/packages/*.mk
 
 

@@ -16,21 +16,19 @@ def IsDistBuildConf(lines):
     return(False)
 
 class SyntaxError(Exception):
+    """Syntax error exception"""
     def __init__(self, msg = ""):
-        Exception()
+        """Constructor"""
+        Exception.__init__()
         self.msg = msg
 
     def __str__(self):
         return(self.msg)
 
 class Base(object):
-    """
-    Base class for the buildtree classes
-    """
+    """Base class for the buildtree classes"""
     def __init__(self, name = ""):
-        """
-        Constructor
-        """
+        """Constructor"""
         if len(name.strip(string.printable)) > 0:
             logger.debug("Constructing Base object with an unspeakable name")
         else:
@@ -45,8 +43,8 @@ class Base(object):
         return(self.name)
 
     def Tokenize(self, line):
-        """Split a line into tokens of either sequences of letters, numbers, -, and _
-        or a separate token for any other character"""
+        """Split a line into tokens of either sequences of letters, numbers, -, 
+        and _ or a separate token for any other character"""
         logger.debug("Tokenizing line: " + line.strip())
         token = ""
         tokens = list()
@@ -78,7 +76,6 @@ class Base(object):
 
     def Parse(self, lines):
         """Eat up lines, and fill in the tree"""
-        import section
         logger.debug("Base consuming: " + str(len(lines)) + " lines")
         tokenized_lines = list()
         for line in lines:

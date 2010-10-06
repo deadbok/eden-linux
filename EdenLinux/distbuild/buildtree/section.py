@@ -4,13 +4,11 @@ Created on Sep 14, 2010
 @author: oblivion
 """
 from logger import logger
-from ordereddict import OrderedDict
 from base import Base
 from function import Function
 from variable import Variable
 from comment import Comment
 from reference import Reference
-from data import Data
 from target import Target
 
 class Section(Base):
@@ -77,7 +75,7 @@ class Section(Base):
                         node = self.Add(Comment())
                     elif token == "$":
                         logger.debug("Found reference")
-                        node = self.Add(Reference())
+                        node = self.Add(Reference(self))
                     #Check if we've found someone to parse the line 
                     if not node == None:
                         #Call the right parser

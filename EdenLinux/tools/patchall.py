@@ -37,6 +37,9 @@ def main():
                     if options.verbose:
                         print('Running: ' + command)
                     os.system(command)
+        command = "touch " + source_dir + "/.patched"
+        os.system(command)
+
     except IOError as e:
         print('Exception: "' + e.strerror + '" accessing file: ' + patch_dir + "/" + entry)
     except OSError as e:

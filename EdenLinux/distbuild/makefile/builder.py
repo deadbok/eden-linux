@@ -134,6 +134,8 @@ class Builder(object):
         makefile.addInclude(self.tree.GetGlobalVar("build_dir").GetDeref()
                             + "/*.mk")
         makefile.addInclude(self.tree.GetGlobalVar("build_dir").GetDeref()
+                            + "/target/*.mk")
+        makefile.addInclude(self.tree.GetGlobalVar("build_dir").GetDeref()
                             + "/packages/*.mk")
         dependencies = ""
         for node in self.tree.IterNodes():

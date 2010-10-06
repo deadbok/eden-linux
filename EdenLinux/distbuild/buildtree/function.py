@@ -19,6 +19,7 @@ class Function(Base):
         """
         logger.debug("Constructing Function object")
         Base.__init__(self, name)
+        self.inline = True
 
     def __str__(self):
         ret = self.name + "("
@@ -29,9 +30,7 @@ class Function(Base):
                 if items > 1:
                     ret += ", "
                     items -= 1
-            ret += ")"
-        else:
-            ret += ")"
+        ret += ")"
         return(ret)
 
     def Consume(self, tokens, lines):
@@ -106,4 +105,15 @@ class Function(Base):
                                 token = sub_tokens.pop()
                                 target += token #.lstrip()
                             node.Set(target)
+        #Consume code, if it is an inline function
+        if len(lines) > 0:
+            tokens = lines.pop()
+            if len(tokens) > 0:
+                if tokens[0] == "{":
+                    logger.debug("Reading inline code")
+    #                tokens = lines.pop()
+    #                while not (tokens[0] == "}") and (len(lines) > 0):
+    #                    tokens = lines.pop()
+                else:
+                    lines.append(tokens)
         return(tokens, lines)

@@ -139,43 +139,43 @@ class Makefile(object):
         logger.debug("Converted string: " + ret)
         return(ret)
 
+    def parse(self, lines):
+        i = 0
+        while len(lines) > i:
+            stripped_line = lines[i].strip()
+            #Comment
+            if stripped_line[0] == "#":
+                logger.debug("Skipping comment: " + lines[i])
+            #Include
+            elif stripped_line.find("include") == 0:
+                logger.debug("Processing include line: " + stripped_line)
+                self.addInclude(stripped_line.replace("include", ""))
+            elif stripped_line.find("=") > -1:
+                logger.debug("Processing variable line: " + stripped_line)
+                var = stripped_line.partition("=")
+                self.addVar(var[0], var[2])
+            elif stripped_line.find(":") > -1:
+                logger.debug("Processing target line: " + stripped_line)
+                target_line = stripped_line.partition(":")
+                recipe_lines = list()
+                i += 1
+                while len(lines) > i:
+                    if not lines[i].strip() == "\n":
+                        logger.debug("Processing recipe line: " + lines[i])
+                        recipe_lines.append(lines[i].strip("\n"))
+                        i += 1
+
+                self.addTarget(target_line[0], target_line[2], recipe_lines)
+            else:
+                logger.warning("Cannot parse: " + lines[i])
+            i += 1
+
     def read(self):
         logger.debug("Reading Makefile: " + self.filename)
-
         try:
             with file(self.filename, "r") as makefile:
                 lines = makefile.readlines()
-
-            i = 0
-            while len(lines) > i:
-                stripped_line = lines[i].strip()
-                #Comment
-                if stripped_line[0] == "#":
-                    logger.debug("Skipping comment: " + lines[i])
-                #Include
-                elif stripped_line.find("include") == 0:
-                    logger.debug("Processing include line: " + stripped_line)
-                    self.addInclude(stripped_line.replace("include", ""))
-                elif stripped_line.find("=") > -1:
-                    logger.debug("Processing variable line: " + stripped_line)
-                    var = stripped_line.partition("=")
-                    self.addVar(var[0], var[2])
-                elif stripped_line.find(":") > -1:
-                    logger.debug("Processing target line: " + stripped_line)
-                    target_line = stripped_line.partition(":")
-                    recipe_lines = list()
-                    i += 1
-                    while len(lines) > i:
-                        if not lines[i].strip() == "\n":
-                            logger.debug("Processing recipe line: " + lines[i])
-                            recipe_lines.append(lines[i].strip("\n"))
-                            i += 1
-
-                    self.addTarget(target_line[0], target_line[2], recipe_lines)
-                else:
-                    logger.warning("Cannot parse: " + lines[i])
-
-                i += 1
+            self.parse(lines)
         except IOError as e:
             logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
             raise
