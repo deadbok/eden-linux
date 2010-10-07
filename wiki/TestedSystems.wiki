@@ -1,0 +1,22 @@
+#summary Tested systems.
+
+= Introduction =
+
+This is a list of tested host systems and the targets they have been tested with.
+
+
+= Details =
+
+|| Architecture || x86 || x86_64 ||
+|| x86 || OK || OK ||
+|| x86_64 || U || U ||
+
+==Legend==
+_Across is host type._
+_Downwards is target type._
+
+{{{
+OK = Tested and works
+U = Untested
+X = Tested and not working
+}}}
