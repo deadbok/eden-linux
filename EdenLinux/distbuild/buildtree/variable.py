@@ -33,7 +33,7 @@ class Variable(Base):
         strip_spaces = True
         while len(tokens):
             token = tokens.pop()
-            while strip_spaces and token == " ":
+            while strip_spaces and token == " " and len(tokens) > 0:
                 token = tokens.pop()
             #Check for comments
             if token == "#":

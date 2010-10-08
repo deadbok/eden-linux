@@ -34,7 +34,7 @@ class Section(Base):
             name = ""
             while len(tokens) > 0:
                 token = tokens.pop()
-                while token == " ":
+                while token == " " and len(tokens) > 0:
                     token = tokens.pop()
                 logger.debug("Consuming token: " + token)
                 node = None

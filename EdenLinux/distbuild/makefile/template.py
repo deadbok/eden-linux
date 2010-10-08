@@ -5,19 +5,19 @@ Created on Sep 4, 2010
 '''
 from logger import logger
 from makefile import Makefile
+from makefile import MakefileError
 
 class Template(Makefile):
     """
     Class to handle Makefile templates
     """
-    def __init__(self, filename):
+    def __init__(self, filename = ""):
         """
         Constructor, read in template
         """
         logger.debug("Entering Template.__init__")
         Makefile.__init__(self, filename)
-        self.read()
-
+#        self.read()
 
     def parseVar(self, line, pos):
         i = pos
@@ -34,7 +34,6 @@ class Template(Makefile):
                     done = True
 
         return(ret, i)
-
 
     def expandVars(self, line, vars):
         """Replace variable names, with their values"""
@@ -64,7 +63,14 @@ class Template(Makefile):
         logger.debug("Expanded string: " + ret)
         return(ret)
 
-    def combine(self, vars, var_prefix = ""):
+    def combine(self, vars, var_prefix = "", lines = None):
+        if not lines == None:
+            self.parse(lines)
+        elif not self.filename == "":
+            self.read(self.filename)
+        else:
+            raise MakefileError("No file of data to combine")
+        
         target = self.toMakeLine(self.expandVars(self.targets[0].target, vars), var_prefix)
         prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, vars), var_prefix)
         recipe = list()

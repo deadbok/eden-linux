@@ -88,7 +88,7 @@ def main():
         makefile_builder = builder.Builder(tree)
         makefile_builder.build()
     except SyntaxError as e:
-        logger.exception("Syntax error in: " + e.filename)
+        logger.exception("Syntax error: " + str(e))
     except Exception as e:
         logger.exception("Error creating Makefiles: " + str(e))
 

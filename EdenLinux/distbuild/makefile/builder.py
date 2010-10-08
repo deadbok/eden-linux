@@ -111,8 +111,8 @@ class Builder(object):
 
         #Open the template makefile
         template = Template(self.tree.getVar("template_dir",
-                                                     self.globals)
-                                    + "/download.mk")
+                                             self.globals)
+                            + "/download.mk")
 
         #Get all urls and targets
         _vars = dict()
@@ -293,19 +293,23 @@ class Builder(object):
                                 #Add target variables for local targets, to local variables
                                 _vars.update(entry_targets)
                                 try:
-                                    #Get template filename 
-                                    template_filename = func.GetLocalVar("func_makefile")
-                                    #If the template filename is empty supply a default template
-                                    if template_filename == None:
-                                        template_filename = (sections[1:len(sections)] + "-"
-                                                             + func.name + ".mk")
+                                    if not func.inline:
+                                        #Get template filename 
+                                        template_filename = func.GetLocalVar("func_makefile")
+                                        #If the template filename is empty supply a default template
+                                        if template_filename == None:
+                                            template_filename = (sections[1:len(sections)] + "-"
+                                                                 + func.name + ".mk")
+                                        else:
+                                            template_filename = template_filename.GetDeref()
+                                        #Load the template
+                                        template = Template(node.GetGlobalVar("template_dir").GetDeref()
+                                                             + "/" + template_filename)
+                                        #Create rule from template
+                                        rule = template.combine(_vars, self.expandName(node))
                                     else:
-                                        template_filename = template_filename.GetDeref()
-                                    #Load the template
-                                    template = Template(node.GetGlobalVar("template_dir").GetDeref()
-                                                         + "/" + template_filename)
-                                    #Create rule from template
-                                    rule = template.combine(_vars, self.expandName(node))
+                                        template = Template()
+                                        rule = template.combine(_vars, self.expandName(node), func.code)
                                 except IOError:
                                     raise BuilderError("Error during file access cannot continue")
                                 except MakefileSyntaxError as e:

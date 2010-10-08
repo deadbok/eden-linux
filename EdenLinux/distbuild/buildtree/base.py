@@ -49,7 +49,7 @@ class Base(object):
         token = ""
         tokens = list()
         #Run through all characters in the line
-        for ch in line.strip():
+        for ch in line:
             #if this is an accepted character
             if ch in (string.ascii_letters + string.digits + "-" + "_"):
                 #Add to token
