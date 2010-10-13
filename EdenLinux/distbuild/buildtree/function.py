@@ -7,7 +7,6 @@ from base import Base
 from variable import Variable
 from comment import Comment
 from logger import logger
-from ordereddict import OrderedDict
 
 class Function(Base):
     """

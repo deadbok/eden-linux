@@ -6,7 +6,6 @@ Created on Sep 16, 2010
 import os
 from base import Base
 from logger import logger
-from ordereddict import OrderedDict
 
 class Data(Base):
     """

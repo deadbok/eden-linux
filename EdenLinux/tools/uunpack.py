@@ -8,7 +8,7 @@ Quickly hacked tool to find the archive type of a file from the extension, and u
 '''
 import optparse
 import os.path
-import os
+#import os
 
 #Dict of decompressors, and their calling convention
 decompressors = { ".bz2": ["tar", "$verbose -v", "-xjf", "$packed_filename", "-C", "$destination"],

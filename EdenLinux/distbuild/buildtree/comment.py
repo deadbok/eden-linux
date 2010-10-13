@@ -6,7 +6,6 @@ Created on Sep 16, 2010
 import hashlib
 from base import Base
 from data import Data
-from ordereddict import OrderedDict
 from logger import logger
 
 class Comment(Base):

@@ -7,7 +7,6 @@ import os
 from base import Base
 from comment import Comment
 from logger import logger
-from ordereddict import OrderedDict
 
 class Reference(Base):
     """A variable reference in the .conf file"""

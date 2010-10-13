@@ -9,7 +9,6 @@ from logger import set_console_loglevel
 from makefile import builder
 import buildtree.base
 import buildtree.section
-import buildtree.variable
 
 tree = buildtree.section.Section("global")
 

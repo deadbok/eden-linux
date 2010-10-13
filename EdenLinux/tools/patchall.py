@@ -8,7 +8,7 @@ Quickly hacked tool to apply all patches in a directory to a source tree
 '''
 import optparse
 import os.path
-import os
+#import os
 
 def main():
     """Main functions"""

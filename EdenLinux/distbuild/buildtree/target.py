@@ -5,10 +5,7 @@ Created on Sep 23, 2010
 """
 from base import Base
 from comment import Comment
-from data import Data
-from reference import Reference
 from logger import logger
-from ordereddict import OrderedDict
 
 class Target(Base):
     """

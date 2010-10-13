@@ -140,10 +140,10 @@ class Base(object):
 
     def GetGlobalVar(self, name):
         from variable import Variable
-        from reference import Reference
+#        from reference import Reference
         for node in self.Root().IterTree():
             if isinstance(node, Variable):
-                sections = ""
+#                sections = ""
                 node_name = ""
                 section_names = node.GetPath()
                 section_names.reverse()
