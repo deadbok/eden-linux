@@ -21,9 +21,7 @@ class BuilderError(Exception):
 class Builder(object):
     """Class that builds a Makefile based build system from the buildtree"""
     def __init__(self, tree):
-        """
-        Constructor
-        """
+        """Constructor"""
         logger.debug("Entering Builder.__init__")
         self.tree = tree
         #Create a node with the current work directory
@@ -38,6 +36,7 @@ class Builder(object):
             os.makedirs(directory)
 
     def tree2path(self, path):
+        """Convert a path in the tree, to a path on the file system"""
         if path == None:
             return None
         rev_path = path
@@ -72,7 +71,6 @@ class Builder(object):
                     + "/directories.mk")
         logger.info('Creating: ' + filename)
         directories_makefile = Makefile(filename)
-
         #Open the template makefile
         template = Template(self.tree.GetGlobalVar("template_dir").GetDeref()
                                                      + "/mkdir.mk")
@@ -82,13 +80,11 @@ class Builder(object):
                 if node.name.find("_dir") > -1:
                     rule = template.combine({"target": "$(" + node.name.upper() + ")"})
                     directories_makefile.addTarget(rule[0], rule[1], rule[2])
-
         directories_makefile.write()
 
     def download_mk(self):
         """Create a makefile with rules to download all needed files."""
         download_dir = self.tree.getVar("download_dir", self.globals)
-
         logger.info('Creating: ' + download_dir + "/download.mk")
         #Create download dir
         self.create_dir(download_dir)
@@ -105,12 +101,10 @@ class Builder(object):
         for target in urls:
             all_targets += " $(DOWNLOAD_DIR)/" + os.path.basename(target)
         download.addTarget("download-all", all_targets)
-
         #Open the template makefile
         template = Template(self.tree.getVar("template_dir",
                                              self.globals)
                             + "/download.mk")
-
         #Get all urls and targets
         _vars = dict()
         for url in urls:
@@ -118,7 +112,6 @@ class Builder(object):
                                                 + os.path.basename(url))})
             rule = template.combine(_vars)
             download.addTarget(rule[0], rule[1], rule[2])
-
         download.write()
 
     def makefile(self):
@@ -145,6 +138,7 @@ class Builder(object):
         makefile.write()
 
     def expand_name(self, node = None, name = ""):
+        """Add namespace to the variable, to get the global name"""
         if node == None:
             node = self.tree
         sections = ""
@@ -159,6 +153,8 @@ class Builder(object):
         return(ret)
 
     def get_section_include_files(self, node = None):
+        """Get the include files, needed to full fill the dependencies of the section"""
+        logger.debug("Getting include files from dependencies")
         if node == None:
             node = self
         ret = list()
@@ -175,6 +171,11 @@ class Builder(object):
                 ret.append(node.GetGlobalVar("root").GetDeref() + "/"
                            + node.GetGlobalVar("build_dir").GetDeref() + "/"
                            + sections + "*.mk")
+                logger.debug("    Adding: " + node.GetGlobalVar("root").GetDeref() + "/"
+                           + node.GetGlobalVar("build_dir").GetDeref() + "/"
+                           + sections + "*.mk")
+                logger.debug("    For: " + target.name)
+        #Get dependencies for global variables
         
         return(ret)
 

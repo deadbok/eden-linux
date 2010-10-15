@@ -179,28 +179,28 @@ class Base(object):
     def IterNodes(self):
         """Iterate through first level of sub-nodes"""
         for node in self.nodes.itervalues():
-            if len(node.name.strip(string.printable)) > 0:
-                logger.debug("Yielding unspeakable node" + " type " + str(type(node)))
-            else:
-                logger.debug("Yielding: " + node.name + " type " + str(type(node)))
+#            if len(node.name.strip(string.printable)) > 0:
+#                logger.debug("Yielding unspeakable node" + " type " + str(type(node)))
+#            else:
+#                logger.debug("Yielding: " + node.name + " type " + str(type(node)))
             yield node
 
     def IterTree(self, root = None):
         """Iterate through all the nodes in the tree"""
         if root == None:
             root = self
-        if len(root.name.strip(string.printable)) > 0:
-            logger.debug("Yielding unspeakable node" + " type " + str(type(root)))
-        else:
-            logger.debug("Yielding: " + root.name + " type " + str(type(root)))
+#        if len(root.name.strip(string.printable)) > 0:
+#            logger.debug("Yielding unspeakable node" + " type " + str(type(root)))
+#        else:
+#            logger.debug("Yielding: " + root.name + " type " + str(type(root)))
         yield root
         last = root
         for node in root.IterTree():
             for child in node.IterNodes():
-                if len(child.name.strip(string.printable)) > 0:
-                    logger.debug("Yielding unspeakable node" + " type " + str(type(child)))
-                else:
-                    logger.debug("Yielding: " + child.name + " type " + str(type(child)))
+#                if len(child.name.strip(string.printable)) > 0:
+#                    logger.debug("Yielding unspeakable node" + " type " + str(type(child)))
+#                else:
+#                    logger.debug("Yielding: " + child.name + " type " + str(type(child)))
                 yield child
                 last = child
             if last == node:
