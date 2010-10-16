@@ -1,0 +1,6 @@
+#summary Log of what I am working on at the moment.
+
+=Log entries=
+16 Oct. 2010
+----
+* The makefile.builder.Builder class is getting an overhaul. I am splitting the job of writing make files in to different classes, and keeping the Builder class as base class.
