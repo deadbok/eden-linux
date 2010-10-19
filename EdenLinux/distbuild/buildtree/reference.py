@@ -66,21 +66,24 @@ class Reference(Base):
             if self.local:
                 node = self.parent.GetLocalVar(self.reference)
                 if isinstance(node, Variable):
-                    self.Add(node)
+                    self.Add(node, False)
                 else:
-                    logger.debug("Cannot find local variable: " + self.reference)
+                    logger.debug("Cannot find local variable: "
+                                 + self.reference)
                     raise SyntaxError("Cannot find local variable: "
                                       + self.reference)
             else:
                 node = self.parent.GetGlobalVar(self.reference)
                 if isinstance(node, Variable):
-                    self.Add(node)
+                    self.Add(node, False)
                 else:
-                    logger.debug("Cannot find global variable: " + self.reference)
+                    logger.debug("Cannot find global variable: "
+                                 + self.reference)
                     raise SyntaxError("Cannot find global variable: "
-                                      + self.reference)
+                                      + self.reference + str(self.GetPath()))
 
     def Get(self):
+        """Get the referenced variable"""
         if not self.reference in self.nodes:
             self.Link()
             if not self.reference in self.nodes:

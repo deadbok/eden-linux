@@ -113,41 +113,67 @@ class Function(Base):
                             node.Set(target)
         #Consume code, if it is an inline function
         if len(lines) > 0:
+            #Skip empty lines
             tokens = lines.pop()
             while (len(tokens) == 0) and (len(lines) > 0):
-                tokens = lines.pop() 
+                tokens = lines.pop()
+            #Check for function start 
             if tokens[0] == "{":
+                #Start counting the braces
+                braces = 1
                 tabs = 0
+                #Count the tabs before the {
                 for token in tokens:
                     if token == "\t":
                         tabs += 1
+                #Add one since the code is indented one more tab
                 tabs += 1
-                logger.debug("Reading inline code:")
-                #If inline is false, a file has all ready been loaded
+                logger.debug("Reading in line code:")
+                #If in line is false, a file has all ready been loaded
                 if not self.inline:
+                    #Get section path
                     error_path = ""
                     path = self.GetPath()
-#                    path.reverse()
                     while len(path) > 1:
                         error_path += path.pop() + "."
                     error_path += str(self)
-                    raise SyntaxError("Both template file and inline code given for "
+                    #Raise syntax error
+                    raise SyntaxError("Both template file and in line code given for "
                                       + self.name + " in section " + error_path)
+                #This is in fact an in line function
                 self.inline = True
+                #Next line
                 tokens = lines.pop()
                 logger.debug("    " + str(tokens))
                 line = 0
+                #Pop the tabs
                 for i in range(tabs):
-                    tokens.pop() 
+                    tokens.pop()
+                #Allocate the first line
                 self.code.append("")
-                while not (tokens[0] == "}") and (len(lines) > 0):
+                #While there are more lines, and an } (function end) is not found
+                while (braces > 0) and (len(lines) > 0):
+                    #While there are still more tokens in the current line
                     while len(tokens) > 0:
-                        self.code[line] += tokens.pop()
+                        #Add the token to the line
+                        token = tokens.pop()
+                        #Count braces
+                        if token == "{":
+                            braces += 1
+                        elif token == "}":
+                            braces -= 1
+                        if braces > 0:
+                            self.code[line] += token
+                    #Next line
                     tokens = lines.pop()
                     line += 1
+                    #Skip tabs
                     for i in range(tabs):
                         if not tokens[0] == "}":
-                            tokens.pop() 
+                            tokens.pop()
+                        else:
+                            braces -= 1
+                    #Allocate new line
                     self.code.append("")
                     logger.debug("    " + str(tokens))
                 while len(tokens) > 0:

@@ -1,0 +1,10 @@
+2010-10-19  oblivion  <martin.groenholdt@gmail.com>
+
+	* distbuild/buildtree/__init__.py: Deleted TODO entry
+	* conf/packages/ncurses.conf.new: Removed.
+	* distbuild/build.py: New file. Class to write build.mk
+	* distbuild/directories.py: New file. Class to write directories.mk
+	* distbuild/globalvar.py: New file. Class to write global.mk
+	* distbuild/sections.py: New file. Class to write section .mk files 
+	* Makefile: Added rule to build the the makefiles with ditbuild
+	

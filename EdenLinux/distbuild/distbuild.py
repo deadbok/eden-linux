@@ -3,6 +3,10 @@ import optparse
 import os.path
 import logging
 import string
+import globalvar
+import build
+import directories
+import sections
 from logger import logger
 from logger import set_file_loglevel
 from logger import set_console_loglevel
@@ -84,10 +88,20 @@ def main():
 
         logger.info("Build tree:")
         print_tree(tree)
-        makefile_builder = builder.Builder(tree)
-        makefile_builder.build()
+        logger.info("Creating Makefiles...")
+        #Create a node with the current work directory
+        node = tree.Add(buildtree.variable.Variable("root"))
+        node.Set(os.getcwd())
+        build_makefile = build.build(tree)
+        build_makefile.write()
+        global_vars_makefile = globalvar.globalvar(tree)
+        global_vars_makefile.write()
+        directories_makefile = directories.directories(tree)
+        directories_makefile.write()
+        sections_makefile = sections.sections(tree)
+        sections_makefile.write()
     except SyntaxError as e:
-        logger.exception("Syntax error: " + str(e))
+        logger.exception("Syntax error: " + str(e) + " in: " + e.filename)
     except Exception as e:
         logger.exception("Error creating Makefiles: " + str(e))
 

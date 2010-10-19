@@ -98,7 +98,7 @@ class Base(object):
             #Try the parent of this node
             return(Base.Root(node.parent))
 
-    def Add(self, node):
+    def Add(self, node, adjust_root = True):
         from data import Data
         from reference import Reference
         if isinstance(node, Base):
@@ -112,8 +112,9 @@ class Base(object):
                 logger.debug("Adding node: " + node.name + " to: " + self.name)
             logger.debug("Node type: " + str(type(node)))
             logger.debug("Parent type: " + str(type(self)))
-            logger.debug("Setting parent to: " + str(self))
-            node.parent = self
+            if adjust_root:
+                logger.debug("Setting parent to: " + str(self))
+                node.parent = self
             self.nodes[node.name] = node
         else:
             logger.warning('Wrong type "' + str(type(node)) + '" of node, cannot add')
@@ -140,19 +141,21 @@ class Base(object):
 
     def GetGlobalVar(self, name):
         from variable import Variable
-#        from reference import Reference
-        for node in self.Root().IterTree():
+        from reference import Reference
+        root = self.Root()
+        for node in root.IterTree():
             if isinstance(node, Variable):
-#                sections = ""
-                node_name = ""
-                section_names = node.GetPath()
-                section_names.reverse()
-                section_names.pop()
-                node_name += node.name
-                for section_name in section_names:
-                    node_name += "_" + section_name
-                if name == node_name:
-                    return(node)
+                if not isinstance(node.parent, Reference):
+    #                sections = ""
+                    node_name = ""
+                    section_names = node.GetPath()
+                    section_names.reverse()
+                    section_names.pop()
+                    node_name += node.name
+                    for section_name in section_names:
+                        node_name += "_" + section_name
+                    if name == node_name:
+                        return(node)
 #        if name in self.Root().nodes:
 #            node = self.Root().nodes[name]
 #            return(node)
@@ -179,28 +182,16 @@ class Base(object):
     def IterNodes(self):
         """Iterate through first level of sub-nodes"""
         for node in self.nodes.itervalues():
-#            if len(node.name.strip(string.printable)) > 0:
-#                logger.debug("Yielding unspeakable node" + " type " + str(type(node)))
-#            else:
-#                logger.debug("Yielding: " + node.name + " type " + str(type(node)))
             yield node
 
     def IterTree(self, root = None):
         """Iterate through all the nodes in the tree"""
         if root == None:
             root = self
-#        if len(root.name.strip(string.printable)) > 0:
-#            logger.debug("Yielding unspeakable node" + " type " + str(type(root)))
-#        else:
-#            logger.debug("Yielding: " + root.name + " type " + str(type(root)))
         yield root
         last = root
         for node in root.IterTree():
             for child in node.IterNodes():
-#                if len(child.name.strip(string.printable)) > 0:
-#                    logger.debug("Yielding unspeakable node" + " type " + str(type(child)))
-#                else:
-#                    logger.debug("Yielding: " + child.name + " type " + str(type(child)))
                 yield child
                 last = child
             if last == node:

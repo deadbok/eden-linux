@@ -1,2 +1,2 @@
-$target:
-	$mkdir $target
+${target}:
+	$mkdir ${target}

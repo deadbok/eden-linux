@@ -1,14 +1,16 @@
-include build/global.mk
-include build/*.mk
-include build/target/*.mk
-include build/packages/*.mk
+-include build/global.mk
+-include build/directories.mk
+-include build/target/*.mk
+-include build/packages/*.mk
+-include build/build.mk
 
-
-all:$(INSTALL_PACKAGES)
-
-.PHONY: source-clean $(TOOLCHAIN_CLEAN_TARGETS)
-source-clean:$(TOOLCHAIN_CLEAN_TARGETS)
-
-.PHONY: source-distclean $(TOOLCHAIN_DISTCLEAN_TARGETS)
-source-distclean:$(TOOLCHAIN_DISTCLEAN_TARGETS)
-
+#This is only the first target if the above files whre not found
+ifndef BUILD_DIR
+all:
+ifdef DEBUG
+	python distbuild/distbuild.py -l0 conf
+else
+	python distbuild/distbuild.py conf
+endif
+	$(MAKE) all
+endif

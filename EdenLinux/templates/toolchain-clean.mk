@@ -1,2 +1,2 @@
-$target:
-	-$make -C $current_package_dir clean
+${target}:
+	-$make -C ${current_package_dir} clean

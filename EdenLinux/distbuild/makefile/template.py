@@ -35,27 +35,28 @@ class Template(Makefile):
 
         return(ret, i)
 
-    def expandVars(self, line, vars):
+    def expandVars(self, line, _vars):
         """Replace variable names, with their values"""
         logger.debug("Expanding variables from globals...")
-        i = line.find("$")
+        i = line.find("${")
         var_name = ""
+        ret = ""
         logger.debug("Input string: " + line)
 
         if i > -1:
             ret = line[0:i]
-            var_name, i = self.parseVar(line, i)
-
+            var_name, i = self.parseVar(line, i + 1)
+            i += 1
             logger.debug("Found variable: " + var_name.strip())
-            if var_name.strip() in vars:
-                value = vars[var_name.strip()]
+            if var_name.strip() in _vars:
+                value = _vars[var_name.strip()].strip()
                 logger.debug("Value: " + value)
-                ret += self.expandVars(value, vars)
+                ret += self.expandVars(value, _vars)
             else:
                 logger.debug("Not in given dictionary")
-                ret += "$" + var_name.strip()
+                ret += "${" + var_name.strip() + "}"
 
-            ret += self.expandVars(line[i:len(line)], vars)
+            ret += self.expandVars(line[i:len(line)], _vars)
         else:
             logger.debug("No variables")
             ret = line
@@ -63,19 +64,21 @@ class Template(Makefile):
         logger.debug("Expanded string: " + ret)
         return(ret)
 
-    def combine(self, vars, var_prefix = "", lines = None):
+    def combine(self, _vars, var_prefix = "", lines = None):
         if not lines == None:
             self.parse(lines)
         elif not self.filename == "":
             self.read(self.filename)
         else:
-            raise MakefileError("No file of data to combine")
-        
-        target = self.toMakeLine(self.expandVars(self.targets[0].target, vars), var_prefix)
-        prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, vars), var_prefix)
+            raise MakefileError("No file or data to combine")
+
+        target = self.toMakeLine(self.expandVars(self.targets[0].target, _vars),
+                                 var_prefix)
+        prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, _vars), var_prefix)
         recipe = list()
         for line in self.targets[0].recipe:
-            recipe.append(self.toMakeLine(self.expandVars(line, vars), var_prefix))
+            recipe.append(self.toMakeLine(self.expandVars(line, _vars),
+                                          var_prefix))
 
         return(target, prerequisites, recipe)
 

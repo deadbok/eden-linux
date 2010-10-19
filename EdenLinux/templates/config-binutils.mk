@@ -1,5 +1,5 @@
-$target: $dependencies $toolchain_build_dir/binutils-${version}/configure $toolchain_build_dir/${dir}
-	(cd $current_package_dir; \
-		LDFLAGS=$(LDFLAGS) $root/$toolchain_build_dir/binutils-${version}/configure $config_opts \
+${target}: ${dependencies} $build_dir_toolchain/binutils-${version}/configure $build_dir_toolchain/${dir}
+	(cd ${current_package_dir}; \
+		LDFLAGS=$(LDFLAGS) $root/$build_dir_toolchain/binutils-${version}/configure ${config_opts} \
 	);
-	$touch $target
+	$touch ${target}

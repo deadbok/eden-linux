@@ -73,6 +73,8 @@ by inclosing them in {} characters like this::
 ===========
 build tasks
 ===========
+A build task translates to a target in the final makefile. The syntax, is mostly like a C
+function.
 
 unpack($current_package_dir/configure)
 config(config-gmp.mk, config_opts = --prefix=$root/$toolchain_root_dir --enable-shared --with-gmp=$root/$toolchain_root_dir, $current_package_dir/Makefile)

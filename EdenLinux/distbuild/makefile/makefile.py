@@ -16,7 +16,7 @@ class MakefileSyntaxError(SyntaxError):
 
     def __str__(self):
         return(self.msg)
-    
+
 class MakefileError(StandardError):
     def __init__(self, msg = ""):
         SyntaxError()
@@ -173,10 +173,12 @@ class Makefile(object):
                             logger.debug("Processing recipe line: " + lines[i])
                             recipe_lines.append(lines[i].strip("\n"))
                             i += 1
-    
+
                     self.addTarget(target_line[0], target_line[2], recipe_lines)
                 else:
                     logger.warning("Cannot parse: " + lines[i])
+                i += 1
+            else:
                 i += 1
 
     def read(self, filename):

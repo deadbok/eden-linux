@@ -46,8 +46,15 @@ class Variable(Base):
                     node = self.Add(Data())
                     node.value = token
                 else:
-                    node = self.Add(Reference(self))
-                    (tokens, lines) = node.Consume(tokens, lines)
+                    if "(" in tokens:
+                        node = self.Add(Data())
+                        node.value = "$"
+                        while (len(tokens) > 0) and (token != ")"):
+                            token = tokens.pop()
+                            node.value += token
+                    else:
+                        node = self.Add(Reference(self))
+                        (tokens, lines) = node.Consume(tokens, lines)
             strip_spaces = False
         return(tokens, lines)
 
