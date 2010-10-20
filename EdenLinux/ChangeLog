@@ -1,3 +1,7 @@
+2010-10-20  oblivion  <martin.groenholdt@gmail.com>
+
+	* conf/packages/fsh/Makefile: Added rule to create fsh directories
+
 2010-10-19  oblivion  <martin.groenholdt@gmail.com>
 
 	* distbuild/buildtree/__init__.py: Deleted TODO entry

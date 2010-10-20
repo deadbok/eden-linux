@@ -14,3 +14,8 @@ else
 endif
 	$(MAKE) all
 endif
+
+.PHONY: distclean
+distclean:
+	$(MAKE) -C distbuild/docs clean
+	$(RM) -R $(BUILD_DIR)
