@@ -2,7 +2,7 @@
 
 =Log entries=
 04 nov. 2010
----
+----
 * Include file resolving works, but somthing broke the make files, when rebuilding. I'm debugging this issue, and will commit, when everything works, as expected.
 
 17 Oct. 2010
