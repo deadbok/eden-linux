@@ -3,7 +3,6 @@ Created on Sep 16, 2010
 
 @author: oblivion
 """
-import os
 from base import Base
 from logger import logger
 
@@ -16,7 +15,8 @@ class Data(Base):
         Constructor
         """
         logger.debug("Constructing Data object")
-        Base.__init__(self, "data" + os.urandom(6))
+        Base.__init__(self, "data")
+        self.name += str(self.id())
 
     def __str__(self):
         return(self.value)

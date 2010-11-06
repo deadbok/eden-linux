@@ -53,6 +53,8 @@ def main():
 
         print("Command line: " + cmd)
         os.system(cmd)
+        command = "touch " + destination + "/.unpacked"
+        os.system(command)
     else:
         print("Unknown extension: " + extension[1])
 

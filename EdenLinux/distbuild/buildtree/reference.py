@@ -3,7 +3,7 @@ Created on Sep 15, 2010
 
 @author: oblivion
 """
-import os
+#import os
 from base import Base
 from comment import Comment
 from logger import logger
@@ -13,12 +13,15 @@ class Reference(Base):
     def __init__(self, parent):
         """Constructor"""
         logger.debug("Constructing Reference object")
-        Base.__init__(self, "ref" + os.urandom(6))
+        Base.__init__(self, "ref")
+        self.name += str(self.id())
         self.parent = parent
         self.local = True
         self.reference = ""
+        self.varname = ""
 
     def __str__(self):
+        """Return string representation"""
         ret = "$"
         if self.local:
             ret += "{"
@@ -29,7 +32,6 @@ class Reference(Base):
 
     def Consume(self, tokens, lines):
         """Consume reference"""
-
         #strip leading spaces
         strip_spaces = True
         done = False
@@ -42,50 +44,64 @@ class Reference(Base):
                     node = self.Add(Comment(""))
                     (tokens, lines) = node.Consume(tokens, lines)
                     done = True
-                #Local variable reference
+                #variable reference
                 elif token == "{":
                     self.local = True
-                    self.reference = tokens.pop()
-                    #Pop the ")"
-                    tokens.pop()
-                    logger.debug("Local variable reference: " + self.reference)
-                    done = True
-                #Global variable reference
-                else:
-                    self.local = False
-                    self.reference = token
-                    logger.debug("Global variable reference: " + self.reference)
+                    try:
+                        while not token == "}":
+                            token = tokens.pop()
+                            if not token == "}":
+                                self.reference += token
+                    except IndexError:
+                        raise SyntaxError("Missing } in reference; "
+                                          + self.reference)
+                    logger.debug("Local variable reference: "
+                                 + self.reference)
                     done = True
                 strip_spaces = False
+                if self.reference.find(".") > -1:
+                    self.local = False
         return(tokens, lines)
 
     def Link(self):
         logger.debug("Linking: " + str(self))
-        if self.reference.islower():
-            from variable import Variable
-            if self.local:
-                node = self.parent.GetLocalVar(self.reference)
-                if isinstance(node, Variable):
-                    self.Add(node, False)
-                else:
-                    logger.debug("Cannot find local variable: "
-                                 + self.reference)
-                    raise SyntaxError("Cannot find local variable: "
-                                      + self.reference)
-            else:
-                node = self.parent.GetGlobalVar(self.reference)
-                if isinstance(node, Variable):
-                    self.Add(node, False)
-                else:
-                    logger.debug("Cannot find global variable: "
-                                 + self.reference)
-                    raise SyntaxError("Cannot find global variable: "
-                                      + self.reference + str(self.GetPath()))
+#        from function import Function
+#        if self.reference.find(".") > -1:
+#            target = self.parent.GetLocalVar(self.reference)
+#        else:       
+#            target = self.parent.GetGlobalVar(self.reference)
+#            if target == None:
+#                for node in self.Root().IterTree():
+#                    if node.GetGlobalName() == self.reference:
+#                        if isinstance(node.parent, Function):
+#                            target = node.parent
+#                        else:
+#                            target = node
+#            if not target == None:
+#                self.Add(target, False)
+#                self.varname = target.name
+#            else:
+#                logger.debug("Cannot find node: "
+#                             + self.reference)
+#                raise SyntaxError("Cannot find node "
+#                                  + self.reference)
 
     def Get(self):
-        """Get the referenced variable"""
-        if not self.reference in self.nodes:
-            self.Link()
-            if not self.reference in self.nodes:
-                return(None)
-        return(self.nodes[self.reference].Get())
+        """Get the referenced variable value"""
+        if self.reference.find(".") > -1:
+            self.local = False
+        if self.local:
+            return(self.GetLocalVar(self.reference).Get())
+        else:
+            return(self.GetGlobalVar(self.reference).Get())
+
+    def GetRef(self):
+        """Get the referenced object"""
+        if self.reference.find(".") > -1:
+            self.local = False
+        if self.local:
+            return(self.GetLocalVar(self.reference))
+        else:
+            return(self.GetGlobalVar(self.reference))
+
+

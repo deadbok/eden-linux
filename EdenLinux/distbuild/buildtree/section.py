@@ -59,11 +59,9 @@ class Section(Base):
                                 if type(node) is Section:
                                     logger.debug("Section exists")
                                 else:
-                                    logger.warning("Overwriting node:")
+                                    logger.warning("Overwriting node: " + node.name)
                                     logger.warning("Node type: " + str(type(node)) + ". Value: " + node.value)
                                     node = self.Add(Section(name))
-
-                    #if this is a variable declaration
                     elif token == "=":
                         logger.debug("Found variable: " + name)
                         node = self.Add(Variable(name))
@@ -102,3 +100,17 @@ class Section(Base):
                 if node.name == name:
                     return(node)
         return(None)
+
+    def IterSection(self, root = None):
+        """Iterate through all the nodes in the tree"""
+        if root == None:
+            root = self
+        yield root
+        last = root
+        for node in root.IterTree():
+            if not (isinstance(node, Section) or isinstance(node, Reference)):
+                for child in node.IterNodes():
+                    yield child
+                    last = child
+                if last == node:
+                    return

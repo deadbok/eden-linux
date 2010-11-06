@@ -3,25 +3,23 @@ Created on Aug 29, 2010
 
 @author: oblivion
 """
+from string import ascii_letters
 from base import Base
 from variable import Variable
 from comment import Comment
 from logger import logger
 
 class Function(Base):
-    """
-    A variable in the .conf file
-    """
+    """A function in the .conf file"""
     def __init__(self, name = ""):
-        """
-        Constructor
-        """
+        """Constructor"""
         logger.debug("Constructing Function object")
         Base.__init__(self, name)
         self.inline = True
         self.code = list()
 
     def __str__(self):
+        """Return a string representation"""
         ret = self.name + "("
         items = len(self.nodes)
         if len(self.nodes) > 0:
@@ -32,6 +30,19 @@ class Function(Base):
                     items -= 1
         ret += ")"
         return(ret)
+
+    def str_contains(self, _str, _set, _all = True):
+        if _all:
+            for ch in _set:
+                if ch not in _str:
+                    return(0)
+            return(1)
+        else:
+            for ch in _set:
+                if ch not in _str:
+                    return(1)
+            return(0)
+        return(0)
 
     def Consume(self, tokens, lines):
         """Consume parameters"""
@@ -147,7 +158,7 @@ class Function(Base):
                 logger.debug("    " + str(tokens))
                 line = 0
                 #Pop the tabs
-                for i in range(tabs):
+                for dummy in range(tabs):
                     tokens.pop()
                 #Allocate the first line
                 self.code.append("")
@@ -165,14 +176,17 @@ class Function(Base):
                         if braces > 0:
                             self.code[line] += token
                     #Next line
-                    tokens = lines.pop()
+                    while len(tokens) == 0:
+                        tokens = lines.pop()
                     line += 1
                     #Skip tabs
-                    for i in range(tabs):
-                        if not tokens[0] == "}":
-                            tokens.pop()
-                        else:
-                            braces -= 1
+                    token = ""
+                    for dummy in range(tabs):
+                        if not len(tokens) == 0:
+                            token = tokens.pop()
+                            if token == "}":
+                                braces -= 1
+                                tokens = list()
                     #Allocate new line
                     self.code.append("")
                     logger.debug("    " + str(tokens))
@@ -183,5 +197,8 @@ class Function(Base):
             else:
                 lines.append(tokens)
                 self.inline = False
-
         return(tokens, lines)
+
+    def Get(self):
+        """Get the name of the variable, holding the target, of this function"""
+        return(self.GetGlobalName())

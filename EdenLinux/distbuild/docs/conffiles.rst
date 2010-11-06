@@ -81,3 +81,12 @@ config(config-gmp.mk, config_opts = --prefix=$root/$toolchain_root_dir --enable-
 build($current_package_dir/libmpfr.la)
 install($toolchain_root_dir/lib/libmpfr.a)
 
+Directory creation
+------------------
+To have a directory created, if it does not exist, append the file ".dir" to the
+directory::
+
+	build(program, Makefile ${build_dir}/.dir)
+	
+In this case ${build_dir} is created if missing.
+

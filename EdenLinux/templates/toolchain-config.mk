@@ -1,4 +1,4 @@
-${target}: ${current_package_dir}/configure ${dependencies}
+${target}: ${dependencies}
 	(cd ${current_package_dir}; \
 		LDFLAGS=$(LDFLAGS) ./configure ${config_opts} \
 	);

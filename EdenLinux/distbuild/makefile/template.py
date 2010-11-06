@@ -6,15 +6,14 @@ Created on Sep 4, 2010
 from logger import logger
 from makefile import Makefile
 from makefile import MakefileError
+import target
 
 class Template(Makefile):
     """
     Class to handle Makefile templates
     """
     def __init__(self, filename = ""):
-        """
-        Constructor, read in template
-        """
+        """Constructor"""
         logger.debug("Entering Template.__init__")
         Makefile.__init__(self, filename)
 #        self.read()
@@ -28,7 +27,7 @@ class Template(Makefile):
             if i == len(line):
                 done = True
             else:
-                if line[i].isalnum() or line[i] == "-" or line[i] == "_":
+                if line[i].isalnum() or line[i] == "-" or line[i] == "_" or line[i] == ".":
                     ret += line[i]
                 else:
                     done = True
@@ -64,7 +63,7 @@ class Template(Makefile):
         logger.debug("Expanded string: " + ret)
         return(ret)
 
-    def combine(self, _vars, var_prefix = "", lines = None):
+    def combine(self, _vars, var_postfix = "", lines = None):
         if not lines == None:
             self.parse(lines)
         elif not self.filename == "":
@@ -72,13 +71,14 @@ class Template(Makefile):
         else:
             raise MakefileError("No file or data to combine")
 
-        target = self.toMakeLine(self.expandVars(self.targets[0].target, _vars),
-                                 var_prefix)
-        prerequisites = self.toMakeLine(self.expandVars(self.targets[0].prerequisites, _vars), var_prefix)
-        recipe = list()
-        for line in self.targets[0].recipe:
-            recipe.append(self.toMakeLine(self.expandVars(line, _vars),
-                                          var_prefix))
-
-        return(target, prerequisites, recipe)
+        for entry in self.entries:
+            if isinstance(entry, target.Target):
+                _target = self.toMakeLine(self.expandVars(entry.target, _vars),
+                                         var_postfix)
+                prerequisites = self.toMakeLine(self.expandVars(entry.prerequisites, _vars), var_postfix)
+                recipe = list()
+                for line in entry.recipe:
+                    recipe.append(self.toMakeLine(self.expandVars(line, _vars),
+                                                  var_postfix))
+                return(_target, prerequisites, recipe)
 

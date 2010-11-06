@@ -3,19 +3,21 @@ Created on Sep 14, 2010
 
 @author: oblivion
 """
-import string
+from string import printable
+from string import ascii_letters
+from string import digits
 from ordereddict import OrderedDict
 from logger import logger
 
 def IsDistBuildConf(lines):
+    """Check to see if this is a distbuild file"""
     if lines[0].strip() == "#distbuild":
         logger.debug("This is a distbuild configuration file")
         return(True)
-
     logger.debug("This is not a distuild configuration file")
     return(False)
 
-class SyntaxError(Exception):
+class BaseSyntaxError(Exception):
     """Syntax error exception"""
     def __init__(self, msg = ""):
         """Constructor"""
@@ -27,9 +29,10 @@ class SyntaxError(Exception):
 
 class Base(object):
     """Base class for the buildtree classes"""
+    idnum = 0
     def __init__(self, name = ""):
         """Constructor"""
-        if len(name.strip(string.printable)) > 0:
+        if len(name.strip(printable)) > 0:
             logger.debug("Constructing Base object with an unspeakable name")
         else:
             logger.debug("Constructing Base object named: " + name)
@@ -42,6 +45,12 @@ class Base(object):
         """Return the name"""
         return(self.name)
 
+    def id(self):
+        """Create a unique ID"""
+        ret = Base.idnum
+        Base.idnum += 1
+        return(ret)
+
     def Tokenize(self, line):
         """Split a line into tokens of either sequences of letters, numbers, -, 
         and _ or a separate token for any other character"""
@@ -51,7 +60,7 @@ class Base(object):
         #Run through all characters in the line
         for ch in line:
             #if this is an accepted character
-            if ch in (string.ascii_letters + string.digits + "-" + "_"):
+            if ch in (ascii_letters + digits + "-" + "_"):
                 #Add to token
                 token += ch
             else:
@@ -83,7 +92,6 @@ class Base(object):
             tokenized_line = self.Tokenize(line)
             tokenized_line.reverse()
             tokenized_lines.append(tokenized_line)
-
         tokenized_lines.reverse()
         self.Consume("", tokenized_lines)
 
@@ -99,17 +107,9 @@ class Base(object):
             return(Base.Root(node.parent))
 
     def Add(self, node, adjust_root = True):
-        from data import Data
-        from reference import Reference
+        """Add a new node"""
         if isinstance(node, Base):
-            if isinstance(node, Data):
-                logger.debug("Adding data node to: " + self.name)
-            elif isinstance(node, Reference):
-                logger.debug("Adding reference node to: " + self.name)
-            elif isinstance(self, Reference):
-                logger.debug("Adding node: " + node.name + " to: (unspeakable name)")
-            else:
-                logger.debug("Adding node: " + node.name + " to: " + self.name)
+            logger.debug("Adding node: " + node.name + " to: " + self.name)
             logger.debug("Node type: " + str(type(node)))
             logger.debug("Parent type: " + str(type(self)))
             if adjust_root:
@@ -117,10 +117,12 @@ class Base(object):
                 node.parent = self
             self.nodes[node.name] = node
         else:
-            logger.warning('Wrong type "' + str(type(node)) + '" of node, cannot add')
+            logger.warning('Wrong type "' + str(type(node))
+                           + '" of node, cannot add')
         return(node)
 
     def GetNode(self, name, root = None):
+        """Get a node, belonging to root, or the current node"""
         if root == None:
             root = self
         if name in root.nodes:
@@ -129,6 +131,7 @@ class Base(object):
         return(None)
 
     def GetLocalVar(self, name):
+        """Return a glocal variable by name"""
         if name in self.nodes:
             node = self.nodes[name]
             return(node)
@@ -140,26 +143,25 @@ class Base(object):
         return(None)
 
     def GetGlobalVar(self, name):
-        from variable import Variable
-        from reference import Reference
-        root = self.Root()
-        for node in root.IterTree():
-            if isinstance(node, Variable):
-                if not isinstance(node.parent, Reference):
-    #                sections = ""
-                    node_name = ""
-                    section_names = node.GetPath()
-                    section_names.reverse()
-                    section_names.pop()
-                    node_name += node.name
-                    for section_name in section_names:
-                        node_name += "_" + section_name
-                    if name == node_name:
-                        return(node)
-#        if name in self.Root().nodes:
-#            node = self.Root().nodes[name]
-#            return(node)
-        return(None)
+        """Return a global variable by name"""
+#        from variable import Variable
+#        from reference import Reference
+#        from function import Function
+        node = self.Root()
+        path = name.split(".")
+        path.reverse()
+        for node_name in path:
+            node = node.GetNode(node_name)
+            if node == None:
+                raise SyntaxError("Cannot find node " + name)
+        return(node)
+#        for node in root.IterTree():
+#            if isinstance(node, Variable):
+#                if not isinstance(node.parent, Reference):
+#                    if not isinstance(node.parent, Function):
+#                        if name == node.GetGlobalName():
+#                            return(node)
+#        return(None)
 
     def GetPath(self):
         """Get the name of the nodes from the root of the tree to this node"""
@@ -168,6 +170,19 @@ class Base(object):
         while node.parent != None:
             ret.append(node.name)
             node = node.parent
+        return(ret)
+
+    def GetPathToNode(self, target):
+        """Get the name of the nodes from the given node of the tree to this
+        node"""
+        ret = list()
+        node = self
+        while node.name != target.name:
+            ret.append(node.name)
+            node = node.parent
+            if node == None:
+                ret.append(self.name)
+                return(ret)
         return(ret)
 
     def Link(self):
@@ -196,3 +211,18 @@ class Base(object):
                 last = child
             if last == node:
                 return
+
+    def GetGlobalName(self, sep = "."):
+        """Get the global name of the node"""
+        node = self
+        ret = ""
+        if node.name.find(".") > -1:
+            ret = node.name
+        else:
+            while not node.parent == None:
+                ret += node.name
+                node = node.parent
+                if not node.parent == None:
+                    ret += sep
+        #logger.debug("Global name: " + ret)
+        return(ret)

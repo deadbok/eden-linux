@@ -27,13 +27,15 @@ def main():
     patch_dir = args[0]
     source_dir = args[1]
 
-    print('patchall patching "' + source_dir + '" with patches in "' + patch_dir + '"')
+    print('patchall patching "' + source_dir + '" with patches in "'
+          + patch_dir + '"')
     try:
         for entry in os.listdir(patch_dir):
             if os.path.isfile(patch_dir + "/" + entry):
                 if os.path.splitext(entry)[1] == ".patch":
                     print("Patching with: " + entry)
-                    command = "patch -p1 -d " + source_dir + " < " + patch_dir + "/" + entry
+                    command = ("patch -p1 -d " + source_dir + " < " + patch_dir
+                               + "/" + entry)
                     if options.verbose:
                         print('Running: ' + command)
                     os.system(command)
@@ -41,7 +43,8 @@ def main():
         os.system(command)
 
     except IOError as e:
-        print('Exception: "' + e.strerror + '" accessing file: ' + patch_dir + "/" + entry)
+        print('Exception: "' + e.strerror + '" accessing file: ' + patch_dir
+              + "/" + entry)
     except OSError as e:
         print('Exception: "' + e.strerror + '" accessing file: ' + patch_dir)
 

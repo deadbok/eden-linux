@@ -6,11 +6,11 @@ Created on Aug 29, 2010
 import os.path
 from logger import logger
 import buildtree.reference
-from makefile import Makefile
+from dependencies import Dependencies
 
 class BuilderError(Exception):
     def __init__(self, msg = ""):
-        Exception.__init__()
+        Exception.__init__(self)
         self.msg = msg
 
     def __str__(self):
@@ -18,18 +18,21 @@ class BuilderError(Exception):
 
 class Builder(object):
     """Class that builds a Makefile based build system from the buildtree"""
+    dep = Dependencies()
     def __init__(self, tree):
         """Constructor"""
         logger.debug("Entering Builder.__init__")
         self.tree = tree
-        makefile_path = self.tree.GetGlobalVar("build_dir").GetDeref()
+        makefile_path = self.tree.GetGlobalVar("distbuild_dir").GetDeref()
         self.create_dir(makefile_path)
         self.local_variables = dict()
         self.makefile = None
-
-    def start(self, node, filename):
-        self.makefile = Makefile(filename)
-
+        self.included_files = set()
+        self.urls = set()
+        self.local_variables["dependencies"] = ""
+        self.local_variables["target"] = ""
+        self.local_variables["current_package_dir"] = ""
+        self.dep.get(self.tree)
 
     def create_dir(self, directory):
         """Create directory if it does not exist"""
@@ -37,12 +40,13 @@ class Builder(object):
             logger.debug("Creating directory: " + directory)
             os.makedirs(directory)
 
-    def tree2path(self, path):
+    def tree2path(self, path, reverse = False):
         """Convert a path in the tree, to a path on the file system"""
         if path == None:
             return None
         rev_path = path
-        rev_path.reverse()
+        if reverse:
+            rev_path.reverse()
         ret = ""
         for directory in rev_path:
             ret += "/" + directory
@@ -63,6 +67,54 @@ class Builder(object):
         ret += sections
         return(ret)
 
+    def get_node_include_files(self, node):
+        """Get the include files, needed to full fill the dependencies of the
+        node"""
+        logger.debug("Getting include files from dependencies")
+        if node == None:
+            return("")
+        ret = list()
+        #Get dependencies for global variable references
+        try:
+            for reference in node.IterTree():
+                if isinstance(reference, buildtree.reference.Reference):
+                    if reference.reference in self.local_variables:
+                        logger.debug(reference.reference + " found in local variables")
+                    else:
+                        logger.debug("Getting include file for reference: "
+                                     + str(reference))
+                        ref_node = reference.GetRef()
+                        name = ref_node.GetGlobalName()
+                        include_filenames = self.dep.dep_tree[name]
+                        section = node
+                        while not isinstance(section, buildtree.section.Section):
+                            section = section.parent
+                        if section.name in include_filenames:
+                            include_filename = include_filenames[section.name]
+                        else:
+                            include_filename = ""
+                            while not section.parent == None:
+                                include_filename += "../"
+                                section = section.parent
+                            ref_sections = name.split(".")
+                            if len(include_filenames) > 1:
+                                include_filename += ref_sections[len(ref_sections) - 1] + "/" + include_filenames[ref_sections[len(ref_sections) - 1]]
+                            else:
+                                include_filename += include_filenames["global"]
+                        if len(include_filename) > 0:
+                            logger.debug("Including: " + include_filename)
+                            if not include_filename in ret:
+                                ret.append(include_filename)
+        except SyntaxError as e:
+            if e.filename == None:
+                e.filename = " - " + self.makefile.filename
+            e.filename += " - " + self.makefile.filename
+            raise e
+        except AttributeError:
+            raise SyntaxError("Cannot find node " + reference.reference)
+        return(ret)
+
+
     def get_section_include_files(self, node = None):
         """Get the include files, needed to full fill the dependencies of the
         section"""
@@ -70,33 +122,28 @@ class Builder(object):
         if node == None:
             return(None)
         ret = list()
-        #Get dependencies from the package if present
-        dependencies = node.GetSection("dependencies")
-        if not dependencies == None:
-            for target in dependencies.nodes.itervalues():
-                sections = ""
-                target_sections = target.value.split("_")
-                #Pop prefix of the target, to get only sections
-                target_sections.pop(0)
-                for section in reversed(target_sections):
-                    sections += section + "/"
-                ret.append(node.GetGlobalVar("root").GetDeref() + "/"
-                           + node.GetGlobalVar("build_dir").GetDeref() + "/"
-                           + sections + "*.mk")
-                logger.debug("    Adding: "
-                             + node.GetGlobalVar("root").GetDeref() + "/"
-                             + node.GetGlobalVar("build_dir").GetDeref() + "/"
-                             + sections + "*.mk")
-                logger.debug("    For: " + target.name)
-        #Get dependencies for global variables
         try:
-            for reference in node.IterTree(node):
+            for reference in node.IterSection():
                 if isinstance(reference, buildtree.reference.Reference):
-                    if not reference.local:
-                        if not reference.reference in self.local_variables:
-                            logger.debug("Getting include file for reference: "
-                                         + str(reference.Get()))
+                    if reference.reference in self.local_variables:
+                        logger.debug("Found in local variables")
+                    else:
+                        logger.debug("Getting include file for reference: "
+                                     + str(reference))
+                        ref_node = reference.GetRef()
+                        name = ref_node.GetGlobalName()
+                        include_filenames = self.dep.dep_tree[name]
+                        if node.name in include_filenames:
+                            include_filename = include_filenames[node.name]
+                        else:
+                            include_filename = ""
+                        if len(include_filename) > 0:
+                            logger.debug("Including: " + include_filename)
+                            if not include_filename in ret:
+                                ret.append(include_filename)
         except SyntaxError as e:
-            e.filename = self.makefile.filename
+            if e.filename == None:
+                e.filename = " - " + self.makefile.filename
+            e.filename += " - " + self.makefile.filename
             raise e
         return(ret)

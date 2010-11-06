@@ -10,34 +10,32 @@ import target
 import include
 
 class MakefileSyntaxError(SyntaxError):
+    """Syntax error exception"""
     def __init__(self, msg = ""):
-        SyntaxError()
+        SyntaxError.__init__()
         self.msg = msg
 
     def __str__(self):
         return(self.msg)
 
 class MakefileError(StandardError):
+    """General exception"""
     def __init__(self, msg = ""):
-        SyntaxError()
+        StandardError.__init__()
         self.msg = msg
 
     def __str__(self):
         return(self.msg)
 
 class Makefile(object):
-    """
-    Class representing a Makefile
-    """
+    """Class representing a Makefile"""
     def __init__(self, filename = ""):
         """
         Constructor
         """
         logger.debug("Entering Makefile.__init__")
         self.lines = list()
-        self.includes = list()
-        self.vars = list()
-        self.targets = list()
+        self.entries = list()
         self.filename = filename
 
     def addInclude(self, filename, ignore_missing = False):
@@ -45,24 +43,26 @@ class Makefile(object):
         logger.debug("Adding include file: " + filename)
         inc = include.Include(filename)
         inc.ignore_missing = ignore_missing
-        self.includes.append(inc)
+        self.entries.append(inc)
 
     def addVar(self, name, value):
         """Add a variable to the Makefile"""
         logger.debug("Adding variable: " + name + " = " + value)
-        self.vars.append(variable.Variable(name, value))
+        self.entries.append(variable.Variable(name, value))
 
-    def addTarget(self, mktarget, prerequisites = "", recipe = list(), target_var_name = ""):
+    def addTarget(self, mktarget, prerequisites = "", recipe = list(),
+                  target_var_name = ""):
         """Add a target rule to the Makefile"""
         logger.debug("Adding target: " + mktarget + ": " + prerequisites)
         for line in recipe:
             logger.debug("    " + line)
         if target_var_name == "":
-            self.targets.append(target.Target(mktarget, prerequisites, recipe))
+            self.entries.append(target.Target(mktarget, prerequisites, recipe))
         else:
             logger.debug("Using target variable: " + target_var_name)
             self.addVar(target_var_name, mktarget)
-            self.targets.append(target.Target("$(" + target_var_name + ")", prerequisites, recipe))
+            self.entries.append(target.Target("$(" + target_var_name + ")",
+                                              prerequisites, recipe))
 
     def addPhonyTarget(self, mktarget, prerequisites = "", recipe = list()):
         """Add a phony target rule to the Makefile"""
@@ -70,11 +70,13 @@ class Makefile(object):
         for line in recipe:
             logger.debug("    " + line)
 
-        self.targets.append(target.Target(mktarget, prerequisites, recipe, True))
+        self.entries.append(target.Target(mktarget, prerequisites, recipe,
+                                          True))
 
     def parseVar(self, line, pos):
         """Return the variable name and position in a line"""
-        logger.debug("Parsing variable in '" + line + "' at position: " + str(pos))
+        logger.debug("Parsing variable in '" + line + "' at position: "
+                     + str(pos))
         #Start position
         i = pos
         ret = ""
@@ -87,9 +89,12 @@ class Makefile(object):
                 done = True
             else:
                 #Check if this is a character acceptable in a variable name
-                if line[i].isalnum() or line[i] == "-" or line[i] == "_":
+                if line[i].isalnum() or line[i] == "-" or line[i] == "_" or line[i] == ".":
                     #Add to return
-                    ret += line[i]
+                    if line[i] == ".":
+                        ret += "_"
+                    else:
+                        ret += line[i]
                 else:
                     #We've reached the end of the variable
                     done = True
@@ -125,16 +130,19 @@ class Makefile(object):
                     #If this is a regular Makefile variable copy it
                     if line[pos + 2:i + 1].isupper():
                         ret += line[pos + 2:i + 1]
-                        ret += self.toMakeLine(line[i + 1:len(line)], var_suffix)
+                        ret += self.toMakeLine(line[i + 1:len(line)],
+                                               var_suffix)
                     else:
                         #else add the local prefix
                         logger.debug("Found local variable: " + line[pos + 2:i])
                         if var_suffix == "":
-                            ret += line[pos + 2:i].upper()
+                            ret += line[pos + 2:i].upper().replace(".", "_")
                         else:
-                            ret += line[pos + 2:i].upper() + "_" + var_suffix.upper()
+                            ret += (line[pos + 2:i].upper().replace(".", "_") + "."
+                                    + var_suffix.upper().replace(".", "_"))
                         ret += ")"
-                        ret += self.toMakeLine(line[i + 1:len(line)], var_suffix)
+                        ret += self.toMakeLine(line[i + 1:len(line)],
+                                               var_suffix)
                 else:
                     logger.warning("No '}' character found in line: "
                                    + line)
@@ -148,6 +156,7 @@ class Makefile(object):
         return(ret)
 
     def parse(self, lines):
+        """Basic parsing of Makefiles"""
         i = 0
         while len(lines) > i:
             stripped_line = lines[i].strip()
@@ -182,6 +191,7 @@ class Makefile(object):
                 i += 1
 
     def read(self, filename):
+        """Read in a Makefile."""
         self.filename = filename
         logger.debug("Reading Makefile: " + self.filename)
         try:
@@ -189,35 +199,34 @@ class Makefile(object):
                 lines = makefile.readlines()
             self.parse(lines)
         except IOError as e:
-            logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
+            logger.error('Exception: "' + e.strerror + '" accessing file: '
+                          + self.filename)
             raise
 
-
-
     def write(self):
+        """Write out the Makefile."""
         logger.debug("Writing Makefile: " + self.filename)
-
-        for i in self.includes:
-            prefix = ""
-            if i.ignore_missing:
-                prefix = "-"
-            self.lines.append(prefix + "include " + i.filename + "\n")
-
-        self.lines.append("\n")
-
-        for v in self.vars:
-            self.lines.append(v.name + " = " + v.value + "\n")
-
-        self.lines.append("\n")
-
-        for t in self.targets:
-            if t.phony:
-                self.lines.append(".PHONY: " + t.target + " " + t.prerequisites + "\n")
-            self.lines.append(t.target + ":" + t.prerequisites + "\n")
-            for line in t.recipe:
-                self.lines.append(line + "\n")
-            self.lines.append("\n")
-
+        last_entry = self
+        for entry in self.entries:
+            #TODO: Replace this ugly code
+            if not type(entry) == type(last_entry):
+                if len(self.lines) > 0:
+                    self.lines.append("\n")
+            if isinstance(entry, variable.Variable):
+                self.lines.append(entry.name + " = " + entry.value + "\n")
+            elif isinstance(entry, include.Include):
+                prefix = ""
+                if entry.ignore_missing:
+                    prefix = "-"
+                self.lines.append(prefix + "include " + entry.filename + "\n")
+            elif isinstance(entry, target.Target):
+                if entry.phony:
+                    self.lines.append(".PHONY: " + entry.target + " " + entry.prerequisites
+                                      + "\n")
+                self.lines.append(entry.target + ":" + entry.prerequisites + "\n")
+                for line in entry.recipe:
+                    self.lines.append(line + "\n")
+            last_entry = entry
         try:
             file_lines = None
             if os.path.exists(self.filename):
@@ -225,14 +234,20 @@ class Makefile(object):
                     file_lines = makefile.readlines()
 
             if file_lines == None or file_lines != self.lines:
-                makefile = open(self.filename, "w")
-                makefile.writelines(self.lines)
-                makefile.close()
+                if len(self.lines) > 0:
+                    makefile = open(self.filename, "w")
+                    makefile.writelines(self.lines)
+                    makefile.close()
+                else:
+                    logger.debug(self.filename + " skipped, the file is empty.")
+                    if os.path.exists(self.filename):
+                        os.remove(self.filename)
+                    return(False)
             else:
-                logger.debug(self.filename + " skipped, the file is up to date.")
+                logger.debug(self.filename
+                             + " skipped, the file is up to date.")
                 return(False)
-
         except IOError as e:
-            logger.error('Exception: "' + e.strerror + '" accessing file: ' + self.filename)
-
+            logger.error('Exception: "' + e.strerror + '" accessing file: '
+                         + self.filename)
         return(True)
