@@ -1,6 +1,6 @@
 FSH_DIRS := $(shell cat dirlist)
 DESTDIR = .
 
-all:
+install:
 	mkdir -p $(addprefix $(DESTDIR),$(FSH_DIRS))
 

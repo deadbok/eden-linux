@@ -8,6 +8,7 @@ from logger import logger
 import variable
 import target
 import include
+import conditional
 
 class MakefileSyntaxError(SyntaxError):
     """Syntax error exception"""
@@ -73,6 +74,11 @@ class Makefile(object):
         self.entries.append(target.Target(mktarget, prerequisites, recipe,
                                           True))
 
+    def addConditional(self, lines):
+        """Add a conditional to the Makefile"""
+        logger.debug("Adding conditional: " + str(lines))
+        self.entries.append(conditional.Conditional(lines))
+
     def parseVar(self, line, pos):
         """Return the variable name and position in a line"""
         logger.debug("Parsing variable in '" + line + "' at position: "
@@ -89,7 +95,8 @@ class Makefile(object):
                 done = True
             else:
                 #Check if this is a character acceptable in a variable name
-                if line[i].isalnum() or line[i] == "-" or line[i] == "_" or line[i] == ".":
+                if (line[i].isalnum() or line[i] == "-" or
+                    line[i] == "_" or line[i] == "."):
                     #Add to return
                     if line[i] == ".":
                         ret += "_"
@@ -98,7 +105,6 @@ class Makefile(object):
                 else:
                     #We've reached the end of the variable
                     done = True
-
         return(ret, i)
 
     def toMakeLine(self, line, var_suffix = ""):
@@ -108,7 +114,6 @@ class Makefile(object):
         var_name = ""
         logger.debug("Input string: " + line)
         ret = ""
-
         if not pos == -1:
             i = pos
             ret = line[0:i]
@@ -122,7 +127,6 @@ class Makefile(object):
                 else:
                     ret += "$"
                     ret += self.toMakeLine(line[i + 1:len(line)], var_suffix)
-
             else:
                 ret += "$("
                 i = line.find("}")
@@ -138,7 +142,8 @@ class Makefile(object):
                         if var_suffix == "":
                             ret += line[pos + 2:i].upper().replace(".", "_")
                         else:
-                            ret += (line[pos + 2:i].upper().replace(".", "_") + "."
+                            ret += (line[pos + 2:i].upper().replace(".", "_")
+                                    + "."
                                     + var_suffix.upper().replace(".", "_"))
                         ret += ")"
                         ret += self.toMakeLine(line[i + 1:len(line)],
@@ -151,12 +156,12 @@ class Makefile(object):
         else:
             logger.debug("No variable found")
             ret = line
-
         logger.debug("Converted string: " + ret)
         return(ret)
 
     def parse(self, lines):
         """Basic parsing of Makefiles"""
+        self.entries = list()
         i = 0
         while len(lines) > i:
             stripped_line = lines[i].strip()
@@ -177,13 +182,29 @@ class Makefile(object):
                     target_line = stripped_line.partition(":")
                     recipe_lines = list()
                     i += 1
-                    while len(lines) > i:
-                        if not lines[i].strip() == "\n":
-                            logger.debug("Processing recipe line: " + lines[i])
-                            recipe_lines.append(lines[i].strip("\n"))
-                            i += 1
-
+                    while len(lines) > i and lines[i].strip(" ") != "\n":
+                        logger.debug("Processing recipe line: " + lines[i])
+                        recipe_lines.append(lines[i].strip("\n"))
+                        i += 1
                     self.addTarget(target_line[0], target_line[2], recipe_lines)
+                elif stripped_line.find("if") == 0:
+                    logger.debug("Processing conditional:")
+                    #Keep track of how many conditionals are nested 
+                    depth = 1
+                    code = list()
+                    code.append(stripped_line)
+                    while ((not depth == 0) and (len(lines) > i)):
+                        i += 1
+                        stripped_line = lines[i].strip()
+                        if stripped_line.find("if") > 0:
+                            if stripped_line.find("endif") == 0:
+                                depth -= 1
+                            else:
+                                depth += 1
+                            logger.debug("Line " + str(i) + " depth " + str(depth))
+                            logger.debug("Content: " + stripped_line)
+                        code.append(stripped_line)
+                    self.addConditional(code)
                 else:
                     logger.warning("Cannot parse: " + lines[i])
                 i += 1
@@ -206,12 +227,12 @@ class Makefile(object):
     def write(self):
         """Write out the Makefile."""
         logger.debug("Writing Makefile: " + self.filename)
-        last_entry = self
+        last_entry = self.entries[0]
         for entry in self.entries:
-            #TODO: Replace this ugly code
             if not type(entry) == type(last_entry):
-                if len(self.lines) > 0:
-                    self.lines.append("\n")
+                self.lines.append("\n")
+            elif isinstance(entry, target.Target) or isinstance(entry, conditional.Conditional):
+                self.lines.append("\n")
             if isinstance(entry, variable.Variable):
                 self.lines.append(entry.name + " = " + entry.value + "\n")
             elif isinstance(entry, include.Include):
@@ -225,6 +246,9 @@ class Makefile(object):
                                       + "\n")
                 self.lines.append(entry.target + ":" + entry.prerequisites + "\n")
                 for line in entry.recipe:
+                    self.lines.append(line + "\n")
+            elif isinstance(entry, conditional.Conditional):
+                for line in entry.lines:
                     self.lines.append(line + "\n")
             last_entry = entry
         try:

@@ -18,40 +18,20 @@ class sections(Builder):
         """Constructor"""
         Builder.__init__(self, tree)
 
-#    def add_includes(self, node = None):
-#        try:
-#            if node == None:
-#                return
-#            #Include
-#            for include_file in self.get_section_include_files(node):
-#                if not include_file in self.included_files:
-#                    if include_file.find(node.name + ".mk") == -1:
-#                        path = self.tree.GetGlobalVar("root").GetDeref() + "/"
-#                        path += self.tree.GetGlobalVar("build_dir").GetDeref() + "/"
-#                        path += self.tree2path(node.GetPath()) + "/"
-#                        self.makefile.addInclude(path + include_file)
-#                        self.included_files.add(include_file)
-#        except MakefileSyntaxError as e:
-#            raise BuilderError("Syntax error: "
-#                               + e.msg + " in node "
-#                               + node.name + " value " + str(node.Get()))
-#        except SyntaxError as e:
-#            raise BuilderError("Syntax error: "
-#                               + e.msg + " writing " + self.makefile.filename)
-
     def add_includes(self, node = None):
         try:
             if node == None:
                 return
             #Include
             for include_file in self.get_node_include_files(node):
-                if not os.path.basename(include_file) in self.included_files:
-                    if not os.path.basename(include_file) == os.path.basename(self.makefile.filename):
-                        if include_file.find(node.name + ".mk") == -1:
-                            path = self.tree.GetGlobalVar("root").GetDeref() + "/" + self.tree.GetGlobalVar("distbuild_dir").GetDeref()
-                            path += self.tree2path(node.GetPath()[1:], True) + "/"
-                            self.makefile.addInclude(path + include_file)
-                            self.included_files.add(os.path.basename(include_file))
+                if not include_file.replace("../", "") == self.makefile.filename.replace("build/", ""):
+                    if include_file.find(node.name + ".mk") == -1:
+                        path = self.tree.GetGlobalVar("root").GetDeref() + "/" + self.tree.GetGlobalVar("distbuild_dir").GetDeref()
+                        path += self.tree2path(node.GetPath()[1:], True) + "/"
+                        include_file = os.path.normpath(path + include_file)
+                        if not include_file in self.included_files:
+                            self.makefile.addInclude(include_file)
+                            self.included_files.add(include_file)
         except MakefileSyntaxError as e:
             raise BuilderError("Syntax error: "
                                + e.msg + " in node "
@@ -89,9 +69,13 @@ class sections(Builder):
         for node in section.IterNodes():
             if isinstance(node, buildtree.variable.Variable):
                 if node.name.find("_dir") > -1:
-                    rule = template.combine({"target": "$(" + node.GetGlobalName().replace(".", "_").upper()
-                                             + ")"})
-                    self.makefile.addTarget(rule[0], rule[1], rule[2])
+                    #rule = template.combine({"target": "$(" + node.GetGlobalName().replace(".", "_").upper()
+                    #                         + ")"})
+                    #self.makefile.addTarget(rule[0], rule[1], rule[2])
+                    template.combine(self.makefile,
+                                     {"target": "$("
+                                      + node.GetGlobalName().replace(".", "_").upper()
+                                      + ")"})
 
     def write_target(self, node):
         #Write targets makefile
@@ -143,7 +127,8 @@ class sections(Builder):
                         #Add function parameters to local variables
                         for func_node in func.IterNodes():
                             if func_node.name.find("func_") == -1:
-                                if isinstance(func_node, buildtree.variable.Variable):
+                                if isinstance(func_node,
+                                              buildtree.variable.Variable):
                                     self.local_variables[func_node.name] = func_node.Get()
                         #Add target variables for local targets, to local variables
                         self.local_variables.update(entry_targets)
@@ -161,11 +146,17 @@ class sections(Builder):
                                 template = Template(self.tree.GetGlobalVar("template_dir").GetDeref()
                                                      + "/" + template_filename)
                                 #Create rule from template
-                                rule = template.combine(self.local_variables)
+                                template.combine(self.makefile,
+                                                 self.local_variables, None,
+                                                 func.name.upper() + "_"
+                                                + section.GetGlobalName("_").upper())
                             else:
                                 template = Template()
-                                rule = template.combine(self.local_variables, "",
-                                                        func.code)
+                                template.combine(self.makefile,
+                                                 self.local_variables,
+                                                 func.code,
+                                                 func.name.upper() + "_"
+                                                + section.GetGlobalName("_").upper())
                         except IOError:
                             raise BuilderError("Error during file access cannot continue")
                         except MakefileSyntaxError as e:
@@ -173,9 +164,9 @@ class sections(Builder):
                                                + e.msg + " in file: "
                                                + template_filename)
                         #Add rule to makefile
-                        self.makefile.addTarget(rule[0], rule[1], rule[2],
-                                                func.name.upper() + "_"
-                                                + section.GetGlobalName("_").upper())
+                        #self.makefile.addTarget(rule[0], rule[1], rule[2],
+                        #                        func.name.upper() + "_"
+                        #                        + section.GetGlobalName("_").upper())
         except MakefileSyntaxError as e:
             raise BuilderError("Syntax error: "
                                + e.msg + " in node: "

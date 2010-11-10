@@ -1,3 +1,40 @@
+2010-11-11  oblivion  <martin.groenholdt@gmail.com>
+
+	* Makefile.old: Removed.
+	* templates/config-busybox.mk: Removed.
+	* attic/Makefile: New file.
+	* conf/packages/fsh.conf: New file.
+	* conf/packages/syslinux.conf: New file.
+	* conf/packages/syslinux/extlinux.conf: New file.
+	* conf/target/ext2.conf: New file.
+	* conf/target/image.conf: New file.
+	* conf/toolchain/nasm.conf: New file.
+	* conf/toolchain/syslinux.conf: New file.
+	* distbuild/makefile/conditional.py: New file.
+	* templates/target-mkdir.mk: New file.
+	* conf/build.conf: 
+	* conf/commands.conf: 
+	* conf/directory.conf: 
+	* conf/packages/busybox.conf: 
+	* conf/packages/fsh/dirlist: 
+	* conf/packages/fsh/Makefile: 
+	* conf/packages/packages.conf: 
+	* conf/target/x86.conf: 
+	* conf/toolchain/toolchain.conf: 
+	* distbuild/__init__.pyc: 
+	* distbuild/makefile/__init__.pyc: 
+	* distbuild/makefile/builder.pyc: 
+	* distbuild/makefile/makefile.py: 
+	* distbuild/makefile/template.py: template syntax expanded to include more Makefile language
+	* distbuild/sections.py: 
+	* templates/mkdir.mk: 
+	* templates/toolchain-mkdir.mk: 
+
+2010-11-07  oblivion  <martin.groenholdt@gmail.com>
+
+	* distbuild/makefile/makefile.py: Added conditional processing
+	* distbuild/makefile/conditional.py: New file. For makefile conditionals
+
 2010-11-06  oblivion  <martin.groenholdt@gmail.com>
 
 	* distbuild/build.py: Removed.

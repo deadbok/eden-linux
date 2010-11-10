@@ -7,6 +7,9 @@ from logger import logger
 from makefile import Makefile
 from makefile import MakefileError
 import target
+import conditional
+import variable
+import include
 
 class Template(Makefile):
     """
@@ -63,22 +66,28 @@ class Template(Makefile):
         logger.debug("Expanded string: " + ret)
         return(ret)
 
-    def combine(self, _vars, var_postfix = "", lines = None):
+    def combine(self, _makefile, _vars, lines = None, target_var_name = ""):
         if not lines == None:
             self.parse(lines)
         elif not self.filename == "":
             self.read(self.filename)
         else:
             raise MakefileError("No file or data to combine")
-
         for entry in self.entries:
             if isinstance(entry, target.Target):
-                _target = self.toMakeLine(self.expandVars(entry.target, _vars),
-                                         var_postfix)
-                prerequisites = self.toMakeLine(self.expandVars(entry.prerequisites, _vars), var_postfix)
+                _target = self.toMakeLine(self.expandVars(entry.target, _vars))
+                prerequisites = self.toMakeLine(self.expandVars(entry.prerequisites, _vars))
                 recipe = list()
                 for line in entry.recipe:
-                    recipe.append(self.toMakeLine(self.expandVars(line, _vars),
-                                                  var_postfix))
-                return(_target, prerequisites, recipe)
+                    recipe.append(self.toMakeLine(self.expandVars(line, _vars)))
+                _makefile.addTarget(_target, prerequisites, recipe, target_var_name)
+            elif isinstance(entry, conditional.Conditional):
+                _conditional = list()
+                for line in entry.lines:
+                    _conditional.append(self.toMakeLine(self.expandVars(line, _vars)))
+                _makefile.addConditional(_conditional)
+            elif isinstance(entry, variable.Variable):
+                _makefile.addVar(entry.name, self.toMakeLine(self.expandVars(entry.value, _vars)))
+            elif isinstance(entry, include.Include):
+                _makefile.entries.append(entry)
 
