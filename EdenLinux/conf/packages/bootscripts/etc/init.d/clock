@@ -13,20 +13,11 @@ SYSLOG_ROTATE_SIZE=65536
 
 case "$1" in
 start)
-	echo -n "Starting syslogd: "
-	syslogd -m 0 -s $SYSLOG_ROTATE_SIZE -L
-	check_status
-	echo -n "Starting klogd: "
-	klogd
+	echo -n "Setting system clock: "
+	hwclock --hctosys --utc
 	check_status
 	;; 
 stop)
-	echo -n "Stopping klogd: "
-	killall klogd
-	check_status
-	echo -n "Stopping syslogd: "
-	killall syslogd
-	check_status
 	;;
 restart)
 	$0 stop

@@ -42,8 +42,12 @@ $(DESTDIR)/dev/tty5: $(DESTDIR)/dev
 	
 $(DESTDIR)/dev/tty6: $(DESTDIR)/dev
 	-mknod $(DESTDIR)/dev/tty6 c 4 5
+
+$(DESTDIR)/dev/rtc: $(DESTDIR)/dev	
+	-mknod $(DESTDIR)/dev/rtc c 10 135
 	
-dev: $(DESTDIR)/dev/pts $(DESTDIR)/dev/zero $(DESTDIR)/dev/null $(DESTDIR)/dev/tty $(DESTDIR)/dev/console $(DESTDIR)/dev/ptmx $(DESTDIR)/dev/tty0 $(DESTDIR)/dev/tty1 $(DESTDIR)/dev/tty2 $(DESTDIR)/dev/tty3 $(DESTDIR)/dev/tty4 $(DESTDIR)/dev/tty5  $(DESTDIR)/dev/tty6
+	
+dev: $(DESTDIR)/dev/pts $(DESTDIR)/dev/zero $(DESTDIR)/dev/null $(DESTDIR)/dev/tty $(DESTDIR)/dev/console $(DESTDIR)/dev/ptmx $(DESTDIR)/dev/tty0 $(DESTDIR)/dev/tty1 $(DESTDIR)/dev/tty2 $(DESTDIR)/dev/tty3 $(DESTDIR)/dev/tty4 $(DESTDIR)/dev/tty5  $(DESTDIR)/dev/tty6 $(DESTDIR)/dev/rtc
 	touch $(DESTDIR)/dev/*
 
 dev-clean:

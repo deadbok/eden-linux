@@ -17,7 +17,7 @@ class BuilderError(Exception):
         return(self.msg)
 
 class Builder(object):
-    """Class that builds a Makefile based build system from the buildtree"""
+    """Class of utility functions that help building a Makefile based build system from the buildtree"""
     dep = Dependencies()
     def __init__(self, tree):
         """Constructor"""

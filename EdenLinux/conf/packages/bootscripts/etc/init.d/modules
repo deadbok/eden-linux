@@ -20,6 +20,11 @@ start)
 
 	check_status
 	;;
+stop)
+	;;
+restart)
+	start
+	;;
 *)
 	echo "Usage: $0 {start|stop|restart}"
 	exit 1

@@ -1,0 +1,14 @@
+diff -Naur Python-2.6.6.orig/setup.py Python-2.6.6/setup.py
+--- Python-2.6.6.orig/setup.py	2010-12-09 21:36:58.000000000 +0100
++++ Python-2.6.6/setup.py	2010-12-09 21:38:04.000000000 +0100
+@@ -18,7 +18,9 @@
+ from distutils.spawn import find_executable
+ 
+ # This global variable is used to hold the list of modules to be disabled.
+-disabled_module_list = []
++disabled_module_list = ['_bsddb', '_hashlib', '_tkinter', 'bsddb185', 'bz2',
++                         'dbm', 'dl', 'gdbm', 'imageop', 'readline',
++                         'sunaudiodev', '_sqlite3', '_ssl', 'nis']
+ 
+ def add_dir_to_list(dirlist, dir):
+     """Add the directory 'dir' to the list 'dirlist' (at the front) if

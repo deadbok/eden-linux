@@ -38,15 +38,20 @@ def main():
                                + "/" + entry)
                     if options.verbose:
                         print('Running: ' + command)
-                    os.system(command)
+                    retcode = os.system(command)
+                    if not retcode == 0:
+                        return(retcode)
         command = "touch " + source_dir + "/.patched"
         os.system(command)
 
-    except IOError as e:
-        print('Exception: "' + e.strerror + '" accessing file: ' + patch_dir
+    except IOError as exception:
+        print('Exception: "' + exception.strerror + '" accessing file: '
+              + patch_dir
               + "/" + entry)
-    except OSError as e:
-        print('Exception: "' + e.strerror + '" accessing file: ' + patch_dir)
+    except OSError as exception:
+        print('Exception: "' + exception.strerror + '" accessing file: '
+              + patch_dir)
+    return(0)
 
 if __name__ == '__main__':
     main()

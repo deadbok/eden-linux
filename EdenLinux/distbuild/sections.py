@@ -24,7 +24,9 @@ class sections(Builder):
                 return
             #Include
             for include_file in self.get_node_include_files(node):
+                #Do not include the current makefile
                 if not include_file.replace("../", "") == self.makefile.filename.replace("build/", ""):
+                    #Do not include if allready included in another file
                     if include_file.find(node.name + ".mk") == -1:
                         path = self.tree.GetGlobalVar("root").GetDeref() + "/" + self.tree.GetGlobalVar("distbuild_dir").GetDeref()
                         path += self.tree2path(node.GetPath()[1:], True) + "/"
@@ -167,6 +169,12 @@ class sections(Builder):
                         #self.makefile.addTarget(rule[0], rule[1], rule[2],
                         #                        func.name.upper() + "_"
                         #                        + section.GetGlobalName("_").upper())
+                        #Clear function parameters from local variables
+                        for func_node in func.IterNodes():
+                            if func_node.name.find("func_") == -1:
+                                if isinstance(func_node,
+                                              buildtree.variable.Variable):
+                                    del self.local_variables[func_node.name]
         except MakefileSyntaxError as e:
             raise BuilderError("Syntax error: "
                                + e.msg + " in node: "

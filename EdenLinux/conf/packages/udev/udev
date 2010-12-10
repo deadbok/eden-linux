@@ -1,9 +1,10 @@
-#!/bin/ash
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          udev      
+# Short-Description: Dynamic devices 
+### END INIT INFO
 
-# udev Startup Script
-#
-
-. /etc/rc.d/init.d/functions
+. /etc/init.d/functions
 
 case "$1" in
 start)
@@ -11,19 +12,27 @@ start)
 
 	/bin/mount -n -t tmpfs -o mode=0755 udev /dev
 
-	cp -aR /lib/udev/devices/* /dev
-	
+	[ -d /lib/udev/devices ] && cp -af /lib/udev/devices/* /dev
+
+	if [ ! -d /dev/shm ] ; then
+		mkdir /dev/shm || die "failed to mkdir /dev/shm"
+	fi
+
 	chmod 1777 /dev/shm
 
 	echo > /proc/sys/kernel/hotplug
 
-	/sbin/udevd --daemon
+	dmesg -n 2
 
+	/sbin/udevd --daemon
+	check_status
+	
 	mkdir -p /dev/.udev/queue
 
+	echo -n "Waiting for devices to settle"
 	/sbin/udevadm trigger
-	
 	/sbin/udevadm settle
+	dmesg -n 7
 	check_status
 	;;
 *)

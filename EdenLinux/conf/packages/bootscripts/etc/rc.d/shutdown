@@ -10,7 +10,7 @@ echo "System is going down for reboot or halt now."
 echo
 
 
-echo "Starting stop scripts."
+echo "Running stop scripts."
 
 for i in /etc/rc.d/stop/*
 do

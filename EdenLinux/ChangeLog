@@ -1,3 +1,45 @@
+2010-12-10  oblivion  <martin.groenholdt@gmail.com>
+
+	* templates/install-e2fsprogs.mk: Removed.
+	* conf/packages/bootscripts/etc/init.d/clock: New file.
+	* conf/packages/bootscripts/etc/rc.d/start_services: New file.
+	
+	* conf/packages/bootscripts/etc/rc.d/stop_services: New file.
+	
+	* conf/packages/openssl.conf: New file.
+	* conf/packages/python.conf: New file.
+	* conf/packages/python/Python-2.6.6-xcompile.patch: New file.
+	* conf/packages/python/python-2.6.6_disable_modules_uclibc.patch: New file.
+	* conf/packages/sqlite.conf: New file.
+	* docs/LSB-Core-generic.html: New file.
+	* conf/build.conf: 
+	* conf/packages/bootdevs/Makefile: 
+	* conf/packages/bootscripts/etc/init.d/modules: 
+	* conf/packages/bootscripts/etc/init.d/mountroot: 
+	* conf/packages/bootscripts/etc/init.d/syslog: 
+	* conf/packages/bootscripts/etc/rc.d/shutdown: 
+	* conf/packages/bootscripts/etc/rc.d/startup: 
+	* conf/packages/bootscripts/Makefile: 
+	* conf/packages/bootscripts/sbin/rc-update.py: 
+	* conf/packages/linux-kernel/config: 
+	* conf/packages/packages.conf: 
+	* conf/packages/udev.conf: 
+	* conf/packages/udev/udev: 
+	* conf/target/ext2.conf: 
+	* conf/target/image.conf: 
+	* conf/target/x86/uclibc_config: 
+	* conf/toolchain/binutils.conf: 
+	* conf/toolchain/gcc-cross.conf: 
+	* conf/toolchain/gcc-static.conf: 
+	* conf/toolchain/toolchain.conf: 
+	* conf/toolchain/uclibc/config: 
+	* distbuild/makefile/__init__.pyc: 
+	* distbuild/makefile/builder.pyc: 
+	
+	* distbuild/sections.py: 
+	* templates/packages-patch.mk: 
+	* tools/patchall.py: 
+
 2010-11-11  oblivion  <martin.groenholdt@gmail.com>
 
 	* Makefile.old: Removed.
