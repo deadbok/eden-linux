@@ -1,6 +1,9 @@
-#!/bin/ash
-#
-# Network interface(s) init script
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          network      
+# Short-Description: Network interface(s) init script
+# Required-Start:	 udev
+### END INIT INFO
 #
 # config: /etc/network.conf
 #	  /etc/network/interface.[devname]

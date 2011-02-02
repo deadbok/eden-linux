@@ -1,5 +1,8 @@
-# module loading Startup Script
-#
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          modules  
+# Short-Description: module loading Startup Script
+### END INIT INFO
 
 . /etc/init.d/functions
 

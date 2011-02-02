@@ -4,6 +4,7 @@ Created on 16 Oct 2010
 @author: oblivion
 """
 import os.path
+import shutil
 import buildtree
 from logger import logger
 from makefile.makefile import Makefile
@@ -26,7 +27,7 @@ class sections(Builder):
             for include_file in self.get_node_include_files(node):
                 #Do not include the current makefile
                 if not include_file.replace("../", "") == self.makefile.filename.replace("build/", ""):
-                    #Do not include if allready included in another file
+                    #Do not include if already included in another file
                     if include_file.find(node.name + ".mk") == -1:
                         path = self.tree.GetGlobalVar("root").GetDeref() + "/" + self.tree.GetGlobalVar("distbuild_dir").GetDeref()
                         path += self.tree2path(node.GetPath()[1:], True) + "/"
@@ -39,8 +40,8 @@ class sections(Builder):
                                + e.msg + " in node "
                                + node.name + " value " + str(node.Get()))
         except SyntaxError as e:
-            raise BuilderError("Syntax error: "
-                               + e.msg + " writing " + self.makefile.filename)
+            raise BuilderError("Syntax error: " + e.msg + " writing "
+                                + self.makefile.filename)
 
     def write_var(self, node):
         """Create a make file with section global variables"""
@@ -99,10 +100,10 @@ class sections(Builder):
                         logger.debug("Ignoring duplicate package url")
                     else:
                         self.local_variables["dependencies"] = ""
-                        dependencies = func.GetLocalVar("func_dependencies")
+                        dependencies = func.GetLocalVar("func_dependencies", False)
                         if not dependencies == None:
                             self.local_variables["dependencies"] += dependencies.Get()
-                        if not section.GetLocalVar("url") == None:
+                        if not section.GetLocalVar("url", False) == None:
                             self.local_variables["packed_filename"] = os.path.basename(section.GetLocalVar("url").Get())
                             self.urls.add(section.GetLocalVar("url").GetDeref())
                         #directory to unpack the package to
@@ -118,7 +119,7 @@ class sections(Builder):
                                                          + "/"
                                                          + section.name)
                         #Add target to local variables
-                        if func.GetLocalVar("func_target") == None:
+                        if func.GetLocalVar("func_target", False) == None:
                             #Default target
                             self.local_variables["target"] = func.name + "_" + section.GetGlobalName("_")
                         else:
@@ -137,7 +138,7 @@ class sections(Builder):
                         try:
                             if not func.inline:
                                 #Get template filename 
-                                template_filename = func.GetLocalVar("func_makefile")
+                                template_filename = func.GetLocalVar("func_makefile", False)
                                 #If the template filename is empty supply a default template
                                 if template_filename == None:
                                     section_names = func.GetPath()
@@ -160,7 +161,11 @@ class sections(Builder):
                                                  func.name.upper() + "_"
                                                 + section.GetGlobalName("_").upper())
                         except IOError:
-                            raise BuilderError("Error during file access cannot continue")
+                            raise BuilderError("Error accessing template file "
+                                               + template_filename
+                                               + " in section "
+                                               + section.name
+                                               + ".")
                         except MakefileSyntaxError as e:
                             raise BuilderError("Template syntax error: "
                                                + e.msg + " in file: "
@@ -185,22 +190,29 @@ class sections(Builder):
         """build the Makefiles for all sections"""
         logger.debug("Creating section Makefiles")
         #Run through the tree
+        build_path = self.tree.GetGlobalVar("distbuild_dir").GetDeref()
         for node in self.tree.IterTree():
             #If this is a section
             if isinstance(node, buildtree.section.Section):
-                path = self.tree.GetGlobalVar("distbuild_dir").GetDeref()
-                path += self.tree2path(node.GetPath(), True)
+
+                path = build_path + self.tree2path(node.GetPath(), True)
                 #Create directory for the Makefile
                 try:
                     self.create_dir(path)
                     filename = path + "/" + node.name + ".mk"
                     self.makefile = Makefile(filename)
                     logger.debug("Creating makefile for section: " + node.name)
+                    if node.name == "global":
+                        self.makefile.addInclude(self.tree.GetGlobalVar("root").GetDeref() + "/" + build_path + "/rules.mk")
                     self.write_var(node)
-                    self.write_dir(node)
+                    #self.write_dir(node)
                     self.write_target(node)
                     if self.makefile.write():
                         logger.info('Writing: ' + filename + "...OK")
                 except:
                     raise
+        logger.info('Copying rules.mk...')
+        shutil.copyfile(self.tree.GetGlobalVar("template_dir").GetDeref() + "/rules.mk",
+                        build_path + "/rules.mk")
+
 

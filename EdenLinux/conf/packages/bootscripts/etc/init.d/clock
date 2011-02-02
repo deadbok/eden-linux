@@ -1,7 +1,8 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          syslog      
+# Provides:          clock      
 # Short-Description: Control the syslog daemon
+# Required-Start:	 udev
 ### END INIT INFO
 
 # Syslog Startup Script

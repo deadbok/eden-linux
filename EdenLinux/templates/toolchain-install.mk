@@ -1,2 +1,2 @@
-${target}: ${dependencies} ${current_build_target}
+${target}: ${dependencies}
 	$make -C ${current_package_dir} install

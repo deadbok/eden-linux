@@ -53,7 +53,7 @@ class Section(Base):
                             logger.debug("Found section: " + name)
                             node = self.GetNode(name)
                             if node == None:
-                                logger.debug("Section does not exists")
+                                logger.debug("Section does not exist")
                                 node = self.Add(Section(name))
                             else:
                                 if type(node) is Section:

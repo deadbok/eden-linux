@@ -11,9 +11,10 @@ from logger import logger
 
 def IsDistBuildConf(lines):
     """Check to see if this is a distbuild file"""
-    if lines[0].strip() == "#distbuild":
-        logger.debug("This is a distbuild configuration file")
-        return(True)
+    if len(lines) > 0:
+        if lines[0].strip() == "#distbuild":
+            logger.debug("This is a distbuild configuration file")
+            return(True)
     logger.debug("This is not a distuild configuration file")
     return(False)
 
@@ -130,17 +131,23 @@ class Base(object):
             return(node)
         return(None)
 
-    def GetLocalVar(self, name):
+    def GetLocalVar(self, name, raise_error_on_not_found = True):
         """Return a glocal variable by name"""
         if name in self.nodes:
             node = self.nodes[name]
             return(node)
         if self.parent == None:
-            return(None)
+            if raise_error_on_not_found:
+                raise SyntaxError("Cannot find local variable: " + name)
+            else:
+                return(None)
         else:
-            node = self.parent.GetLocalVar(name)
+            node = self.parent.GetLocalVar(name, raise_error_on_not_found)
             return(node)
-        return(None)
+        if raise_error_on_not_found:
+            raise SyntaxError("Cannot find local variable: " + name)
+        else:
+            return(None)
 
     def GetGlobalVar(self, name):
         """Return a global variable by name"""
@@ -152,8 +159,8 @@ class Base(object):
         path.reverse()
         for node_name in path:
             node = node.GetNode(node_name)
-            if node == None:
-                raise SyntaxError("Cannot find node " + name)
+        if node == None:
+            raise SyntaxError("Cannot find variable: " + name)
         return(node)
 #        for node in root.IterTree():
 #            if isinstance(node, Variable):
