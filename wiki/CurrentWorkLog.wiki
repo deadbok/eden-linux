@@ -1,6 +1,7 @@
 #summary Log of what I am working on at the moment.
 
 =Log entries=
+
 5. juni. 2011
 ---
 * Complete rewrite almost done
