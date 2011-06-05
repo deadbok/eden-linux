@@ -4,21 +4,21 @@
 
 5. juni. 2011
 ----
-* Complete rewrite almost done
-* Proper handling of make file include dependencies
+ * Complete rewrite almost done
+ * Proper handling of make file include dependencies
 
 13 nov. 2010
 ----
-* Working on the initscripts
+ * Working on the initscripts
 
 04 nov. 2010
 ----
-* Include file resolving works, but somthing broke the make files, when rebuilding. I'm debugging this issue, and will commit, when everything works, as expected.
+ * Include file resolving works, but somthing broke the make files, when  rebuilding. I'm debugging this issue, and will commit, when everything works, as expected.
 
 17 Oct. 2010
 ----
-* Resolving include files needed for references in .conf files.
+ * Resolving include files needed for references in .conf files.
 
 16 Oct. 2010
 ----
-* The makefile.builder.Builder class is getting an overhaul. I am splitting the job of writing make files in to different classes, and keeping the Builder class as base class.
+ * The makefile.builder.Builder class is getting an overhaul. I am splitting the job of writing make files in to different classes, and keeping the Builder class as base class.
