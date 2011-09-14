@@ -1,0 +1,2 @@
+#Add modules to be loaded at boot below each module seoerated by a newline
+parport 
