@@ -105,9 +105,11 @@ def main():
     elif options.log_level == 5:
         log.init_file_log(logging.CRITICAL)
     else:
-        log.init_console_log(logging.INFO)
+        log.init_file_log(logging.INFO)
     if options.verbose:
         log.init_console_log(logging.DEBUG)
+    else:
+        log.init_console_log()
     #Save the config path
     template_path = args[0]
     output_dir = args[1]
