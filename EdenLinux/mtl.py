@@ -1,13 +1,15 @@
+#!/usr/bin/env python
 
-#!/usr/bin/python
 '''
 Created on 1 Sep 2011
 
 @author: oblivion
 '''
+import optparse
 import os
 import shutil
 import log
+import logging
 import inline
 import keywords
 import namespace
@@ -21,8 +23,8 @@ def istemplate(lines):
     else:
         return(False)
 
-def load_templates(root_dir):
-    log.logger.info("Loading templates from: " + root_dir)
+def load_plugins(root_dir):
+    log.logger.info("Loading plugins from: " + root_dir)
     for entry in os.listdir(root_dir):
         if entry.find(".py") > -1:
             log.logger.info(entry)
@@ -76,11 +78,42 @@ def process_template(input_filename, output_filename):
         tmpl_file.close()
 
 def main():
-    log.init_file_log()
-    log.init_console_log()
+    usage = "usage: %prog [options] template_path output_dir"
+    arg_parser = optparse.OptionParser(usage = usage)
+    arg_parser.add_option("-v", "--verbose",
+                          action = "store_true", dest = "verbose",
+                          default = False,
+                          help = "Print detailed progress [default]")
+    arg_parser.add_option("-l", "--log-level",
+                          type = "int", default = 2,
+                          help = "Set the logging level for the log files (0-5)"
+                          )
+    (options, args) = arg_parser.parse_args()
+    if len(args) == 0:
+        arg_parser.print_help()
+        return
+    if options.log_level == 0:
+        log.init_file_log(logging.NOTSET)
+    elif options.log_level == 1:
+        log.init_file_log(logging.DEBUG)
+    elif options.log_level == 2:
+        log.init_file_log(logging.INFO)
+    elif options.log_level == 3:
+        log.init_file_log(logging.WARNING)
+    elif options.log_level == 4:
+        log.init_file_log(logging.ERROR)
+    elif options.log_level == 5:
+        log.init_file_log(logging.CRITICAL)
+    else:
+        log.init_console_log(logging.INFO)
+    if options.verbose:
+        log.init_console_log(logging.DEBUG)
+    #Save the config path
+    template_path = args[0]
+    output_dir = args[1]
     log.logger.info("Make file Template engine V" + str(version))
-    load_templates("tmpl")
-    process_templates("mk", "build")
+    load_plugins("plugins")
+    process_templates(template_path, output_dir)
 
 
 if __name__ == '__main__':

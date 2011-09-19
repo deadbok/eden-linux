@@ -24,7 +24,8 @@ def download():
     print "\t$(WGET) $(" + var_name("url") + ") -P $(DOWNLOAD_DIR)",
 
 def unpack(dir_, filename):
-    print filename + ": $(DOWNLOAD_DIR)/$(" + var_name("file") + ")"
+    print var_name("unpack") + " := " + filename
+    print "$(" + var_name("unpack") + "): $(DOWNLOAD_DIR)/$(" + var_name("file") + ")"
     print "ifeq ($(suffix $(" + var_name("file") + ")), .bz2)"
     print "\t$(TAR) -xjf $(DOWNLOAD_DIR)/$(" + var_name("file") + ") -C " + dir_
     print "else ifeq ($(suffix $(" + var_name("file") + ")), .gz)"

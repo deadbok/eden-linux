@@ -23,3 +23,5 @@ WGET = wget
 
 TAR_PARAM = --touch
 TAR = tar $(TAR_PARAM)
+
+MKNOD = mknod

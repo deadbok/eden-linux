@@ -1,7 +1,7 @@
 #mtl
 ${local_namespace("packages.kernel")}
 
-${package("$(PACKAGES_BUILD_DIR)/torvalds-linux-fa9c4d0", "", "2.6.30", "linux-$(PACKAGES_KERNEL_VERSION).tar.gz", "https://github.com/torvalds/linux/tarball/v2.6.30")}
+${package("$(PACKAGES_BUILD_DIR)/linux-$(PACKAGES_KERNEL_VERSION)", "", "2.6.39", "linux-$(PACKAGES_KERNEL_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/kernel/v2.6/$(PACKAGES_KERNEL_FILE)")}
 
 #Special rule, while kernel.org is down
 #${download}
@@ -16,8 +16,8 @@ ${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_KERNEL_SRC_DIR)/Makefile")}
 $(PACKAGES_KERNEL_SRC_DIR)/.config: $(TARGET_KERNEL_CONFIG)
 	$(CP) -a $(TARGET_KERNEL_CONFIG) $(PACKAGES_KERNEL_SRC_DIR)/.config
 
-PACKAGES_KERNEL_BUILD = $(PACKAGES_KERNEL_BUILD_DIR))/vmlinux
-$(PACKAGES_KERNEL_BUILD): $(PACKAGES_KERNEL_BUILD_DIR)/Makefile $(PACKAGES_KERNEL_SRC_DIR)/.config
+PACKAGES_KERNEL_BUILD = $(PACKAGES_KERNEL_BUILD_DIR)/vmlinux
+$(PACKAGES_KERNEL_BUILD): $(PACKAGES_KERNEL_UNPACK) $(PACKAGES_KERNEL_SRC_DIR)/.config
 	$(TOOLCHAIN_ENV) $(MAKE) -C $(PACKAGES_KERNEL_BUILD_DIR) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- oldconfig
 	$(TOOLCHAIN_ENV) $(MAKE) -C $(PACKAGES_KERNEL_BUILD_DIR) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)-
 
@@ -30,6 +30,9 @@ $(PACKAGES_KERNEL_INSTALL): $(PACKAGES_KERNEL_BUILD) $(ROOTFS_DIR)/sbin/depmod.p
 	$(CP) $(PACKAGES_KERNEL_BUILD_DIR)/.config $(ROOTFS_DIR)/boot/config-$(PACKAGES_KERNEL_VERSION)
 	$(TOOLCHAIN_ENV) $(MAKE) -C $(PACKAGES_KERNEL_BUILD_DIR) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- modules_install INSTALL_MOD_PATH=$(ROOTFS_DIR)
 	$(ROOTFS_DIR)/sbin/depmod.pl -F $(ROOTFS_DIR)/boot/System.map-$(PACKAGES_KERNEL_VERSION) -b $(ROOTFS_DIR)/lib/modules/$(PACKAGES_KERNEL_VERSION)
+
+kernel-menuconfig:
+	$(TOOLCHAIN_ENV) $(MAKE) -C $(PACKAGES_KERNEL_BUILD_DIR) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- menuconfig
 
 #packages:
 #	linux-kernel:

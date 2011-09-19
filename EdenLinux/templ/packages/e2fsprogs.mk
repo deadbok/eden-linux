@@ -13,6 +13,6 @@ ${make("$(TOOLCHAIN_ENV)", '', "all", "$(PACKAGES_E2FSPROGS_BUILD_DIR)/misc/mke2
 
 ${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/sbin/mke2fs", "$(PACKAGES_E2FSPROGS_ALL)")}
 
-${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install-libs", "$(ROOTFS_DIR)/lib/e2fsprogs", "$(PACKAGES_E2FSPROGS_ALL)")}
+${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install-libs", "$(ROOTFS_DIR)/usr/lib/libext2fs.a", "$(PACKAGES_E2FSPROGS_ALL)")}
 	
 

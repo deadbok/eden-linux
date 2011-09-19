@@ -47,3 +47,4 @@ def init_console_log(level = logging.INFO):
 def close_log():
     console_log.close()
     file_log.close()
+

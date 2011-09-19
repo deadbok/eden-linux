@@ -1,7 +1,7 @@
 #mtl
 ${local_namespace("packages.iana-etc")}
 
-${package("$(PACKAGES_BUILD_DIR)/iana-etc-$(PACKAGES_IANA-ETC_VERSION)", "", "2.30", "iana-etc-$(PACKAGES_IANA-ETC_VERSION).tar.bz1", "http://ftp.osuosl.org/pub/lfs/hlfs-packages/unstable/$(PACKAGES_IANA-ETC_FILE)")}
+${package("$(PACKAGES_BUILD_DIR)/iana-etc-$(PACKAGES_IANA-ETC_VERSION)", "", "2.30", "iana-etc-$(PACKAGES_IANA-ETC_VERSION).tar.bz2", "http://sethwklein.net/$(PACKAGES_IANA-ETC_FILE)")}
 
 ${download}
 

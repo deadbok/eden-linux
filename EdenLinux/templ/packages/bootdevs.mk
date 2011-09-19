@@ -4,7 +4,7 @@ ${local_namespace("packages.bootdevs")}
 ${package("$(ROOT)/packages/bootdevs", "", "1.0", "", "")}
 
 ${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/.devs", "")}
-	$(TOUCH) $(ROOTFS_DIR) / .devs
+	$(TOUCH) $(PACKAGES_BOOTDEVS_INSTALL)
 
 #packages:
 #	bootdevs:

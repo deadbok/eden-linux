@@ -1,0 +1,13 @@
+2011-09-17  oblivion  <oblivion@laptoblivion>
+
+	* mk/packages/udev.mk: Converted from old syntax
+	* mk/toolchain/kernel-headers.mk: Kernel 2.6.39
+	* mk/packages/dropbear.mk: Converted from old syntax
+	* mk/packages/baseconf.mk: Converted from old syntax
+	* mk/packages/ncurses.mk: Converted from old syntax
+	* mk/packages/e2fsprogs.mk: Corrected install-libs target
+	* mk/packages/iana-etc.mk: New URL
+	* mk/packages/zlib.mk: Converted from old syntax
+	* mk/packages/kernel.mk: Fixed a typo in the config target
+	Kernel 2.6.39
+	kernel-menuconfig added

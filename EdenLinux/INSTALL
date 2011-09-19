@@ -1,7 +1,4 @@
-Start by running:
-make config	(Not yet there)
-make all
-make install
+
 
 note:
 en_US.UTF-8 needs to be available for uClibc to build

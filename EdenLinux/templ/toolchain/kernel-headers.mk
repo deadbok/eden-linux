@@ -1,15 +1,15 @@
 #mtl
 ${local_namespace("toolchain.kernel-headers")}
 
-${package("$(TOOLCHAIN_BUILD_DIR)/torvalds-linux-fa9c4d0", "", "2.6.30", "linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION).tar.gz", "https://github.com/torvalds/linux/tarball/v2.6.30")}
+${package("$(TOOLCHAIN_BUILD_DIR)/linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION)", "", "2.6.39", "linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/kernel/v2.6/$(TOOLCHAIN_KERNEL-HEADERS_FILE)")}
 
 #Special rule, while kernel.org is down
-#${download}
-$(DOWNLOAD_DIR)/v2.6.30:
-	$(WGET) $(TOOLCHAIN_KERNEL-HEADERS_URL) -P $(DOWNLOAD_DIR)
+${download}
+#$(DOWNLOAD_DIR)/v2.6.39:
+#	$(WGET) $(TOOLCHAIN_KERNEL-HEADERS_URL) -P $(DOWNLOAD_DIR)
 
-$(DOWNLOAD_DIR)/$(TOOLCHAIN_KERNEL-HEADERS_FILE): $(DOWNLOAD_DIR)/v2.6.30
-	$(CP) $(DOWNLOAD_DIR)/v2.6.30 $(DOWNLOAD_DIR)/$(${local}FILE)
+#$(DOWNLOAD_DIR)/$(TOOLCHAIN_KERNEL-HEADERS_FILE): $(DOWNLOAD_DIR)/v2.6.39
+#	$(CP) $(DOWNLOAD_DIR)/v2.6.39 $(DOWNLOAD_DIR)/$(${local}FILE)
 
 ${unpack("$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR)/Makefile")}
 
