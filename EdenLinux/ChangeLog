@@ -1,3 +1,54 @@
+2011-09-22  oblivion  <oblivion@laptoblivion>
+
+	* mtl.py: Version 0.2
+
+2011-09-21  oblivion  <oblivion@laptoblivion>
+
+	* mtl.py: Added deletion of files that are no longer in the template dir
+
+2011-09-20  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/busybox.mk: Added busybox-menuconfig target
+	* tmpl/autoconf.py: Removed.
+	* tmpl/make.py: Removed.
+	* tmpl/namespace.py: Removed.
+	* tmpl/package.py: Removed.
+	* tmpl/packages/syslinux.conf: Removed.
+	* tmpl/patch.py: Removed.
+	* tmpl/put.py: Removed.
+	* tmpl/target/ext2.conf: Removed.
+	* tmpl/target/image.conf: Removed.
+	* tmpl/target/initramfs.conf: Removed.
+	* tmpl/target/iso.conf: Removed.
+	* tmpl/target/x86.conf: Removed.
+	* tmpl/toolchain/nasm.conf: Removed.
+	* tmpl/toolchain/syslinux.conf: Removed.
+	* tmpl/packages/syslinux.mk: New file.
+	* tmpl/target/ext2.mk: New file.
+	* tmpl/target/image.mk: New file.
+	* tmpl/target/initramfs.mk: New file.
+	* tmpl/target/iso.mk: New file.
+	* tmpl/target/x86.mk: New file.
+	* tmpl/toolchain/nasm.mk: New file.
+	* tmpl/toolchain/syslinux.mk: New file.
+	* inline.py: Fixed some new line issues
+	* mtl.py: More intelligent file update algorithm
+	* tmpl/commands.mk: Added some more commands
+	* tmpl/Makefile: 
+	* tmpl/packages/python.mk: 
+	* tmpl/target/target.mk: 
+	* tmpl/toolchain/toolchain.mk: 
+	* tmpl/toolchain/uclibc.mk: Added uclibc-menuconfig target
+2011-09-19  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/syslinux.mk: Converted from old syntax
+	* tmpl/toolchain/syslinux.mk: Converted from old syntax
+	* tmpl/target/target.mk: Include a target specific make file
+	* tmpl/target/ext2.mk: Converted from old syntax
+	* tmpl/target/image.mk: Converted from old syntax
+	* mk/ renamed to tmpl/
+	* tmpl/ renamed to plugins/
+
 2011-09-17  oblivion  <oblivion@laptoblivion>
 
 	* mk/packages/udev.mk: Converted from old syntax
@@ -9,5 +60,5 @@
 	* mk/packages/iana-etc.mk: New URL
 	* mk/packages/zlib.mk: Converted from old syntax
 	* mk/packages/kernel.mk: Fixed a typo in the config target
-	Kernel 2.6.39
-	kernel-menuconfig added
+	* mk/packages/kernel.mk: Kernel 2.6.39
+	* mk/packages/kernel.mk: kernel-menuconfig added

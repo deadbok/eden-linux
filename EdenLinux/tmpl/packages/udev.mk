@@ -7,7 +7,7 @@ ${download}
 
 ${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_UDEV_SRC_DIR)/configure")}
 	
-${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc-html --datarootdir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc', "")}
+${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --datarootdir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc', "")}
 
 ${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"', "all", "$(PACKAGES_UDEV_BUILD_DIR)/udev/udevd", "$(PACKAGES_UDEV_CONFIG)")}
 

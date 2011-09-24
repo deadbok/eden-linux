@@ -7,7 +7,6 @@ import re
 import sys
 from StringIO import StringIO
 import log
-import keywords
 import namespace
 
 
@@ -15,11 +14,12 @@ def repl(matchobj):
     log.logger.debug("Found in-line code: " + matchobj.group(1))
     buf = StringIO()
     sys.stdout = buf
-#    env = dict()
-#    env.update(namespace.namespaces[namespace.current].env)
-#    env.update(namespace.namespaces["global"].env)
+    env = dict()
+    env.update(namespace.namespaces[namespace.current].env)
+    env.update(namespace.namespaces["global"].env)
 #TODO: Make sure the dictionaries are passed in the right order for new variables to be created in the local namespace
-    exec matchobj.group(1) in namespace.namespaces["global"].env, namespace.namespaces[namespace.current].env
+    exec matchobj.group(1) in env
+    namespace.namespaces[namespace.current].env.update(env)
     #remember to restore the original stdout!
     sys.stdout = sys.__stdout__
 
@@ -45,8 +45,9 @@ class Inline(object):
 
         ret = list()
         for entity in self.processed:
-            if isinstance(entity, str):
+            if isinstance(entity, str) and entity != "":
                 keyword_sub = self.inline_re.sub(repl, entity)
-                ret.append(keyword_sub)
+                if not keyword_sub == "":
+                    ret.extend(keyword_sub.splitlines(True))
         self.processed = ret
         return(ret)
