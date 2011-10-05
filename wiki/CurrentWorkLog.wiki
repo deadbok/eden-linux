@@ -1,6 +1,11 @@
 #summary Log of what I am working on at the moment.
 
 =Log entries=
+5. oct. 2011
+----
+ * Template engine mostly done, maybe some refinements will creep in
+ * Creating plugins to support makefiles
+
 19. sep. 2011
 ----
  * Another complete rewrite almost done
