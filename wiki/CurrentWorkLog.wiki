@@ -1,6 +1,10 @@
 #summary Log of what I am working on at the moment.
 
 =Log entries=
+18. oct. 2011
+----
+ * The toolchain is giving me trouble
+
 5. oct. 2011
 ----
  * Template engine mostly done, maybe some refinements will creep in
