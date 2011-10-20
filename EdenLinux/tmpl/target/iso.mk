@@ -1,8 +1,8 @@
 #mtl
 ${local_namespace("target.iso")}
 
-${local}DIR = $(BUILD_DIR)/images
-${local}FILE := $(TARGET_ISO_DIR)/eden.iso
+${local()}DIR = $(BUILD_DIR)/images
+${local()}FILE := $(TARGET_ISO_DIR)/eden.iso
 
 include packages/syslinux.mk 
 
@@ -22,6 +22,7 @@ $(TARGET_ISO_FILE): $(TOOLCHAIN_SYSLINUX_SRC_DIR)/core/isolinux.bin $(TARGET_ISO
 ifeq ($(UID), 0)
 	$(CP) $(ROOTFS_DIR)/boot/kernel-$(PACKAGES_KERNEL_VERSION) $(ROOTFS_DIR)/boot/kernel
 	$(CP) $(TOOLCHAIN_SYSLINUX_BUILD_DIR)/core/isolinux.bin $(ROOTFS_DIR)/boot/isolinux/
+	$(TOUCH)  $(TOOLCHAIN_SYSLINUX_BUILD_DIR)/core/isolinux.bin
 	$(TOUCH)  $(ROOTFS_DIR)/etc/EdenLive
 	$(GENISOIMAGE) -o $(TARGET_ISO_FILE) -R -b boot/isolinux/isolinux.bin -c boot/isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table $(ROOTFS_DIR)	
 else
@@ -58,3 +59,5 @@ endif
 #		}
 #	:iso
 #:target
+
+.NOTPARALLEL:

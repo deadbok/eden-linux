@@ -1,19 +1,45 @@
 #mtl
 ${local_namespace("packages.udev")}
 
-${package("$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_UDEV_VERSION)", "", "168", "udev-$(PACKAGES_UDEV_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/utils/kernel/hotplug/$(PACKAGES_UDEV_FILE)")}
+#${package("$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_UDEV_VERSION)", "", "168", "udev-$(PACKAGES_UDEV_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/utils/kernel/hotplug/$(PACKAGES_UDEV_FILE)")}
 
-${download}
+#${download()}
 
-${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_UDEV_SRC_DIR)/configure")}
+#${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_UDEV_SRC_DIR)/configure")}
 	
-${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --datarootdir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc', "")}
+#${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=$(ROOTFS_DIR)/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc', "")}
 
-${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"', "all", "$(PACKAGES_UDEV_BUILD_DIR)/udev/udevd", "$(PACKAGES_UDEV_CONFIG)")}
+${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"
+${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/sbin/udevd", "$(PACKAGES_UDEV_ALL)")}
-	$(CP) $(ROOT)/${put(namespace.current.replace(".", "/"))}/80-drivers.rules $(ROOTFS_DIR)/etc/udev/rules.d/80-drivers.rules
-	$(CP) $(ROOT)/${put(namespace.current.replace(".", "/"))}/udev $(ROOTFS_DIR)/etc/init.d/udev  
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=$(ROOTFS_DIR)/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc
+${local()}CONFIG_ENV = $(PACKAGES_ENV)
+
+${local()}BUILD_PARAM = 
+${local()}BUILD_ENV = $(PACKAGES_ENV) 
+
+${py udev = AutoconfPackage('$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_UDEV_VERSION)', '', '168', "http://launchpad.net/udev/main/168/+download/udev-$(PACKAGES_UDEV_VERSION).tar.bz2", "$(ROOTFS_DIR)/sbin/udevd")}
+
+${udev.vars()}
+
+${udev.rules['download']}
+
+${udev.rules['unpack']}
+
+${udev.rules['config']}
+
+${udev.rules['build']}
+
+${py udev.rules['install'].dependencies += " $(PACKAGES_BOOTSCRIPTS_INSTALL)"}
+${udev.rules['install']}
+	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/80-drivers.rules $(ROOTFS_DIR)/etc/udev/rules.d/80-drivers.rules
+	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/udev $(ROOTFS_DIR)/etc/init.d/udev  
+
+#${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"', "all", "$(PACKAGES_UDEV_BUILD_DIR)/udev/udevd", "$(PACKAGES_UDEV_CONFIG)")}
+
+#${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/sbin/udevd", "$(PACKAGES_UDEV_ALL) $(PACKAGES_BOOTSCRIPTS_INSTALL)")}
+#	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/80-drivers.rules $(ROOTFS_DIR)/etc/udev/rules.d/80-drivers.rules
+#	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/udev $(ROOTFS_DIR)/etc/init.d/udev  
 
 $(ROOTFS_DIR)/lib/udev/devices:
 	$(MKDIR) -p $(ROOTFS_DIR)/lib/udev/devices
@@ -36,7 +62,8 @@ $(ROOTFS_DIR)/lib/udev/devices/tty1: $(ROOTFS_DIR)/lib/udev/devices
 $(ROOTFS_DIR)/lib/udev/devices/console: $(ROOTFS_DIR)/lib/udev/devices
 	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/console c 5 1
 
-${local}DEVICES = $(ROOTFS_DIR)/lib/udev/devices/zero $(ROOTFS_DIR)/lib/udev/devices/null $(ROOTFS_DIR)/lib/udev/devices/tty $(ROOTFS_DIR)/lib/udev/devices/tty0 $(ROOTFS_DIR)/lib/udev/devices/tty1 $(ROOTFS_DIR)/lib/udev/devices/console
+${local()}DEVICES = $(ROOTFS_DIR)/lib/udev/devices/zero $(ROOTFS_DIR)/lib/udev/devices/null $(ROOTFS_DIR)/lib/udev/devices/tty $(ROOTFS_DIR)/lib/udev/devices/tty0 $(ROOTFS_DIR)/lib/udev/devices/tty1 $(ROOTFS_DIR)/lib/udev/devices/console
+
 #packages:
 #	udev:
 #		version = 162

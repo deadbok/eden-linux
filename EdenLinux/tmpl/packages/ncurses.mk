@@ -1,17 +1,29 @@
 #mtl
 ${local_namespace("packages.ncurses")}
 
-${package("$(PACKAGES_BUILD_DIR)/ncurses-$(PACKAGES_NCURSES_VERSION)", "", "5.7", "ncurses-$(PACKAGES_NCURSES_VERSION).tar.gz", "http://ftp.gnu.org/pub/gnu/ncurses/$(PACKAGES_NCURSES_FILE)")}
+#${package("$(PACKAGES_BUILD_DIR)/ncurses-$(PACKAGES_NCURSES_VERSION)", "", "5.7", "ncurses-$(PACKAGES_NCURSES_VERSION).tar.gz", "http://ftp.gnu.org/pub/gnu/ncurses/$(PACKAGES_NCURSES_FILE)")}
 
-${download}
+${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
+${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_NCURSES_SRC_DIR)/configure")}
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --with-cc="$(ARCH_TARGET)-gcc -Os" --with-linker=$(ARCH_TARGET)-ld --with-shared --without-debug --without-ada --with-build-cc=gcc --enable-overwrite --without-cxx-binding --program-prefix=
+${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
-${autoconf('$(TOOLCHAIN_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --with-cc="$(ARCH_TARGET)-gcc -Os" --with-linker=$(ARCH_TARGET)-ld --with-shared --without-debug --without-ada --with-build-cc=gcc --enable-overwrite --without-cxx-binding --program-prefix=', "")}
+${local()}BUILD_PARAM = MULTI=1 PROGRAMS="ncurses dbclient ncurseskey ncursesconvert scp"
+${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
-${make("$(TOOLCHAIN_ENV)", 'MULTI=1 PROGRAMS="ncurses dbclient ncurseskey ncursesconvert scp"', "all", "$(PACKAGES_NCURSES_BUILD_DIR)/lib/libncurses.a", "$(PACKAGES_NCURSES_CONFIG)")}
+${py ncurses = AutoconfPackage('$(PACKAGES_BUILD_DIR)/ncurses-$(PACKAGES_NCURSES_VERSION)', '', '5.7', "http://ftp.gnu.org/pub/gnu/ncurses/ncurses-$(PACKAGES_NCURSES_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/lib/libncurses.a", "$(PACKAGES_ENV)")}
+${ncurses}
 
-${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/usr/lib/libncurses.a", "$(PACKAGES_NCURSES_ALL)")}
+#${download()}
+
+#${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_NCURSES_SRC_DIR)/configure")}
+
+#${autoconf('$(TOOLCHAIN_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --with-cc="$(ARCH_TARGET)-gcc -Os" --with-linker=$(ARCH_TARGET)-ld --with-shared --without-debug --without-ada --with-build-cc=gcc --enable-overwrite --without-cxx-binding --program-prefix=', "")}
+
+#${make("$(TOOLCHAIN_ENV)", 'MULTI=1 PROGRAMS="ncurses dbclient ncurseskey ncursesconvert scp"', "all", "$(PACKAGES_NCURSES_BUILD_DIR)/lib/libncurses.a", "$(PACKAGES_NCURSES_CONFIG)")}
+
+#${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/usr/lib/libncurses.a", "$(PACKAGES_NCURSES_ALL)")}
 
 
 #
@@ -32,3 +44,5 @@ ${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/us
 #		distclean()
 #	:ncurses
 #:packages
+
+.NOTPARALLEL:

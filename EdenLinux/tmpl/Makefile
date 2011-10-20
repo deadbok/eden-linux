@@ -1,4 +1,7 @@
 #mtl
+
+include colors.mk
+
 TARGET := x86
 ARCH := i686
 KERNEL_ARCH := i386
@@ -30,24 +33,35 @@ $(IMAGES_DIR):
 $(ROOTFS_DIR):
 	$(MKDIR) $(ROOTFS_DIR)
 
+$(TEMP_DIR):
+	$(MKDIR) $(TEMP_DIR)
+
 include commands.mk
 
 include toolchain/toolchain.mk
 include packages/packages.mk
 include target/target.mk
 
-all: $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(PACKAGES_BUILD)
+.PHONY: all
+all: $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(PACKAGES_BUILD)
+	$(TOUCH) $(TEMP_DIR)/.all
+
+#Cry out if trying install before all
+$(TEMP_DIR)/.all:
+	$(error Make target 'all' first)
 
 INSTALL := $(PACKAGES_INSTALL) $(TARGET_INSTALL)
 
 .PHONY: install
-install: 
+install: $(TEMP_DIR)/.all 
 ifeq ($(UID), 0)
 	$(MAKE) $(INSTALL)
 else
-	$(error you need to be root)
+	$(error You need to be root)
 endif
-	
+
+.NOTPARALLEL:
+
 #TODO: Clean rules
 #clean(clean, ${clean.toolchain})
 #{

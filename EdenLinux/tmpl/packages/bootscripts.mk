@@ -1,10 +1,15 @@
 #mtl
 ${local_namespace("packages.bootscripts")}
 
-${package("$(ROOT)/packages/bootscripts", "", "1.0", "", "")}
+#${package("$(ROOT)/packages/bootscripts", "", "1.0", "", "")}
+${py bootscripts = Package("$(ROOT)/packages/bootscripts", "", "1.0", "", "$(ROOTFS_DIR)/sbin/rc-update.py")}
+${bootscripts}
 
-${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/sbin/rc-update.py", "")}
-	$(TOUCH) $(PACKAGES_BOOTSCRIPTS_INSTALL)
+${py install = MakeRule("", "DESTDIR=$(ROOTFS_DIR)", "$(PACKAGES_BOOTSCRIPTS_BUILD_DIR)", "install", "$(ROOTFS_DIR)/sbin/rc-update.py", "", var_name("install"))} 
+${install}
+
+#${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/sbin/rc-update.py", "")}
+#	$(TOUCH) $(PACKAGES_BOOTSCRIPTS_INSTALL)
 
 #packages:
 #	bootscripts:
@@ -19,3 +24,5 @@ ${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/sbin/rc-update.py"
 #		distclean()
 #	:bootscripts
 #:packages
+
+.NOTPARALLEL:

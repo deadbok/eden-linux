@@ -13,4 +13,6 @@ include target/iso.mk
 #update-busybox-config: $(PACKAGES_BUSYBOX_SRC_DIR)/.config
 #	$(CP) -a $(PACKAGES_BUSYBOX_SRC_DIR)/.config $(${local}BUSYBOX_CONFIG)
 
-${local}INSTALL = $(TARGET_ISO_FILE)
+${local()}INSTALL = $(TARGET_ISO_FILE)
+
+.NOTPARALLEL:

@@ -79,3 +79,5 @@ endif
 #		}
 #	:ext2
 #:target
+
+.NOTPARALLEL:

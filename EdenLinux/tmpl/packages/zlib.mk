@@ -1,18 +1,35 @@
 #mtl
 ${local_namespace("packages.zlib")}
 
-${package("$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)", "", "1.2.5", "zlib-$(PACKAGES_ZLIB_VERSION).tar.gz", "http://www.zlib.net/$(PACKAGES_ZLIB_FILE)")}
+#${package("$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)", "", "1.2.5", "zlib-$(PACKAGES_ZLIB_VERSION).tar.gz", "http://www.zlib.net/$(PACKAGES_ZLIB_FILE)")}
+#${Package("$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)", "", "1.2.5", "http://www.zlib.net/linux-$(PACKAGES_KERNEL_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/lib/libz.a")}
 
-${download}
+${local()}INSTALL_PARAM = prefix=$(ROOTFS_DIR)/usr -j1
+${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_ZLIB_SRC_DIR)/configure")}
+${local()}CONFIG_PARAM = --prefix=/usr --shared
+${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
-${autoconf('$(TOOLCHAIN_ENV)', '--prefix=/usr --shared', "")}
+${local()}BUILD_PARAM = -j1
+${local()}BUILD_ENV = $(PACKAGES_ENV)  
 
-${make("$(TOOLCHAIN_ENV)", '-j1', "all", "$(PACKAGES_ZLIB_BUILD_DIR)/libz.a", "$(PACKAGES_ZLIB_CONFIG)")}
+${py zlib = AutoconfPackage('$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)', '', '1.2.5', "http://www.zlib.net/zlib-$(PACKAGES_ZLIB_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/lib/libz.a")}
+${zlib}
+#${download()}
 
-${make("$(TOOLCHAIN_ENV)", 'prefix=$(ROOTFS_DIR)/usr -j1', "install", "$(ROOTFS_DIR)/usr/lib/libz.a", "$(PACKAGES_ZLIB_ALL)")}
+#${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_ZLIB_SRC_DIR)/configure")}
 
+#${DownloadRule("$(DOWNLOAD_DIR)", "$(PACKAGES_ZLIB_URL)")}
+
+#${UnpackRule("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_ZLIB_SRC_DIR)/configure")}
+
+#${autoconf('$(TOOLCHAIN_ENV)', '--prefix=/usr --shared', "")}
+
+#${make("$(TOOLCHAIN_ENV)", '-j1', "all", "$(PACKAGES_ZLIB_BUILD_DIR)/libz.a", "$(PACKAGES_ZLIB_CONFIG)")}
+#${MakeRule("$(TOOLCHAIN_ENV)", "-j1", "$(PACKAGES_BASECONF_BUILD_DIR)", "all", "$(PACKAGES_ZLIB_BUILD_DIR)/libz.a", var_name("build"), "$(PACKAGES_ZLIB_CONFIG)")}
+
+#${make("$(TOOLCHAIN_ENV)", 'prefix=$(ROOTFS_DIR)/usr -j1', "install", "$(ROOTFS_DIR)/usr/lib/libz.a", "$(PACKAGES_ZLIB_ALL)")}
+#${MakeRule("$(TOOLCHAIN_ENV)", "prefix=$(ROOTFS_DIR)/usr -j1", "$(PACKAGES_BASECONF_BUILD_DIR)", "install", "$(ROOTFS_DIR)/usr/lib/libz.a", var_name("install"), "$(PACKAGES_ZLIB_BUILD)")}
 
 
 
@@ -33,3 +50,6 @@ ${make("$(TOOLCHAIN_ENV)", 'prefix=$(ROOTFS_DIR)/usr -j1', "install", "$(ROOTFS_
 #		distclean()
 #	:zlib
 #:packages
+
+
+.NOTPARALLEL:

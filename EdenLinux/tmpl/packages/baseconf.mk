@@ -1,10 +1,13 @@
 #mtl
 ${local_namespace("packages.baseconf")}
 
-${package("$(ROOT)/packages/baseconf", "", "1.0", "", "")}
+#${package("$(ROOT)/packages/baseconf", "", "1.0", "", "")}
+${Package("$(ROOT)/packages/baseconf", "", "1.0", "", "$(ROOTFS_DIR)/etc/profile")}
 
-${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/etc/profile", "")}
-	$(TOUCH) $(PACKAGES_BASECONF_INSTALL)
+${MakeRule("", "DESTDIR=$(ROOTFS_DIR)", "$(PACKAGES_BASECONF_BUILD_DIR)", "install", "$(ROOTFS_DIR)/etc/profile", "", var_name("install"))} 
+
+#${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/etc/profile", "")}
+#	$(TOUCH) $(PACKAGES_BASECONF_INSTALL)
 
 #	
 #packages:
@@ -20,3 +23,5 @@ ${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/etc/profile", "")}
 #		distclean()
 #	:baseconf
 #:packages
+
+.NOTPARALLEL:

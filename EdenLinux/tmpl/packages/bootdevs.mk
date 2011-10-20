@@ -1,10 +1,16 @@
 #mtl
 ${local_namespace("packages.bootdevs")}
 
-${package("$(ROOT)/packages/bootdevs", "", "1.0", "", "")}
+${Package("$(ROOT)/packages/bootdevs", "", "1.0", "", "$(ROOTFS_DIR)/.devs")}
 
-${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/.devs", "")}
-	$(TOUCH) $(PACKAGES_BOOTDEVS_INSTALL)
+
+${MakeRule("", "DESTDIR=$(ROOTFS_DIR)", "$(PACKAGES_BOOTDEVS_BUILD_DIR)", "install", "$(ROOTFS_DIR)/.dev", "", var_name("install"))} 
+
+
+#${package("$(ROOT)/packages/bootdevs", "", "1.0", "", "")}
+#
+#${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/.devs", "")}
+#	$(TOUCH) $(PACKAGES_BOOTDEVS_INSTALL)
 
 #packages:
 #	bootdevs:
@@ -19,3 +25,5 @@ ${make("", "DESTDIR=$(ROOTFS_DIR)", "install", "$(ROOTFS_DIR)/.devs", "")}
 #		distclean()
 #	:bootdevss
 #:packages
+
+.NOTPARALLEL:

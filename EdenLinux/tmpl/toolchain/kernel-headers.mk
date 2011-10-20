@@ -1,17 +1,17 @@
 #mtl
 ${local_namespace("toolchain.kernel-headers")}
 
-${package("$(TOOLCHAIN_BUILD_DIR)/linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION)", "", "2.6.39", "linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/kernel/v2.6/$(TOOLCHAIN_KERNEL-HEADERS_FILE)")}
+#${package("$(TOOLCHAIN_BUILD_DIR)/linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION)", "", "2.6.39", "linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/kernel/v2.6/$(TOOLCHAIN_KERNEL-HEADERS_FILE)")}
 
-#Special rule, while kernel.org is down
-${download}
-#$(DOWNLOAD_DIR)/v2.6.39:
-#	$(WGET) $(TOOLCHAIN_KERNEL-HEADERS_URL) -P $(DOWNLOAD_DIR)
+${Package('$(TOOLCHAIN_BUILD_DIR)/linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION)', '', '2.6.39', "http://linux-kernel.uio.no/pub/linux/kernel/v2.6/linux-$(TOOLCHAIN_KERNEL-HEADERS_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/include/linux/fs.h")}
 
-#$(DOWNLOAD_DIR)/$(TOOLCHAIN_KERNEL-HEADERS_FILE): $(DOWNLOAD_DIR)/v2.6.39
-#	$(CP) $(DOWNLOAD_DIR)/v2.6.39 $(DOWNLOAD_DIR)/$(${local}FILE)
+${DownloadRule("$(TOOLCHAIN_KERNEL-HEADERS_URL)")}
 
-${unpack("$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR)/Makefile")}
+${UnpackRule("$(DOWNLOAD_DIR)/$(TOOLCHAIN_KERNEL-HEADERS_FILE)", "$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR)/Makefile")}
+
+#${download()}
+
+#${unpack("$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR)/Makefile")}
 
 TOOLCHAIN_KERNEL-HEADERS_BUILD = $(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR)/include/linux/version.h
 $(TOOLCHAIN_KERNEL-HEADERS_BUILD): $(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR)/Makefile
@@ -22,3 +22,4 @@ TOOLCHAIN_KERNEL-HEADERS_INSTALL = $(ROOTFS_DIR)/usr/include/linux/fs.h
 $(TOOLCHAIN_KERNEL-HEADERS_INSTALL): $(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR)/include/linux/version.h
 	CFLAGS="" CXXFLAGS="" $(MAKE) -C $(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR) ARCH=$(KERNEL_ARCH) INSTALL_HDR_PATH=$(ROOTFS_DIR)/usr headers_install
 
+.NOTPARALLEL:

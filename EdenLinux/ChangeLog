@@ -1,3 +1,69 @@
+2011-10-16  oblivion  <oblivion@laptoblivion>
+
+	* plugins/put.py: Removed.
+	* tmpl/packages/bootscripts/sbin/boot_services/BootService.py: Removed.
+	* tmpl/packages/bootscripts/sbin/boot_services/BootServices.py: Removed.
+	* tmpl/packages/pkg-config.mk: Removed.
+	* Makefile: New file.
+	* mtl/__init__.py: New file.
+	* mtl/inline.py: New file.
+	* mtl/keywords.py: New file.
+	* mtl/log.py: New file.
+	* mtl/mtl.py: New file.
+	* mtl/namespace.py: New file.
+	* mtl/ordereddict.py: New file.
+	* plugins/__init__.py: New file.
+	* plugins/download.py: New file.
+	* plugins/rule.py: New file.
+	* plugins/unpack.py: New file.
+	* plugins/autoconf.py: Created classes for generating templates
+	* plugins/make.py: Created classes for generating templates
+	* plugins/namespace.py: Cleaning up
+	* plugins/package.py: Created classes for generating templates
+	* plugins/patch.py: Created classes for generating templates
+	* tmpl/colors.mk: Added some term codes
+	* tmpl/commands.mk: Converted to new class template syntax
+	* tmpl/Makefile: Converted to new class template syntax
+	* tmpl/packages/baseconf.mk: Converted to new class template syntax
+	* tmpl/packages/bootdevs.mk: Converted to new class template syntax
+	* tmpl/packages/bootscripts.mk: Converted to new class template syntax
+	* tmpl/packages/bootscripts/sbin/rc-update.py: 
+	* tmpl/packages/busybox.mk: Converted to new class template syntax
+	* tmpl/packages/dropbear.mk: Converted to new class template syntax
+	* tmpl/packages/e2fsprogs.mk: Converted to new class template syntax
+	* tmpl/packages/iana-etc.mk: Converted to new class template syntax
+	* tmpl/packages/kernel.mk: Converted to new class template syntax
+	* tmpl/packages/kernel/config: 
+	* tmpl/packages/nano.mk: Converted to new class template syntax
+	* tmpl/packages/ncurses.mk: Converted to new class template syntax
+	* tmpl/packages/packages.mk: Converted to new class template syntax
+	* tmpl/packages/python.mk: Converted to new class template syntax
+	* tmpl/packages/syslinux.mk: Converted to new class template syntax
+	* tmpl/packages/udev.mk: Converted to new class template syntax
+	* tmpl/packages/zlib.mk: Converted to new class template syntax
+	* tmpl/target/ext2.mk: Converted to new class template syntax
+	* tmpl/target/fsh.mk: Converted to new class template syntax
+	* tmpl/target/image.mk: Converted to new class template syntax
+	* tmpl/target/initramfs.mk: Converted to new class template syntax
+	* tmpl/target/iso.mk: Converted to new class template syntax
+	* tmpl/target/target.mk: Converted to new class template syntax
+	* tmpl/target/x86.mk: Converted to new class template syntax
+	* tmpl/target/x86/uclibc_config: 
+	* tmpl/toolchain/binutils.mk: Converted to new class template syntax
+	* tmpl/toolchain/gcc-cross.mk: Converted to new class template syntax
+	* tmpl/toolchain/gcc-static.mk: Converted to new class template syntax
+	* tmpl/toolchain/gmp.mk: Converted to new class template syntax
+	* tmpl/toolchain/kernel-headers.mk: Converted to new class template syntax
+	* tmpl/toolchain/mpc.mk: Converted to new class template syntax
+	* tmpl/toolchain/mpfr.mk: Converted to new class template syntax
+	* tmpl/toolchain/nasm.mk: Converted to new class template syntax
+	* tmpl/toolchain/syslinux.mk: Converted to new class template syntax
+	* tmpl/toolchain/toolchain.mk: Converted to new class template syntax
+	* tmpl/toolchain/uclibc.mk: Converted to new class template syntax
+2011-09-25  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/kernel/config: Updated for kernel 2.6.39
+
 2011-09-22  oblivion  <oblivion@laptoblivion>
 
 	* mtl.py: Version 0.2

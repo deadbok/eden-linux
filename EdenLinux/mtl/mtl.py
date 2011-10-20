@@ -13,28 +13,79 @@ import logging
 import inline
 import keywords
 import namespace
+import ordereddict
 from namespace import namespaces
 from StringIO import StringIO
 
 version = 0.2
 
 def istemplate(lines):
+    '''
+    Check for template identifier in the lines.
+    
+    @type lines: str
+    @param lines: The lines to test.
+    @rtype: Bool
+    @return: Whether the lines belong to a template
+    '''
     if lines[0].find("#mtl") == 0:
         return(True)
     else:
         return(False)
 
 def load_plugins(root_dir):
+    '''
+    Load plugins.
+    
+    @type root_dir: str
+    @param root_dir: The directory to load the plugins from.
+    '''
     log.logger.info("Loading plugins from: " + root_dir)
-    for entry in os.listdir(root_dir):
-        if entry.find(".py") > -1:
-            log.logger.info(entry)
-            namespaces["global"].env["namespace"] = namespace
-            execfile(root_dir + "/" + entry, namespaces["global"].env)
+    plugins = os.listdir(root_dir)
+    index = 0
+    stop = False
+    entry = ""
+    errors = 0
+    while len(plugins) > 0:
+        if errors == len(plugins):
+            stop = True
+        if index >= len(plugins):
+            index = 0
+            errors = 0
+        entry = plugins[index]
+        if entry.endswith(".py"):
+            try:
+                namespaces["global"].env["namespace"] = namespace
+                namespaces["global"].env["ordereddict"] = ordereddict
+                execfile(root_dir + "/" + entry, namespaces["global"].env)
+                del plugins[index]
+                log.logger.info(entry + "...OK")
+            except Exception as exception:
+                if stop:
+                    raise exception
+                index += 1
+                errors += 1
+                log.logger.info(entry + "..." + str(exception) + "...waiting")
+        else:
+            del plugins[index]
+
+#    for entry in os.listdir(root_dir):
+#        if entry.find(".py") > -1:
+#            log.logger.info(entry)
+#            try:
+#                namespaces["global"].env["namespace"] = namespace
+#                execfile(root_dir + "/" + entry, namespaces["global"].env)
+
 
 def process_templates(root_dir, output_dir):
-    '''Process templates in root dir and all subdirectories,
-    and output them to a directory.
+    '''
+    Process templates in root dir and all subdirectories,
+    and output the results to a directory.
+    
+    @type root_dir: str
+    @param root_dir: Root directory to load the templates from.
+    @type output_dir: str
+    @param output_dir: Directory to put the processed templates in.
     '''
     for entry in os.listdir(root_dir):
         if not ((entry.find(".") == 0)):
@@ -87,11 +138,21 @@ def clean_output_dir(root_dir, output_dir, do_dirs = False):
 
 
 def update_template(tmpl_file, input_filename, output_filename):
+    '''
+    Update the target of a template, checking if contents have changed.
+    
+    @type tmpl_file: File Object
+    @param tmpl_file: An open template file.
+    @type input_filename: str.
+    @param input_filename: Name of the template file.
+    @type output_filename: str
+    @param output_filename: Name of the output file.
+    '''
     log.logger.info("Reading template: " + input_filename)
     lines = tmpl_file.readlines()
     template = inline.Inline(lines)
     #Dirty trick. I use StringIO to make sure the output lines are
-    #formatted as the would be, hen read from a file
+    #formatted as the would be, when read from a file
     temp_strio = StringIO()
     temp_strio.writelines(template.substitute(keywords.keywords))
     temp_strio.seek(0)
@@ -113,6 +174,16 @@ def update_template(tmpl_file, input_filename, output_filename):
             output_file.close()
 
 def process_file(input_filename, output_filename):
+    '''
+    Do something to a file.
+        - If the file is a template update it
+        - If it is some other type of file, copy it if needed
+    
+    @type input_filename: str
+    @param input_filename: The name of the input file to work on
+    @type output_filename: str
+    @param output_filename: The name of the output file or directory
+    '''
     with open(input_filename) as tmpl_file:
         line = tmpl_file.readline()
         if istemplate([line]):
@@ -129,12 +200,17 @@ def process_file(input_filename, output_filename):
                 else:
                     log.logger.debug("No need to update: " + output_filename)
             else:
+                #There is no spoon!
+                #Copy the file to have one.
                 log.logger.info("Copying: " + input_filename)
-                shutil.copy2(input_filename, os.path.dirname(output_filename))
+                shutil.copy2(input_filename,
+                                 os.path.dirname(output_filename))
+                #shutil.copy2(input_filename, os.path.dirname(output_filename))
         tmpl_file.close()
 
 
 def main():
+    '''Main entry point.'''
     usage = "usage: %prog [options] template_path output_dir"
     arg_parser = optparse.OptionParser(usage = usage)
     arg_parser.add_option("-v", "--verbose",

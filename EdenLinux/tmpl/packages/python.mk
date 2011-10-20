@@ -1,38 +1,52 @@
 #mtl
 ${local_namespace("packages.python")}
 
-${package("$(PACKAGES_BUILD_DIR)/Python-$(PACKAGES_PYTHON_VERSION)", "$(PACKAGES_BUILD_DIR)/Python-cross_build", "2.6.6", "Python-$(PACKAGES_PYTHON_VERSION).tar.bz2", "http://www.python.org/ftp/python/$(PACKAGES_PYTHON_VERSION)/$(PACKAGES_PYTHON_FILE)")}
+${Package("$(PACKAGES_BUILD_DIR)/Python-$(PACKAGES_PYTHON_VERSION)", "$(PACKAGES_BUILD_DIR)/Python-$(PACKAGES_PYTHON_VERSION)", "2.6.6", "http://www.python.org/ftp/python/$(PACKAGES_PYTHON_VERSION)/Python-$(PACKAGES_PYTHON_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/python")}
 
-${download}
+${DownloadRule("$(PACKAGES_PYTHON_URL)")}
 
-${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_PYTHON_SRC_DIR)/configure")}
+${UnpackRule("$(DOWNLOAD_DIR)/$(PACKAGES_PYTHON_FILE)", "$(PACKAGES_BUILD_DIR)", "$(PACKAGES_PYTHON_SRC_DIR)/README")}
 
-${patchall("$(PACKAGES_PYTHON_UNPACK)")}
+${PatchRule("$(PACKAGES_PYTHON_UNPACK)")}
+	
+${AutoconfRule('', '', "$(PACKAGES_PYTHON_SRC_DIR)", "$(PACKAGES_PYTHON_BUILD_DIR)", "$(PACKAGES_PYTHON_BUILD_DIR)/.host_configured", "$(PACKAGES_PYTHON_UNPACK)", "PACKAGES_PYTHON_HOST_CONFIG")}
+	$(TOUCH) $(PACKAGES_PYTHON_SRC_DIR)/.host_configured
 
-$(PACKAGES_PYTHON_BUILD_DIR): $(PACKAGES_PYTHON_BUILD_DIR)/.dir
+${MakeRule('', '', "$(PACKAGES_PYTHON_SRC_DIR)", "python", "$(PACKAGES_PYTHON_SRC_DIR)/hostpython", "$(PACKAGES_PYTHON_HOST_CONFIG)", "PACKAGES_PYTHON_HOST_PYTHON")}
+	$(MV) $(PACKAGES_PYTHON_SRC_DIR)/python $(PACKAGES_PYTHON_SRC_DIR)/hostpython
 
-$(PACKAGES_PYTHON_BUILD_DIR)/.dir:
-	$(MKDIR) $(PACKAGES_PYTHON_BUILD_DIR)
-	$(TOUCH) $(PACKAGES_PYTHON_BUILD_DIR)/.dir
+${MakeRule('', '', "$(PACKAGES_PYTHON_SRC_DIR)/Parser", "pgen", "$(PACKAGES_PYTHON_SRC_DIR)/Parser/hostpgen", "$(PACKAGES_PYTHON_HOST_CONFIG)", "PACKAGES_PYTHON_HOST_PGEN")}
+	$(MV) $(PACKAGES_PYTHON_SRC_DIR)/Parser/pgen $(PACKAGES_PYTHON_SRC_DIR)/Parser/hostpgen
 
-PACKAGES_PYTHON_HOST-TOOlS = $(PACKAGES_PYTHON_BUILD_DIR)/hostpython
-$(PACKAGES_PYTHON_HOST-TOOlS): $(PACKAGES_PYTHON_PATCHALL) $(PACKAGES_PYTHON_BUILD_DIR)/.dir
-	(cd $(PACKAGES_PYTHON_BUILD_DIR); \
-		$(PACKAGES_PYTHON_SRC_DIR)/configure --prefix=/usr \
-	);
-	$(MAKE) -C $(PACKAGES_PYTHON_BUILD_DIR) python
-	$(MV) $(PACKAGES_PYTHON_BUILD_DIR)/python $(PACKAGES_PYTHON_BUILD_DIR)/hostpython
-	$(MAKE) -C $(PACKAGES_PYTHON_BUILD_DIR)/Parser pgen
-	$(MV) $(PACKAGES_PYTHON_BUILD_DIR)/Parser/pgen $(PACKAGES_PYTHON_BUILD_DIR)/Parser/hostpgen
-	$(MAKE) -C $(PACKAGES_PYTHON_BUILD_DIR) distclean
+${MakeRule('', '', "$(PACKAGES_PYTHON_SRC_DIR)", "distclean", "distclean", "$(PACKAGES_PYTHON_HOST_CONFIG)", "PACKAGES_PYTHON_DISTCLEAN")}
 
-${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --build=$(ARCH_HOST) --host=$(ARCH_TARGET)', "$(PACKAGES_PYTHON_HOST-TOOlS)")}
+PACKAGES_PYTHON_HOST-TOOlS = $(PACKAGES_PYTHON_SRC_DIR)/.host-tools
+$(PACKAGES_PYTHON_HOST-TOOlS): $(PACKAGES_PYTHON_HOST_PYTHON) $(PACKAGES_PYTHON_HOST_PGEN)
+	$(MAKE) $(PACKAGES_PYTHON_DISTCLEAN)
+	$(TOUCH) $(PACKAGES_PYTHON_SRC_DIR)/.host-tools
+#	(cd $(PACKAGES_PYTHON_SRC_DIR); \
+#		$(PACKAGES_PYTHON_SRC_DIR)/configure\
+#	);
+#	$(MAKE) -C $(PACKAGES_PYTHON_SRC_DIR) python
+#	$(MV) $(PACKAGES_PYTHON_SRC_DIR)/python $(PACKAGES_PYTHON_SRC_DIR)/hostpython
+#	$(MAKE) -C $(PACKAGES_PYTHON_SRC_DIR)/Parser pgen
+#	$(MV) $(PACKAGES_PYTHON_SRC_DIR)/Parser/pgen $(PACKAGES_PYTHON_SRC_DIR)/Parser/hostpgen
+#	$(MAKE) -C $(PACKAGES_PYTHON_SRC_DIR) distclean
+
+#${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --build=$(ARCH_HOST) --host=$(ARCH_TARGET)', "$(PACKAGES_PYTHON_HOST-TOOlS)")}
+${AutoconfRule('$(PACKAGES_ENV)', '--prefix=/usr --build=$(ARCH_HOST) --host=$(ARCH_TARGET)', "$(PACKAGES_PYTHON_SRC_DIR)", "$(PACKAGES_PYTHON_BUILD_DIR)", "$(PACKAGES_PYTHON_BUILD_DIR)/Makefile", "$(PACKAGES_PYTHON_HOST-TOOlS) $(PACKAGES_PYTHON_PATCHALL)")}
 	$(CP) -r "$(PACKAGES_PYTHON_SRC_DIR)/Lib/plat-linux2" "$(PACKAGES_PYTHON_SRC_DIR)/Lib/plat-linux3"
+#Make sure we do not start making host-tools when rerunning the make file
+#Patching modifies ./configure making it newer than ./.host_configured
+#	$(TOUCH) $(PACKAGES_PYTHON_SRC_DIR)/.host_configured
 
-${make("$(PACKAGES_ENV)", 'HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen BLDSHARED="$(ARCH_TARGET)-gcc -shared" CROSS_COMPILE=$(ARCH_TARGET)- CROSS_COMPILE_TARGET=yes', "all", "$(PACKAGES_PYTHON_BUILD_DIR)/python", "$(PACKAGES_PYTHON_CONFIG)")}
+#${make("$(PACKAGES_ENV)", 'HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen BLDSHARED="$(ARCH_TARGET)-gcc -shared" CROSS_COMPILE=$(ARCH_TARGET)- CROSS_COMPILE_TARGET=yes', "all", "$(PACKAGES_PYTHON_BUILD_DIR)/python", "$(PACKAGES_PYTHON_CONFIG)")}
+${MakeRule('$(PACKAGES_ENV)', 'HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen BLDSHARED="$(ARCH_TARGET)-gcc -shared" CROSS_COMPILE=$(ARCH_TARGET)- CROSS_COMPILE_TARGET=yes', "$(PACKAGES_PYTHON_BUILD_DIR)", "all", "$(PACKAGES_PYTHON_BUILD_DIR)/python", "$(PACKAGES_PYTHON_CONFIG)", "PACKAGES_PYTHON_BUILD")}
 
-${make("$(PACKAGES_ENV)", 'HOSTPYTHON=./hostpython BLDSHARED="$(ARCH_TARGET)-gcc -shared" CROSS_COMPILE=$(ARCH_TARGET)- CROSS_COMPILE_TARGET=yes prefix=$(ROOTFS_DIR)/usr', "install", "$(ROOTFS_DIR)/usr/bin/python", "$(PACKAGES_PYTHON_ALL)")}
 
+#${make("$(PACKAGES_ENV)", 'HOSTPYTHON=./hostpython BLDSHARED="$(ARCH_TARGET)-gcc -shared" CROSS_COMPILE=$(ARCH_TARGET)- CROSS_COMPILE_TARGET=yes prefix=$(ROOTFS_DIR)/usr', "install", "$(ROOTFS_DIR)/usr/bin/python", "$(PACKAGES_PYTHON_ALL)")}
+${MakeRule('$(PACKAGES_ENV)', 'HOSTPYTHON=./hostpython BLDSHARED="$(ARCH_TARGET)-gcc -shared" CROSS_COMPILE=$(ARCH_TARGET)- CROSS_COMPILE_TARGET=yes prefix=$(ROOTFS_DIR)/usr', "$(PACKAGES_PYTHON_BUILD_DIR)", "install", "$(ROOTFS_DIR)/usr/bin/python", "$(PACKAGES_PYTHON_BUILD)", "PACKAGES_PYTHON_INSTALL")}
+	
 #packages:
 #	python:
 #		version = 2.6.6
@@ -78,3 +92,5 @@ ${make("$(PACKAGES_ENV)", 'HOSTPYTHON=./hostpython BLDSHARED="$(ARCH_TARGET)-gcc
 #		distclean()
 #	:python
 #:packages
+
+.NOTPARALLEL:

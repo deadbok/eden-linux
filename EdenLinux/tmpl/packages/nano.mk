@@ -1,17 +1,28 @@
 #mtl
 ${local_namespace("packages.nano")}
 
-${package("$(PACKAGES_BUILD_DIR)/nano-$(PACKAGES_NANO_VERSION)", "", "2.2.5", "nano-$(PACKAGES_NANO_VERSION).tar.gz", "http://www.nano-editor.org/dist/v2.2/$(PACKAGES_NANO_FILE)")}
+${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
+${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${download}
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --enable-tiny --program-prefix=
+${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
-${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_NANO_SRC_DIR)/configure")}
+${local()}BUILD_ENV = $(PACKAGES_ENV)  
 
-${autoconf('$(TOOLCHAIN_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --enable-tiny --program-prefix=', "")}
 
-${make("$(TOOLCHAIN_ENV)", '', "all", "$(PACKAGES_NANO_BUILD_DIR)/src/nano", "$(PACKAGES_NANO_CONFIG)")}
+${AutoconfPackage('$(PACKAGES_BUILD_DIR)/nano-$(PACKAGES_NANO_VERSION)', '', '2.2.5', "http://www.nano-editor.org/dist/v2.2/nano-$(PACKAGES_NANO_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/bin/nano")}
 
-${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/usr/bin/nano", "$(PACKAGES_NANO_ALL)")}
+#${package("$(PACKAGES_BUILD_DIR)/nano-$(PACKAGES_NANO_VERSION)", "", "2.2.5", "nano-$(PACKAGES_NANO_VERSION).tar.gz", "http://www.nano-editor.org/dist/v2.2/$(PACKAGES_NANO_FILE)")}
+
+#${download()}
+#
+#${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_NANO_SRC_DIR)/configure")}
+
+#${autoconf('$(TOOLCHAIN_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --enable-tiny --program-prefix=', "")}
+
+#${make("$(TOOLCHAIN_ENV)", '', "all", "$(PACKAGES_NANO_BUILD_DIR)/src/nano", "$(PACKAGES_NANO_CONFIG)")}
+#
+#${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/usr/bin/nano", "$(PACKAGES_NANO_ALL)")}
 
 #
 #packages:
@@ -32,3 +43,5 @@ ${make("$(TOOLCHAIN_ENV)", 'DESTDIR=$(ROOTFS_DIR)', "install", "$(ROOTFS_DIR)/us
 #		distclean()
 #	:nano
 #:packages
+
+.NOTPARALLEL:

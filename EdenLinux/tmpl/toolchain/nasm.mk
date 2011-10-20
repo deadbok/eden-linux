@@ -1,17 +1,29 @@
 #mtl
 ${local_namespace("toolchain.nasm")}
 
-${package("$(TOOLCHAIN_BUILD_DIR)/nasm-$(TOOLCHAIN_NASM_VERSION)", "", "2.08.02", "nasm-$(TOOLCHAIN_NASM_VERSION).tar.bz2", "http://www.nasm.us/pub/nasm/releasebuilds/$(TOOLCHAIN_NASM_VERSION)/$(TOOLCHAIN_NASM_FILE)")}
+${local()}INSTALL_PARAM = 
+${local()}INSTALL_ENV = $(TOOLCHAIN_ENV)
 
-${download}
+${local()}CONFIG_PARAM = --prefix=$(TOOLCHAIN_ROOT_DIR)
+${local()}CONFIG_ENV = $(TOOLCHAIN_ENV)
 
-${unpack("$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_NASM_SRC_DIR)/configure")}
+${local()}BUILD_PARAM = 
+${local()}BUILD_ENV = $(TOOLCHAIN_ENV)
 
-${autoconf('$(TOOLCHAIN_ENV)', '--prefix=$(TOOLCHAIN_ROOT_DIR)', "")}
+${AutoconfPackage('$(TOOLCHAIN_BUILD_DIR)/nasm-$(TOOLCHAIN_NASM_VERSION)', '', '2.08.02', "http://www.nasm.us/pub/nasm/releasebuilds/$(TOOLCHAIN_NASM_VERSION)/nasm-$(TOOLCHAIN_NASM_VERSION).tar.bz2", "$(TOOLCHAIN_ROOT_DIR)/bin/nasm")}
 
-${make('$(TOOLCHAIN_ENV)', "", "all", "$(TOOLCHAIN_NASM_BUILD_DIR)/nasm", "$(TOOLCHAIN_NASM_CONFIG)")}
 
-${make('$(TOOLCHAIN_ENV)', "", "install", "$(TOOLCHAIN_ROOT_DIR)/bin/nasm", "$(TOOLCHAIN_NASM_ALL)")}
+#${package("$(TOOLCHAIN_BUILD_DIR)/nasm-$(TOOLCHAIN_NASM_VERSION)", "", "2.08.02", "nasm-$(TOOLCHAIN_NASM_VERSION).tar.bz2", "http://www.nasm.us/pub/nasm/releasebuilds/$(TOOLCHAIN_NASM_VERSION)/$(TOOLCHAIN_NASM_FILE)")}
+#
+#${download()}
+#
+#${unpack("$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_NASM_SRC_DIR)/configure")}
+#
+#${autoconf('$(TOOLCHAIN_ENV)', '--prefix=$(TOOLCHAIN_ROOT_DIR)', "")}
+#
+#${make('$(TOOLCHAIN_ENV)', "", "all", "$(TOOLCHAIN_NASM_BUILD_DIR)/nasm", "$(TOOLCHAIN_NASM_CONFIG)")}
+#
+#${make('$(TOOLCHAIN_ENV)', "", "install", "$(TOOLCHAIN_ROOT_DIR)/bin/nasm", "$(TOOLCHAIN_NASM_ALL)")}
 
 #toolchain:
 #	nasm:
@@ -29,3 +41,5 @@ ${make('$(TOOLCHAIN_ENV)', "", "install", "$(TOOLCHAIN_ROOT_DIR)/bin/nasm", "$(T
 #		distclean()
 #	:nasm
 #:toolchain
+
+.NOTPARALLEL:

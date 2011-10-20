@@ -1,8 +1,8 @@
 #mtl
 ${local_namespace("target.image")}
 
-${local}SIZE = 256
-${local}FILENAME = root.img
+${local()}SIZE = 256
+${local()}FILENAME = root.img
 
 $(TARGET_IMAGE_FILE) := $(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)
 $(TARGET_IMAGE_FILE):
@@ -30,3 +30,5 @@ $(TARGET_IMAGE_FILE):
 #		}
 #	:image
 #:target
+
+.NOTPARALLEL:

@@ -1,35 +1,56 @@
 '''
-Created on 7 Sep 2011
+Basic package related functions.
 
+@since: 7 Sep 2011
 @author: oblivion
 '''
-def var_name(postfix = None):
-    if postfix == None:
-        return(local_prefix())
-    else:
-        return(local_prefix() + postfix.upper())
+import os
 
-def package(src_dir, build_dir, version, filename, url):
-    print var_name("version") + " := " + version
-    print var_name("src_dir") + " := " + src_dir
-    if build_dir == "":
-        print var_name("build_dir") + " := " + src_dir
-    else:
-        print var_name("build_dir") + " := " + build_dir
-    print var_name("file") + " := " + filename
-    print var_name("url") + " := " + url,
+class Package(object):
+    '''Class to encapsulate a software package.'''
+    def __init__(self, src_dir = ".", build_dir = "", version = "0.0", url = "http://localhost", target = "."):
+        '''
+        Constructor.
+        
+        @type src_dir: str
+        @param src_dir: The directory to unpack the source into.
+        @type build_dir: str
+        @param build_dir: The directory i which to build the package.
+        @type version: str
+        @param version: Package version.
+        @type url: str
+        @param url: Where to download the package.
+        @type target: str
+        @param target: The final target expected, when every rule has run.
+        '''
+        self.src_dir = src_dir
+        self.build_dir = build_dir
+        self.version = version
+        self.url = url
+        self.target = target
+        self.filename = os.path.basename(url)
+        self.rules = ordereddict.OrderedDict()
 
-def download():
-    print "$(DOWNLOAD_DIR)/$(" + var_name("file") + "):"
-    print "\t$(WGET) $(" + var_name("url") + ") -P $(DOWNLOAD_DIR)",
+    def vars(self):
+        '''Create the default package variables'''
+        ret = var_name("version") + " := " + self.version + "\n"
+        ret += var_name("src_dir") + " := " + self.src_dir + "\n"
+        ret += var_name("build_dir") + " := "
+        if self.build_dir == "":
+            ret += self.src_dir + "\n"
+        else:
+            ret += self.build_dir + "\n"
+        ret += var_name("file") + " := " + self.filename + "\n"
+        ret += var_name("url") + " := " + self.url + "\n"
+        ret += '\n'
+        return(ret)
 
-def unpack(dir_, filename):
-    print var_name("unpack") + " := " + filename
-    print "$(" + var_name("unpack") + "): $(DOWNLOAD_DIR)/$(" + var_name("file") + ")"
-    print "ifeq ($(suffix $(" + var_name("file") + ")), .bz2)"
-    print "\t$(TAR) -xjf $(DOWNLOAD_DIR)/$(" + var_name("file") + ") -C " + dir_
-    print "else ifeq ($(suffix $(" + var_name("file") + ")), .gz)"
-    print "\t$(TAR) -xzf $(DOWNLOAD_DIR)/$(" + var_name("file") + ") -C " + dir_
-    print "else"
-    print "\t$(error Unknown archive format in: $(" + var_name("file") + "))"
-    print "endif",
+    def __str__(self):
+        ret = self.vars()
+
+        if len(self.rules) > 0:
+            for rule in self.rules.itervalues():
+                ret += str(rule)
+
+        return(ret)
+
