@@ -1,6 +1,10 @@
 #summary Log of what I am working on at the moment.
 
 =Log entries=
+21. oct. 2011
+----
+ * Converting rc-update to Go
+
 18. oct. 2011
 ----
  * The toolchain is giving me trouble
