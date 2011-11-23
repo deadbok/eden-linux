@@ -1,6 +1,10 @@
 #summary Log of what I am working on at the moment.
 
 =Log entries=
+23. nov. 2011
+----
+ * Trying to find out why mdev segfaults in the initramfs
+
 21. oct. 2011
 ----
  * Converting rc-update to Go
