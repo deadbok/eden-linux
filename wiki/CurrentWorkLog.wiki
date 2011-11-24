@@ -7,7 +7,6 @@
 ----
  * Aufs on the live CD.
 
-=Log entries=
 23. nov. 2011
 ----
  * Trying to find out why mdev segfaults in the initramfs
