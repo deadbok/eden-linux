@@ -1,14 +1,6 @@
 #mtl
 ${local_namespace("packages.udev")}
 
-#${package("$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_UDEV_VERSION)", "", "168", "udev-$(PACKAGES_UDEV_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/utils/kernel/hotplug/$(PACKAGES_UDEV_FILE)")}
-
-#${download()}
-
-#${unpack("$(PACKAGES_BUILD_DIR)", "$(PACKAGES_UDEV_SRC_DIR)/configure")}
-	
-#${autoconf('$(PACKAGES_ENV)', '--prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=$(ROOTFS_DIR)/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc', "")}
-
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
@@ -17,6 +9,9 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
+
+#Add udev to the list of init services
+SERVICES += udev
 
 ${py udev = AutoconfPackage('$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_UDEV_VERSION)', '', '168', "http://launchpad.net/udev/main/168/+download/udev-$(PACKAGES_UDEV_VERSION).tar.bz2", "$(ROOTFS_DIR)/sbin/udevd")}
 
@@ -33,7 +28,8 @@ ${udev.rules['build']}
 ${py udev.rules['install'].dependencies += " $(PACKAGES_BOOTSCRIPTS_INSTALL)"}
 ${udev.rules['install']}
 	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/80-drivers.rules $(ROOTFS_DIR)/etc/udev/rules.d/80-drivers.rules
-	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/udev $(ROOTFS_DIR)/etc/init.d/udev  
+	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/udev $(ROOTFS_DIR)/etc/init.d/udev
+	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev
 
 #${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"', "all", "$(PACKAGES_UDEV_BUILD_DIR)/udev/udevd", "$(PACKAGES_UDEV_CONFIG)")}
 

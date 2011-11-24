@@ -12,4 +12,3 @@ ${MakeRule("", "DESTDIR=$(ROOTFS_DIR)", "$(TARGET_FSH_BUILD_DIR)", "install", "$
 	$(TOUCH) $(ROOTFS_DIR)/.fsh
 
 	
-.NOTPARALLEL:

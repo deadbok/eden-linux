@@ -60,6 +60,15 @@ else
 	$(error You need to be root)
 endif
 
+.PHONY: clean
+clean: $(CLEAN_TARGETS)
+	-$(RM) -Rf $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR)
+
+.PHONY: distclean
+${Rule("distclean", "")}
+	-$(RM) -Rf $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR)
+	$(MAKE) $(DISTCLEAN_TARGETS)
+
 .NOTPARALLEL:
 
 #TODO: Clean rules

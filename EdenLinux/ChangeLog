@@ -1,3 +1,53 @@
+2011-11-24  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/bootscripts/sbin/rc-update.py: Removed.
+	* docs/notes/initramfs.txt: New file.
+	* tmpl/packages/bootscripts/src/Makefile: New file.
+	* tmpl/packages/bootscripts/src/rc-update.go: New file.
+	* tmpl/target/services.mk: New file.
+	* tmpl/target/x86/initramfs_busybox_config: New file.
+	* tmpl/target/x86/target_busybox_config: New file.
+	* tmpl/toolchain/binutils/08_all_binutils-RPATH_ENVVAR-smack.patch: New file.
+	* tmpl/target/initramfs.mk: One rule converted, many to go
+	* tmpl/target/initramfs/init: New kernel command line parser, the old one caused segfaults
+	* tmpl/target/x86.mk: Added config file for busybox in initramfs
+	* tmpl/target/x86/busybox_config: 
+	* tmpl/toolchain/binutils.mk: Added patch rule
+	
+2011-11-22  oblivion  <oblivion@laptoblivion>
+
+	* Makefile: Smarter template update checking
+	* tmpl/packages/busybox.mk: New version 1.19.3
+
+2011-11-16  oblivion  <oblivion@laptoblivion>
+
+	* plugins/rule.py: Minor error checking for empty recipe
+	* tmpl/target/initramfs/init: Talks some more
+	* tmpl/packages/bootscripts/src/Makefile: New file.
+	* tmpl/packages/bootscripts/src/rc-update.go: New file.
+	* tmpl/target/services.mk: New file.
+	* mtl/mtl.py: Talks a little more
+	* tmpl/packages/bootscripts.mk: Added SERCVICES variable to hold startup services
+	* tmpl/packages/bootscripts/Makefile: Rearanged for compiling the go code
+	Fixed a missing directory
+	* tmpl/packages/packages.mk: Minor brush ups
+	Removed Python, now that rc-update is in go
+	* tmpl/packages/udev.mk: SERVICES
+	* tmpl/target/fsh.mk: Removed .NOTPARALLEL
+	* tmpl/target/iso.mk: Added PACKAGES_INSTALL as dependency
+	* tmpl/target/target.mk: Included services.mk
+	* tmpl/target/x86/uclibc_config: Changed to native threads
+	* tmpl/toolchain/gcc-cross.mk: GCC version 4.6.2
+	* tmpl/toolchain/gcc-static.mk: GCC version 4.6.2
+	* tmpl/toolchain/toolchain.mk: Added toolchain-disclean target
+	Added DEBUG option
+	* tmpl/toolchain/uclibc.mk: Turned of parallel make while building, to get the thing to compile
+
+2011-10-20  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/toolchain/toolchain.mk: Moved the toolchain out of the root fs
+	* tmpl/target/x86/uclibc_config: Switched threads to NTPL to satisfy gccgo
+
 2011-10-16  oblivion  <oblivion@laptoblivion>
 
 	* plugins/put.py: Removed.

@@ -1,7 +1,7 @@
 #mtl
 ${local_namespace("toolchain.gcc-static")}
 
-${Package("$(TOOLCHAIN_BUILD_DIR)/gcc-$(TOOLCHAIN_GCC-STATIC_VERSION)", "$(TOOLCHAIN_BUILD_DIR)/gcc-static", "4.6.1", "ftp://gcc.gnu.org/pub/gcc/releases/gcc-$(TOOLCHAIN_GCC-STATIC_VERSION)/gcc-$(TOOLCHAIN_GCC-STATIC_VERSION).tar.bz2", "$(TOOLCHAIN_ROOT_DIR)/gcc-static/bin/$(ARCH_TARGET)-c++")}
+${Package("$(TOOLCHAIN_BUILD_DIR)/gcc-$(TOOLCHAIN_GCC-STATIC_VERSION)", "$(TOOLCHAIN_BUILD_DIR)/gcc-static", "4.6.2", "ftp://gcc.gnu.org/pub/gcc/releases/gcc-$(TOOLCHAIN_GCC-STATIC_VERSION)/gcc-$(TOOLCHAIN_GCC-STATIC_VERSION).tar.bz2", "$(TOOLCHAIN_ROOT_DIR)/gcc-static/bin/$(ARCH_TARGET)-c++")}
 
 ${DownloadRule("$(TOOLCHAIN_GCC-STATIC_URL)")}
 

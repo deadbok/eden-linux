@@ -7,24 +7,20 @@ echo "EdenLinux initramfs..."
 TMP_MOUNT="/mnt/root"
 
 #Mount things needed by this script
+echo "Mounting /proc..."
 mount -t proc proc /proc
+echo "Mounting /sys..."
 mount -t sysfs sysfs /sys
+echo "Mounting /dev..."
 mount -t tmpfs dev /dev
+echo "Mounting /dev/pts..."
 mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 
-
-#Create device nodes
-#mknod /dev/null c 1 3
-#mknod /dev/tty c 5 0
+echo "Registering mdev..."
 echo /sbin/mdev > /proc/sys/kernel/hotplug
+echo "Starting mdev..."
 mdev -s
-
-#Function for parsing command line options with "=" in them
-# get_opt("init=/sbin/init") will return "/sbin/init"
-get_opt() {
-	echo "$@" | cut -d "=" -f 2
-}
 
 #Drop the user into the initramfs busybox shell
 rescue_shell()
@@ -38,15 +34,17 @@ rescue_shell()
 init="/sbin/init"
 root="/dev/hda1"
 
-#Process command line options
-for i in $(cat /proc/cmdline); do
-	case $i in
-		root\=*)
-			root=$(get_opt $i)
-			;;
-		init\=*)
-			init=$(get_opt $i)
-			;;
+echo "Parsing initramfs options on the kernel command line"
+read -r cmdline </proc/cmdline
+
+for param in $cmdline ; do
+	case $param in
+	init=*)
+		init=${param#init=}
+		;;
+	root=*)
+		root=${param#root=}
+		;;
 	esac
 done
 
@@ -146,6 +144,7 @@ if [[ -x "$TMP_MOUNT/$init" ]] ; then
 	#the initramfs can be cleared after switch_root
 	umount /sys /proc
 	
+	echo "Switching to real root file system..."	
 	#Switch to the new root and execute init
 	if ! exec switch_root "$TMP_MOUNT" "$init"; then
 		mount -t proc proc /proc

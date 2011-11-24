@@ -248,6 +248,7 @@ def main():
     output_dir = args[1]
     log.logger.info("Make file Template engine V" + str(version))
     load_plugins("plugins")
+    log.logger.info("Processing templates in: " + template_path)
     process_templates(template_path, output_dir)
     clean_output_dir(template_path, output_dir)
 

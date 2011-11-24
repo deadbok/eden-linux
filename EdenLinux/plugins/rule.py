@@ -14,10 +14,14 @@ class Rule(object):
         '''
         self.target = target
         self.dependencies = dependencies
-        if recipe == None:
+        if (recipe == None) or (recipe == ""):
             self.recipe = list()
-            self.recipe.append("@echo -en $(TITLEBAR_START)" + rule_var_name + "$(TITLEBAR_END)\n")
-            self.recipe.append("@echo -e --+ $(GREEN_COLOR)" + rule_var_name + "$(NO_COLOR) +--\n")
+            if rule_var_name == "":
+                self.recipe.append("@echo -en $(TITLEBAR_START)" + target + "$(TITLEBAR_END)\n")
+                self.recipe.append("@echo -e --+ $(GREEN_COLOR)" + target + "$(NO_COLOR) +--\n")
+            else:
+                self.recipe.append("@echo -en $(TITLEBAR_START)" + rule_var_name + "$(TITLEBAR_END)\n")
+                self.recipe.append("@echo -e --+ $(GREEN_COLOR)" + rule_var_name + "$(NO_COLOR) +--\n")
         else:
             self.recipe = recipe
         self.rule_var = rule_var_name

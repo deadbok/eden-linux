@@ -1,21 +1,41 @@
 MODE=754
 DIRMODE=755
 CONFMODE=644
-DESTDIR = .
+DESTDIR = 
 
-install:
+
+SRC =  $(shell pwd)/src
+ifdef DEBUG
+GO = $(CROSS_COMPILE)gccgo -g
+else
+GO = $(CROSS_COMPILE)gccgo
+endif
+
+$(SRC)/rc-update: $(SRC)/rc-update.go
+	$(GO) $(SRC)/rc-update.go -o $(SRC)/rc-update
+	
+all: $(SRC)/rc-update
+
+$(DESTDIR)/sbin/rc-update: $(SRC)/rc-update
+	install -D $(SRC)/rc-update $(DESTDIR)/sbin/rc-update
+
+install: .installed $(DESTDIR)/etc/rc.d/start_services $(DESTDIR)/etc/rc.d/stop_services
+
+
+.installed: $(DESTDIR)/sbin/rc-update
 	cp -R ./etc $(DESTDIR)
 	chmod -R $(DIRMODE) $(DESTDIR)/etc/rc.d
 	chmod $(CONFMODE) $(DESTDIR)/etc/rc.d/functions
 	chmod $(MODE) $(DESTDIR)/etc/rc.d/startup
 	chmod $(MODE) $(DESTDIR)/etc/rc.d/shutdown
 	chmod $(MODE) $(DESTDIR)/etc/init.d/*
-	cp -R ./sbin $(DESTDIR)
-	touch $(DESTDIR)/etc/rc.d/start_services
-	touch $(DESTDIR)/etc/rc.d/stop_services	
-	python $(DESTDIR)/sbin/rc-update.py --add syslog --dir $(DESTDIR)/etc
-	python $(DESTDIR)/sbin/rc-update.py --add clock --dir $(DESTDIR)/etc	
-	python $(DESTDIR)/sbin/rc-update.py --add mountroot --dir $(DESTDIR)/etc
-	python $(DESTDIR)/sbin/rc-update.py --add udev --dir $(DESTDIR)/etc
-	python $(DESTDIR)/sbin/rc-update.py --add network --dir $(DESTDIR)/etc	
+	touch .installed
 
+$(DESTDIR)/etc/rc.d:
+	mkdir -p $(DESTDIR)/etc/rc.d
+	
+$(DESTDIR)/etc/rc.d/start_services:	$(DESTDIR)/etc/rc.d
+	touch $(DESTDIR)/etc/rc.d/start_services
+
+$(DESTDIR)/etc/rc.d/stop_services: $(DESTDIR)/etc/rc.d
+	touch $(DESTDIR)/etc/rc.d/stop_services	
