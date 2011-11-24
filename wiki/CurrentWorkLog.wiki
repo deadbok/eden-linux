@@ -1,5 +1,12 @@
 #summary Log of what I am working on at the moment.
 
+
+
+=Log entries=
+24. nov. 2011
+----
+ * Aufs on the live CD.
+
 =Log entries=
 23. nov. 2011
 ----
