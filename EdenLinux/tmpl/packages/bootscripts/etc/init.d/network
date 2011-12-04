@@ -2,7 +2,7 @@
 ### BEGIN INIT INFO
 # Provides:          network      
 # Short-Description: Network interface(s) init script
-# Required-Start:	 udev
+# Required-Start:	 udev modules
 ### END INIT INFO
 #
 # config: /etc/network.conf
@@ -25,8 +25,7 @@ start)
 			if [ "$DHCP" = "yes" ]; then
 				echo -n "Starting DHCP for interface $INTERFACE: "
 				udhcpc -b -i "$INTERFACE" \
-					-p "/var/run/udhcpc.$INTERFACE.pid" -s /etc/network/udhcpc.script\
-					> /dev/null
+					-p "/var/run/udhcpc.$INTERFACE.pid" -s /etc/network/udhcpc.script
 			else
 				echo -n "Setting up interface $INTERFACE: "
 				ifconfig "$INTERFACE" "$IPADDRESS" \

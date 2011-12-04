@@ -9,15 +9,13 @@ echo
 echo "System is going down for reboot or halt now."
 echo
 
-
 echo "Running stop scripts."
-
-for i in /etc/rc.d/stop/*
+while read line
 do
-	if [ -x $i ]; then
-		$i stop
+	if [ "$line" != "" ]; then
+		eval $line stop
 	fi
-done
+done < /etc/rc.d/stop_services
 
 echo -n "Syncing hardware clock to system clock:"
 hwclock --systohc --utc
@@ -26,10 +24,3 @@ check_status
 echo -n "Disabling swap space: "
 swapoff -a
 check_status
-
-echo -n "Syncing all filesystems: "
-sync
-check_status
-
-echo -n "Unmounting all filesystems: "
-umount -a -r

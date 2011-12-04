@@ -1,0 +1,26 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          localmount      
+# Short-Description: Check and mount the root filesystem
+# Required-Start:	 mountroot
+### END INIT INFO
+
+. /etc/init.d/functions
+case "$1" in
+start)	
+	echo "Mounting remaining file systems..."
+	mount -a -O no_netdev
+	check_status
+	;;
+stop)
+	echo -n "Syncing all filesystems: "
+	sync
+	check_status
+	echo -n "Unmounting all other currently mounted file systems..."
+    umount -a -d -r -t notmpfs
+	check_status
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac

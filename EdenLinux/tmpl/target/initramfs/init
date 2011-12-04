@@ -135,14 +135,28 @@ if [ $root = "/dev/null" ] ; then
 	done
 fi
 
-#Mount the root device
-mount $root $TMP_MOUNT
+echo "Mounting the root device (read-only part)"
+mkdir -p /ro
+mount $root /ro
+echo "Mounting the root device (writeable part)"
+mkdir -p /rw
+mount -w -t tmpfs -o size=75% tmpfs /rw
+
+echo "Mounting the root device (union part)"
+mount -t aufs -o dirs=/rw:/ro=ro aufs $TMP_MOUNT
+
+echo "Moving the root device (read-only part)"
+mkdir -p $TMP_MOUNT/ro
+mount --move /ro $TMP_MOUNT/ro
+echo "Moving the root device (writeable part)"
+mkdir -p $TMP_MOUNT/rw
+mount --move /rw $TMP_MOUNT/rw
 
 #Check if $init exists and is executable
 if [[ -x "$TMP_MOUNT/$init" ]] ; then
 	#Unmount all other mounts so that the ram used by
 	#the initramfs can be cleared after switch_root
-	umount /sys /proc
+	umount /sys /proc /dev/pts
 	
 	echo "Switching to real root file system..."	
 	#Switch to the new root and execute init

@@ -2,26 +2,31 @@
 ### BEGIN INIT INFO
 # Provides:          modules  
 # Short-Description: module loading Startup Script
+# Required-Start:	 
 ### END INIT INFO
 
 . /etc/init.d/functions
 
 # Assure that the kernel has module support.
-[ -e /proc/ksyms -o -e /proc/modules ] || exit 0
 
 case "$1" in
 start)
-	echo -n "Loading modules: "
+	if [ -e /proc/ksyms -o -e /proc/modules ] ; then	
+		echo -n "Loading modules: "
+		
+	    grep '^[^#]' /etc/modules |
+		while read module args
+		do
+		    [ "$module" ] || continue
+		    modprobe $module $args || :
+			echo $module
+		done
 	
-    grep '^[^#]' /etc/modules |
-	while read module args
-	do
-	    [ "$module" ] || continue
-	    modprobe $module $args || :
-		echo $module
-	done
-
-	check_status
+		check_status
+	else
+		echo "No module support in kernel!"
+		exit 0
+	fi
 	;;
 stop)
 	;;
@@ -33,5 +38,3 @@ restart)
 	exit 1
 	;;
 esac
-
-# End $rc_base/init.d/modules

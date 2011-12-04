@@ -19,10 +19,14 @@ all: $(SRC)/rc-update
 $(DESTDIR)/sbin/rc-update: $(SRC)/rc-update
 	install -D $(SRC)/rc-update $(DESTDIR)/sbin/rc-update
 
-install: .installed $(DESTDIR)/etc/rc.d/start_services $(DESTDIR)/etc/rc.d/stop_services
+install: $(DESTDIR)/etc/rc.d/startup $(DESTDIR)/etc/rc.d/start_services $(DESTDIR)/etc/rc.d/stop_services $(DESTDIR)/sbin/rc-update
 
+#From: http://blog.jgc.org/2011/07/gnu-make-recursive-wildcard-function.html
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
-.installed: $(DESTDIR)/sbin/rc-update
+ETC_FILES = $(call rwildcard,./etc,*)
+
+$(DESTDIR)/etc/rc.d/startup: $(ETC_FILES)
 	cp -R ./etc $(DESTDIR)
 	chmod -R $(DIRMODE) $(DESTDIR)/etc/rc.d
 	chmod $(CONFMODE) $(DESTDIR)/etc/rc.d/functions

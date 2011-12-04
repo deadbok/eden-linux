@@ -12,8 +12,10 @@ start)
 
 	/bin/mount -n -t tmpfs -o mode=0755 udev /dev
 
-	[ -d /lib/udev/devices ] && cp -af /lib/udev/devices/* /dev
-
+	if [ -d /lib/udev/devices ] ; then
+		cp -af /lib/udev/devices/* /dev
+	fi
+	
 	if [ ! -d /dev/shm ] ; then
 		mkdir /dev/shm || die "failed to mkdir /dev/shm"
 	fi
@@ -23,6 +25,10 @@ start)
 	echo > /proc/sys/kernel/hotplug
 
 	dmesg -n 2
+	
+	if [ ! -d /run ] ; then
+		mkdir /run || die "failed to mkdir /run"
+	fi
 
 	/sbin/udevd --daemon
 	check_status
@@ -33,6 +39,16 @@ start)
 	/sbin/udevadm trigger
 	/sbin/udevadm settle
 	dmesg -n 7
+	check_status
+	
+	echo -n "Mounting devpts: "
+	mkdir /dev/pts
+	mount -t devpts devpts /dev/pts 
+	check_status
+	;;
+stop)
+	echo -n "Stopping udev: "
+	/sbin/udevadm control --exit
 	check_status
 	;;
 *)

@@ -7,26 +7,6 @@
 /bin/mount -t proc none /proc
 /bin/mount -t sysfs none /sys
 
-echo -n "Mounting devpts: "
-mount /dev/pts
-check_status
-
-#echo "Starting fsck for local filesystems."
-#/sbin/fsck -A -C -R -T -t nonfs,nosmbfs
-#if [ "$?" -gt 2 ]; then
-#	echo "WARNING: Errors found while checking filesystems."
-#	echo "You can login as root now, the system will reboot after logout."
-#	sulogin
-#	reboot
-#elif [ "$?" = "2" ]; then
-#	echo "NOTICE: System needs to be rebooted now."
-#	sleep 1
-#	reboot
-#else
-#	echo -n "Checking local filesystems: "
-#	check_status
-#fi
-
 #echo -n "Enabling swap space: "
 #swapon -a
 #check_status
@@ -46,9 +26,9 @@ check_status
 #rm -f /var/run/*.pid
 #check_status
 
-#echo -n "Setting up interface lo: "
-#ifconfig lo up 127.0.0.1
-#check_status
+echo -n "Setting up interface lo: "
+ifconfig lo up 127.0.0.1
+check_status
 
 echo "Running start scripts."
 while read line
@@ -57,8 +37,4 @@ do
 		eval $line start
 	fi
 done < /etc/rc.d/start_services
-#for i in /etc/rc.d/start/*
-#do	if [ -x $i ]; then
-#		$i start
-#	fi
-#done
+

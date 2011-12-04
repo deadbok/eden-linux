@@ -8,22 +8,26 @@
 . /etc/init.d/functions
 case "$1" in
 start)
-	echo "Mounting root file system in read-only mode."
-	check_status
-	mount -n -o remount,ro /
-	
-	echo "Checking root filesystem."
-	/sbin/fsck -p -T /
-	if [ "$?" -gt "1" ]; then
-		echo "WARNING: Errors found while checking root filesystem."
-		echo "You can login as root now, the system will reboot after logout."
-		sulogin
-		reboot
+	if [ -e "/etc/EdenLive" ]; then
+		echo "Not checking read-only filesystem"
+	else	
+		echo "Mounting root file system in read-only mode."
+		mount -n -o remount,ro /
+		check_status
+		
+		echo "Checking root filesystem."
+		/sbin/fsck -p -T /
+		if [ "$?" -gt "1" ]; then
+			echo "WARNING: Errors found while checking root filesystem."
+			echo "You can login as root now, the system will reboot after logout."
+			sulogin
+			reboot
+		fi
+		
+		echo -n "Remounting root in read-write mode: "
+		mount -n -o remount,rw /
+		check_status
 	fi
-	
-	echo -n "Remounting root in read-write mode: "
-	mount -o remount,rw /
-	check_status
 	;;
 stop)
 	echo -n "Unmounting root"

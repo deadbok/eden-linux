@@ -1,6 +1,7 @@
 #mtl
 
 include colors.mk
+include functions.mk
 
 TARGET := x86
 ARCH := i686
@@ -23,6 +24,8 @@ ROOTFS_DIR := $(BUILD_DIR)/rootfs
 #template_dir = templates
 ETC_DIR := $(ROOTFS_DIR)/etc
 TEMP_DIR := $(BUILD_DIR)/tmp
+
+SERVICES :=
 
 $(DOWNLOAD_DIR):
 	$(MKDIR) $(DOWNLOAD_DIR)

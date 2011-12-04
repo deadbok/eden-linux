@@ -43,3 +43,6 @@ DD = dd
 GENISOIMAGE = genisoimage $(VERBOSE_FLAG)
 
 CHMOD = chmod
+
+GIT_FLAGS = 
+GIT = git $(GIT_FLAGS) $(VERBOSE_FLAG)

@@ -1,3 +1,46 @@
+2011-12-04  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/busybox/udhcpc-default.script: Removed.
+	* tmpl/functions.mk: New file.
+	* tmpl/packages/aufs-util.mk: New file.
+	* tmpl/packages/aufs-util/cross-compile.patch: New file.
+	* tmpl/packages/aufs.mk: New file.
+	* tmpl/packages/bootscripts/etc/init.d/localmount: New file.
+	* tmpl/packages/kernel-modules.mk: New file.
+	* tmpl/target/iso/fstab: New file.
+	* tmpl/commands.mk: Added Git
+	* tmpl/Makefile: include functions.mk
+	* tmpl/packages/baseconf.mk: Proper dependency checking
+	* tmpl/packages/baseconf/etc/modules: Added pcnet32
+	* tmpl/packages/baseconf/Makefile: Proper dependency checking
+	* tmpl/packages/bootscripts.mk: Added localmount to SERVICES 
+	* tmpl/packages/bootscripts/etc/init.d/modules: Cleaner syntax
+	* tmpl/packages/bootscripts/etc/init.d/mountroot: No file system check on LiveCD's
+	* tmpl/packages/bootscripts/etc/init.d/network: Added startup dependency on modules
+	* tmpl/packages/bootscripts/etc/rc.d/shutdown: Proper service script support
+	* tmpl/packages/bootscripts/etc/rc.d/startup: Cleanup
+	* tmpl/packages/bootscripts/Makefile: Proper dependency checking
+	* tmpl/packages/busybox.mk: Use example udhcpc script
+	* tmpl/packages/packages.mk: Added aufs-util
+	* tmpl/packages/udev/udev: Added /run support and cleaned up syntax
+	* tmpl/target/initramfs/init: aufs support.
+	* tmpl/target/iso.mk: fstab for iso images
+	* tmpl/target/services.mk: Solved some white space problems
+	
+
+2011-11-30  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/target/x86/uclibc_config: Added GNU error, ftw(), and nftw() support for AUFS
+
+2011-11-26  oblivion  <oblivion@laptoblivion>
+
+	* plugins/download.py: Added Git support
+
+2011-11-25  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/toolchain/kernel-headers.mk: New version 3.0.9 
+	* tmpl/packages/kernel.mk: New version 3.0.9
+
 2011-11-24  oblivion  <oblivion@laptoblivion>
 
 	* tmpl/packages/bootscripts/sbin/rc-update.py: Removed.

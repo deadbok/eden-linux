@@ -1,7 +1,7 @@
 #mtl
 ${local_namespace("packages.bootscripts")}
 
-SERVICES += syslog clock mountroot network
+SERVICES += syslog clock mountroot localmount network modules
 ${py bootscripts = Package("$(ROOT)/packages/bootscripts", "$(PACKAGES_BUILD_DIR)/bootscripts", "1.0", "", "$(ROOTFS_DIR)/sbin/rc-update")}
 ${bootscripts}
 

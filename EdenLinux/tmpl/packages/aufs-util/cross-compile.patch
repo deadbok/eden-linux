@@ -1,0 +1,14 @@
+--- aufs-util/Makefile	2011-11-29 15:39:22.000000000 +0100
++++ aufs-util.new/Makefile	2011-11-30 18:06:03.000000000 +0100
+@@ -83,7 +83,10 @@
+ 	}' aufs.in.5 >> $@
+ 	chmod a-w $@
+ 
+-.INTERMEDIATE: c2sh c2tmac ver
++
++c2sh c2tmac ver:
++	$(HOSTCC) $(CFLAGS) $(CPPFLAGS) $(basename $@).c -o $@
++
+ 
+ Install = install -o root -g root -p
+ install_sbin: File = auibusy auplink mount.aufs umount.aufs
