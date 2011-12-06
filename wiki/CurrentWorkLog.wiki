@@ -3,6 +3,11 @@
 
 
 =Log entries=
+06. dec. 2011
+----
+ * Compressed man pages.
+ * Stripped binaries
+
 24. nov. 2011
 ----
  * Aufs on the live CD.
