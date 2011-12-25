@@ -20,10 +20,10 @@ TMPL_FILES = $(call rwildcard,tmpl,*)
 BUILDSYS_DIR = build
 
 all: $(BUILDSYS_DIR)/.mtlstamp
-	$(MAKE) -C build all MAKE_PROCESSES=2
+	$(MAKE) -C build all 2>&1 | tee build.log 
 	
 install:
-	$(MAKE) -C build install MAKE_PROCESSES=2
+	$(MAKE) -C build install 2>&1 | tee install.log 
 	
 html-doc:
 	mkdir -p mtl/doc/html

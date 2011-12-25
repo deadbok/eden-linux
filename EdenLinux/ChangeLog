@@ -1,3 +1,42 @@
+2011-12-25  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/target/headers.mk: New file.
+	
+2011-12-22  oblivion  <oblivion@laptoblivion>
+
+	* Makefile: Log build and install processes to files
+
+2011-12-21  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/target/zip-man/cman.sh: New file.
+	* Makefile: Support for a separate stripped root dir
+	* tmpl/Makefile: Support for a separate stripped root dir
+	* tmpl/target/fsh.mk: Support for a separate stripped root dir
+	* tmpl/target/initramfs.mk: Support for a separate stripped root dir
+	* tmpl/target/iso.mk: Support for a separate stripped root dir
+	* tmpl/target/target.mk: Support for a separate stripped root dir
+	
+2011-12-20  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/kernel.mk: Support for stripping the kernel modules
+
+2011-12-14  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/config.mk: New file.
+	* tmpl/target/strip.mk: New file.
+	* tmpl/target/zip-man.mk: New file.
+	* tmpl/toolchain/elfkickers.mk: New file.
+	* tmpl/Makefile: include config.mk
+	* tmpl/target/fsh.mk: Cleanup
+	* tmpl/target/target.mk: MAN page compression and strip switches added
+	
+2011-12-06  oblivion  <oblivion@laptoblivion>
+
+	* tmpl/packages/dnsmasq.mk: New file.
+	* tmpl/target/zip-man/compressdoc: New file.
+	* tmpl/packages/busybox.mk: Updated template use
+	* tmpl/packages/packages.mk: Added dnsmasq
+	
 2011-12-04  oblivion  <oblivion@laptoblivion>
 
 	* tmpl/packages/busybox/udhcpc-default.script: Removed.

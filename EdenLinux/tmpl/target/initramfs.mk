@@ -47,12 +47,12 @@ ifeq ($(UID), 0)
 LOOP_DEVICE = $(shell losetup -f)
 endif
 
-TARGET_INITRAMFS_CREATE = $(ROOTFS_DIR)/boot/$(TARGET_INITRAMFS_FILENAME) 	
+TARGET_INITRAMFS_CREATE = $(TARGET_ROOTFS_DIR)/boot/$(TARGET_INITRAMFS_FILENAME) 	
 $(TARGET_INITRAMFS_CREATE): $(ROOT)/target/initramfs.mk $(TARGET_INITRAMFS_DIRS) $(TARGET_INITRAMFS_INIT) $(TARGET_INITRAMFS_BUSYBOX_BUILD) $(TARGET_INITRAMFS_BUSYBOX_INSTALL)
 	cp -a /dev/{null,console,tty} $(TARGET_INITRAMFS_DIR)/dev/
 	(cd $(TARGET_INITRAMFS_DIR); \
 		find . -print | cpio -o -H newc | gzip -9 > $(TARGET_INITRAMFS_CREATE); \
-	);			
+	);
 
 .PHONY: target-initramfs-distclean
 target-initramfs-distclean:

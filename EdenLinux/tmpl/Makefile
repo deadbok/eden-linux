@@ -1,19 +1,11 @@
 #mtl
 
 include colors.mk
+include config.mk
 include functions.mk
 
-TARGET := x86
-ARCH := i686
-KERNEL_ARCH := i386
-ARCH_TARGET := $(ARCH)-pc-linux-uclibc
-#Host type definition
-HOST_ARCH := i686
-HOST := $(HOST_ARCH)-pc-linux-gnu
 #Get the userid
 UID := $(shell id -u)
-ROOT_DEVICE := /dev/sda1
-SWAP_DEVICE := /dev/sda2
 
 #Directories
 ROOT = $(shell pwd)
@@ -21,6 +13,7 @@ BUILD_DIR := $(ROOT)/build
 DOWNLOAD_DIR := $(BUILD_DIR)/dl
 IMAGES_DIR := $(BUILD_DIR)/images
 ROOTFS_DIR := $(BUILD_DIR)/rootfs
+STRIPPED_ROOTFS_DIR := $(BUILD_DIR)/stripped_rootfs
 #template_dir = templates
 ETC_DIR := $(ROOTFS_DIR)/etc
 TEMP_DIR := $(BUILD_DIR)/tmp
@@ -35,6 +28,12 @@ $(IMAGES_DIR):
 	
 $(ROOTFS_DIR):
 	$(MKDIR) $(ROOTFS_DIR)
+
+$(STRIPPED_ROOTFS_DIR): $(TEMP_DIR) $(TEMP_DIR)/.stripped_rootfs_dir
+
+$(TEMP_DIR)/.stripped_rootfs_dir:
+	$(MKDIR) $(STRIPPED_ROOTFS_DIR)
+	$(TOUCH) $@
 
 $(TEMP_DIR):
 	$(MKDIR) $(TEMP_DIR)
