@@ -3,6 +3,10 @@
 
 
 =Log entries=
+04. jan. 2012
+----
+ * Configuration system
+
 06. dec. 2011
 ----
  * Compressed man pages.
