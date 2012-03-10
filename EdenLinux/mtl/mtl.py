@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 '''
-Created on 1 Sep 2011
-
+@since: 1 Sep 2011
 @author: oblivion
 '''
 import optparse

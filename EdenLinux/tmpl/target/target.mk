@@ -1,4 +1,5 @@
 #mtl
+${configfile()}
 ${local_namespace("target")}
 
 #Directory from which the root filesystem is assembled
@@ -6,6 +7,7 @@ ${local()}ROOTFS_DIR := $(ROOTFS_DIR)
 
 ${local()}PRE_INSTALL :=
 
+${ConfigVar('strip_target', False, "Strip target binaries", "Strip target binaries to save space")}
 ifdef STRIP_TARGET
 #Set the root to the directory which will contain the stripped version
 ${local()}ROOTFS_DIR := $(STRIPPED_ROOTFS_DIR)

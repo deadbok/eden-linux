@@ -1,3 +1,30 @@
+2012-01-12  oblivion  <oblivion@laptoblivion>
+
+	* config/__init__.py: New file.
+	* config/config.py: New file.
+	* config/configoption.py: New file.
+	* config/configtree.py: New file.
+	* config/loader.py: New file.
+	* config/log.py: New file.
+	* config/ui/__init__.py: New file.
+	* config/ui/configdisplay.py: New file.
+	* config/ui/optionswidget.py: New file.
+	* config/ui/selectiondialog.py: New file.
+	* plugins/configvar.py: New file.
+	* mtl/mtl.py: Fixed an error in epydoc header
+	* plugins/namespace.py: Added forced lower case 
+	* tmpl/config.mk: Added some ConfigVar tests
+	* tmpl/target/target.mk: Added ConfigVar test
+	
+2012-01-09  oblivion  <oblivion@laptoblivion>
+
+	* Makefile: Added mtl sources files as dependence for 'makefiles'
+
+2012-01-05  oblivion  <oblivion@laptoblivion>
+
+	* Makefile: Added generation of API docs for 'config'
+	* mtl/log.py: Fixed log file name 'mtl.log'
+
 2011-12-25  oblivion  <oblivion@laptoblivion>
 
 	* tmpl/target/headers.mk: New file.

@@ -16,6 +16,7 @@ endif
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 TMPL_FILES = $(call rwildcard,tmpl,*)
+MTL_FILES = $(call rwildcard,mtl,*.py) $(call rwildcard,plugins,*.py)
 
 BUILDSYS_DIR = build
 
@@ -30,8 +31,10 @@ html-doc:
 	$(EPYDOC) $(VERBOSE_FLAG) --graph=all --html --include-log --output mtl/doc/html mtl
 	mkdir -p plugins/doc/html
 	$(EPYDOC) $(VERBOSE_FLAG) --graph=all --html --include-log --output plugins/doc/html plugins
+	mkdir -p config/doc/html
+	$(EPYDOC) $(VERBOSE_FLAG) --graph=all --html --include-log --output config/doc/html config
 
-$(BUILDSYS_DIR)/.mtlstamp: $(TMPL_FILES)
+$(BUILDSYS_DIR)/.mtlstamp: $(TMPL_FILES) $(MTL_FILES)
 	./mtl/mtl.py $(LOG_LEVEL) tmpl $(BUILDSYS_DIR)
 	touch $@
 
