@@ -31,7 +31,7 @@ Enter or Space. Change focus with the Tab key.'''
         self.options_widget = optionswidget.OptionWidgets(loader.config_tree)
         self.options_widget.generate_page('global')
         urwid.connect_signal(self.options_widget,
-                             'page_change', self.page_change)
+                             'change', self.page_change)
         #Add them to a listbox
         self.options = urwid.AttrMap(urwid.ListBox(self.options_widget),
                                      'option')

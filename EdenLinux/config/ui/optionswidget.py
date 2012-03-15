@@ -12,6 +12,7 @@ class OptionWidgets(urwid.SimpleListWalker):
     '''
     Class to create a list of widgets for the current level in the configtree
     '''
+    signals = ['change']
     def __init__(self, config_tree):
         '''
         Constructor
@@ -46,7 +47,7 @@ class OptionWidgets(urwid.SimpleListWalker):
             self.append(widget)
 
         self.page = name
-        urwid.emit_signal(self, 'page_change')
+        urwid.emit_signal(self, 'change')
 
     def change_page(self, button, entry):
         '''
