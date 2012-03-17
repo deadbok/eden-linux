@@ -53,10 +53,10 @@ class ConfigVar(object):
         #Handle boolean as a defined/undefined variable
         if isinstance(self.value, bool):
             if self.value:
-                ret += self.name.upper() + '= 1'
+                ret += self.name.upper() + ' = 1'
             else:
-                ret += '#' + self.name.upper() + '= 1'
-            ret += '\n'
+                ret += '#' + self.name.upper() + ' = 1'
         else:
-            ret += self.name.upper() + ':=' + str(self.value)
+            ret += self.name.upper() +  ' := ' + str(self.value)
+        ret += '\n'
         return(ret)
