@@ -21,9 +21,10 @@ class Loader(object):
         '''
         log.logger.info("Loading files from " + makefiles_dir)
         self.config_tree = configtree.ConfigTree()
-        self.loaddir(makefiles_dir)
+        self.load_dir(makefiles_dir)
+        self.dir = makefiles_dir
 
-    def loadfile(self, filename):
+    def load_file(self, filename):
         '''
         Load configuration options from a file
 
@@ -75,11 +76,13 @@ class Loader(object):
                     i += 1
                     config_option.desc = lines[i].strip("##\n")
                     log.logger.debug("Config option: " + str(config_option))
+                    #Save filename for later use
+                    config_option.filename = filename
                     #Add to tree
                     self.config_tree.add(config_option)
                 i += 1
 
-    def loaddir(self, directory):
+    def load_dir(self, directory):
         '''
         Load all config options from files in the directory and descend into
         all sub-directories.
@@ -97,4 +100,4 @@ class Loader(object):
             #Try loading *.mk files
             for filename in files:
                 if os.path.splitext(filename)[1] == '.mk':
-                    self.loadfile(os.path.join(root, filename))
+                    self.load_file(os.path.join(root, filename))

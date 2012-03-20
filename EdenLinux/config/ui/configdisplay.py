@@ -21,7 +21,7 @@ class ConfigDisplay(urwid.AttrMap):
             ('focus', 'black', 'white'),
             ('option', 'black', 'dark cyan')
             ]
-
+    signals = ['save']
     def __init__(self, loader):
         '''
         Constructor, to create the basic layout
@@ -29,6 +29,8 @@ class ConfigDisplay(urwid.AttrMap):
         log.logger.debug("Creating ConfigDisplay instance")
         #Main dialog
         self.dialog = selectiondialog.SelectionDialog(loader)
+        urwid.connect_signal(self.dialog, 'save',
+                             lambda button: self._emit("save"))
         widget = urwid.Filler(self.dialog, ('fixed top', 1),
                                     ('fixed bottom', 1))
         self.body = urwid.AttrMap(widget, 'body')

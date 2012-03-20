@@ -1,6 +1,10 @@
 '''
-@since on 6 Jan 2012
+@since: 6 Jan 2012
 @author: oblivion
+Data structure::
+
+Each note contain its own data, and a field called nodes, which is a list of
+sub-nodes.
 '''
 import configoption
 import log
@@ -41,7 +45,8 @@ class ConfigTree(configoption.ConfigOption):
 
     def add(self, node):
         '''
-        Add a node to the tree
+        Add a node to the tree.
+        
         @param node: The node to add
         @type node: configoption.ConfigOption
         '''
@@ -74,3 +79,4 @@ class ConfigTree(configoption.ConfigOption):
                     #Add node
                 current_node.nodes.append(node)
             log.logger.debug('Adding node: ' + str(node))
+

@@ -13,6 +13,7 @@ class SelectionDialog(window.Window):
     '''
     Configuration dialog with a list of options, buttons, and a frame.
     '''
+    signals = ['save']
     def __init__(self, loader):
         '''
         Constructor
@@ -52,6 +53,9 @@ Enter or Space. Change focus with the Tab key.'''
         #Save
         save_button = urwid.Button('Save')
         self.save_button = urwid.AttrMap(save_button, 'body', 'focus')
+        #Signal save
+        urwid.connect_signal(save_button, 'click',
+                             lambda button: self._emit("save"))
         #Back
         back_button = urwid.Button('Exit')
         self.back_button = urwid.AttrMap(back_button, 'body', 'focus')

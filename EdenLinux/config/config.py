@@ -1,12 +1,14 @@
 '''
-Created on Jan 21, 2011
+Main program.
 
+@since: Jan 21, 2011
 @author: oblivion
 '''
 import urwid
 import log
 import logging
 import loader
+import writer
 import optparse
 import ui.configdisplay
 
@@ -22,6 +24,7 @@ class App(object):
         self.loader = None
         self.display = None
         self.loop = None
+        self.writer = None
 
     def handle_global(self, key):
         '''
@@ -35,6 +38,12 @@ class App(object):
             self.display.body.original_widget.original_widget.page_back()
         return(True)
 
+    def handle_save(self, widget, *args):
+        log.logger.debug("Saving to: " + self.loader.dir)
+        self.writer = writer.Writer(self.loader.dir)
+        self.writer.save_tree(self.loader.config_tree)
+
+
     def run(self, makefiles_dir):
         '''Do your stuff please...
         @param makefiles_dir: Path to find the make files
@@ -42,6 +51,7 @@ class App(object):
         '''
         self.loader = loader.Loader(makefiles_dir)
         self.display = ui.configdisplay.ConfigDisplay(self.loader)
+        urwid.connect_signal(self.display, 'save', self.handle_save)
         self.loop = urwid.MainLoop(self.display, self.display.palette,
                               unhandled_input=self.handle_global, pop_ups=True)
         screen_size = self.loop.screen.get_cols_rows()

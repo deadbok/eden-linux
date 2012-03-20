@@ -7,7 +7,6 @@ import log
 import custombutton
 import choicepopup
 
-
 class OptionItem(urwid.WidgetWrap):
     '''
     General widget to handle changeable config options.

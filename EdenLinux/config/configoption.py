@@ -14,6 +14,7 @@ class ConfigOption(object):
         '''
         Constructor
         '''
+        self.filename = ""
         self.name = ""
         self.values = list()
         self.value = ""
@@ -34,3 +35,14 @@ class ConfigOption(object):
         ret += 'Short description: ' + self.short_desc + ', '
         ret += 'Description: ' + self.desc + ','
         return(ret)
+
+    def iter(self):
+        '''
+        Iterator.
+        '''
+        for node in self.nodes:
+            if node.nodes != None:
+                #Take care of the sub nodes first
+                for subnode in node.iter():
+                    yield subnode
+            yield node

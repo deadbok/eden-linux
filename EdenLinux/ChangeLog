@@ -1,3 +1,23 @@
+2012-03-20  oblivion  <oblivion@cube>
+
+	* config/writer.py: Basic save_tree logic
+
+2012-03-19  oblivion  <oblivion@cube>
+
+	* config/ui/selectiondialog.py: Save signal.
+	* config/ui/configdisplay.py: Save signal.
+	* config/config.py: Save handler
+	* config/loader.py: Storing path.
+	* config/configoption.py: Added iterator.
+	* config/configtree.py: More doc.
+
+2012-03-17  oblivion  <oblivion@cube>
+
+	* config/writer.py: New file.
+	* config/configoption.py: Added storing of filename.
+	* config/loader.py: Added storing of filename.
+	Renamed some functions for better consistency
+
 2012-01-12  oblivion  <oblivion@laptoblivion>
 
 	* config/__init__.py: New file.
