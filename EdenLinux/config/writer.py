@@ -6,7 +6,6 @@ import log
 import os.path
 import configoption
 import configtree
-from bike.transformer.save import save
 
 
 class Writer(object):
@@ -37,7 +36,6 @@ class Writer(object):
         #Keep track of files
         filenames = ['']
         done = False
-        file = None
         #Save loop
         while done == False:
             #No open file
@@ -74,3 +72,10 @@ class Writer(object):
         node_str = list()
         node_str.append("##CONFIG: " + node.name)
         log.logger.debug("Looking for: " + node_str[0])
+        line = config_file.readline()
+        while not line.startswith(node_str[0]):
+            line = config_file.readline()
+        #Go until the end of the block
+        while line.startswith("##"):
+            line = lin
+
