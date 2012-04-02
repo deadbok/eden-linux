@@ -4,16 +4,20 @@ config related stuff.
 @since: 2 Jan 2012
 @author: oblivion
 '''
-
+from yaml import YAMLObject
 
 def configfile():
+    '''
+    Create the tag to identify a file with config valus.
+    '''
     return("##config")
 
 
-class ConfigVar(object):
+class ConfigVar(YAMLObject):
     '''
     Class to generate config option variables
     '''
+    yaml_tag = u'!ConfigVar'
     def __init__(self, name="", value="", short_desc="", desc="",
                  values=""):
         '''
@@ -35,9 +39,15 @@ class ConfigVar(object):
         self.desc = desc
         self.values = values
 
+    def __repr__(self):
+        '''
+        Yaml.
+        '''
+        return "%s(name=%r, value=%r, short_desc=%r, desc=%r, val)" % (self.__class__.__name__, self.name, self.value, self.short_desc, self.desc, self.values)
+
     def __str__(self):
-        '''Stringify the config variable'''
-        ret = '##CONFIG: ' + self.name.upper() + '\n'
+        '''Stringify the config varfrom yaml import YAMLObjectiable'''
+#        ret = '##CONFIG: ' + self.name.upper() + '\n'
 #        if isinstance(self.value, bool):
 #            if self.value:
 #                ret += '##True'
@@ -45,18 +55,19 @@ class ConfigVar(object):
 #                ret += '##False'
 #            ret += '\n'
 #        else:
-        ret += '##' + repr(self.value) + '\n'
-        ret += '##' + repr(self.values) + '\n'
-        ret += '##' + namespace.current + '\n'
-        ret += '##' + self.short_desc + '\n'
-        ret += '##' + self.desc + '\n'
-        #Handle boolean as a defined/undefined variable
-        if isinstance(self.value, bool):
-            if self.value:
-                ret += self.name.upper() + ' = 1'
-            else:
-                ret += '#' + self.name.upper() + ' = 1'
-        else:
-            ret += self.name.upper() +  ' := ' + str(self.value)
-        ret += '\n'
+#        ret += '##' + repr(self.value) + '\n'
+#        ret += '##' + repr(self.values) + '\n'
+#        ret += '##' + namespace.current + '\n'
+#        ret += '##' + self.short_desc + '\n'
+#        ret += '##' + self.desc + '\n'
+#        #Handle boolean as a defined/undefined variable
+#        if isinstance(self.value, bool):
+#            if self.value:
+#                ret += self.name.upper() + ' = 1'
+#            else:
+#                ret += '#' + self.name.upper() + ' = 1'
+#        else:
+#            ret += self.name.upper() + ' := ' + str(self.value)
+        yaml_doc.append(yaml.dump(self))
+        ret = '\n'
         return(ret)

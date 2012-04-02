@@ -16,7 +16,8 @@ import ordereddict
 from namespace import namespaces
 from StringIO import StringIO
 
-version = 0.2
+VERSION = 0.2
+PLUGIN_DESTROY = list()
 
 def istemplate(lines):
     '''
@@ -37,7 +38,7 @@ def load_plugins(root_dir):
     Load plugins.
     
     @type root_dir: str
-    @param root_dir: The directory to load the plugins from.
+    @param root_dir: The directory to lo#Remove the entryad the plugins from.
     '''
     log.logger.info("Loading plugins from: " + root_dir)
     plugins = os.listdir(root_dir)
@@ -45,35 +46,42 @@ def load_plugins(root_dir):
     stop = False
     entry = ""
     errors = 0
+    #Run through all the plugins in the directory
     while len(plugins) > 0:
+        #If there are as many errors loading the plugins, as there are plugins
+        #there is no chance of solving the missing dependencies. So we stop.
         if errors == len(plugins):
             stop = True
+        #We have reached the end, start over.
         if index >= len(plugins):
             index = 0
             errors = 0
+        #Get the current source file
         entry = plugins[index]
+        #Check if it is a python source file
         if entry.endswith(".py"):
             try:
                 namespaces["global"].env["namespace"] = namespace
                 namespaces["global"].env["ordereddict"] = ordereddict
+                #RUN the plugin code in the global namespace
                 execfile(root_dir + "/" + entry, namespaces["global"].env)
+                #Remove the entry
                 del plugins[index]
                 log.logger.info(entry + "...OK")
+                #Catch any exception and try loading the plugin at a later time.
+                #Simple way of trying to solve missing stuff that are not yet
+                #loaded from other plugins
             except Exception as exception:
+                #If stop is set, we have a real error
                 if stop:
+                    #Re-raise
                     raise exception
                 index += 1
                 errors += 1
                 log.logger.info(entry + "..." + str(exception) + "...waiting")
         else:
+            #Remove the entry if it is not a python source file
             del plugins[index]
-
-#    for entry in os.listdir(root_dir):
-#        if entry.find(".py") > -1:
-#            log.logger.info(entry)
-#            try:
-#                namespaces["global"].env["namespace"] = namespace
-#                execfile(root_dir + "/" + entry, namespaces["global"].env)
 
 
 def process_templates(root_dir, output_dir):
@@ -107,8 +115,10 @@ def process_templates(root_dir, output_dir):
                 process_file(filename, output_filename)
 
 
-def clean_output_dir(root_dir, output_dir, do_dirs = False):
-    #Check for files that needs to be deleted
+def clean_output_dir(root_dir, output_dir, do_dirs=False):
+    '''
+    Check for files that needs to be deleted.
+    '''
     for entry in os.listdir(output_dir):
         if not ((entry.find(".") == 0)):
             filename = output_dir + "/" + entry
@@ -206,19 +216,19 @@ def process_file(input_filename, output_filename):
                                  os.path.dirname(output_filename))
                 #shutil.copy2(input_filename, os.path.dirname(output_filename))
         tmpl_file.close()
-
+#Remove the entry
 
 def main():
     '''Main entry point.'''
     usage = "usage: %prog [options] template_path output_dir"
-    arg_parser = optparse.OptionParser(usage = usage)
+    arg_parser = optparse.OptionParser(usage=usage)
     arg_parser.add_option("-v", "--verbose",
-                          action = "store_true", dest = "verbose",
-                          default = False,
-                          help = "Print detailed progress [default]")
+                          action="store_true", dest="verbose",
+                          default=False,
+                          help="Print detailed progress [default]")
     arg_parser.add_option("-l", "--log-level",
-                          type = "int", default = 2,
-                          help = "Set the logging level for the log files (0-5)"
+                          type="int", default=2,
+                          help="Set the logging level for the log files (0-5)"
                           )
     (options, args) = arg_parser.parse_args()
     if len(args) == 0:
@@ -245,11 +255,17 @@ def main():
     #Save the config path
     template_path = args[0]
     output_dir = args[1]
-    log.logger.info("Make file Template engine V" + str(version))
+    #Make the output directory available in the global namespace
+    namespaces["global"].env["mtl_output_dir"] = output_dir
+    #Make a list available to register functions for destroying a plugin
+    namespaces["global"].env["mtl_plugin_destroy"] = PLUGIN_DESTROY
+    log.logger.info("Make file Template engine V" + str(VERSION))
     load_plugins("plugins")
     log.logger.info("Processing templates in: " + template_path)
     process_templates(template_path, output_dir)
     clean_output_dir(template_path, output_dir)
+    for plugin in PLUGIN_DESTROY:
+        plugin()
 
 
 if __name__ == '__main__':

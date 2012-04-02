@@ -7,7 +7,7 @@ Handling of things to do with calling make
 
 class Make(object):
     '''Class to generate recipes for calling make'''
-    def __init__(self, env = "", param = "", build_dir = ".", make_target = "all"):
+    def __init__(self, env="", param="", build_dir=".", make_target="all"):
         self.env = env
         self.param = param
         self.build_dir = build_dir
@@ -24,19 +24,7 @@ class Make(object):
 
 class MakeRule(Rule):
     '''General rule to run make.'''
-    def __init__(self, env = "", param = "", build_dir = ".", make_target = "all", target = "", dependencies = "", rule_var_name = ""):
+    def __init__(self, env="", param="", build_dir=".", make_target="all", target="", dependencies="", rule_var_name=""):
         Rule.__init__(self, target, dependencies, None, rule_var_name)
         self.recipe.append(Make(env, param, build_dir, make_target))
 
-#def make(env, param, target_name, target_file, dep):
-#    print var_name(target_name) + " = ",
-#    if isinstance(target_file, str):
-#        print target_file
-#    else:
-#        print var_name(target_name).lower()
-#    print "$(" + var_name(target_name) + "): " + dep
-#    print "\t",
-#    if len(env) > 0:
-#        print env + " ",
-#    print "$(MAKE) " + param + " -C $(" + var_name("build_dir") + ") " + target_name,
-#$(" + var_name("build_dir") + ")/Makefile "
