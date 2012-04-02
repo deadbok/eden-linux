@@ -13,13 +13,16 @@ import namespace
 def repl(matchobj):
     '''
     repl function for re.RegexObject.sub().
+    Substitute the script with the output of the script
     
     @type matchobj: re.MatchObject
     @param matchobj:  MatchObject from re.RegexObject.sub().
     '''
     log.logger.debug("Found in-line code: " + matchobj.group(1))
+    #Create a buffer to capture the standard output
     buf = StringIO()
     sys.stdout = buf
+    #Create the environment for running the script
     env = dict()
     env.update(namespace.namespaces[namespace.current].env)
     env.update(namespace.namespaces["global"].env)

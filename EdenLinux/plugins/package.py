@@ -8,7 +8,7 @@ import os
 
 class Package(object):
     '''Class to encapsulate a software package.'''
-    def __init__(self, src_dir = ".", build_dir = "", version = "0.0", url = "http://localhost", target = "."):
+    def __init__(self, src_dir = ".", build_dir = "", VERSION = "0.0", url = "http://localhost", target = "."):
         '''
         Constructor.
         
@@ -16,8 +16,8 @@ class Package(object):
         @param src_dir: The directory to unpack the source into.
         @type build_dir: str
         @param build_dir: The directory i which to build the package.
-        @type version: str
-        @param version: Package version.
+        @type VERSION: str
+        @param VERSION: Package VERSION.
         @type url: str
         @param url: Where to download the package.
         @type target: str
@@ -25,7 +25,7 @@ class Package(object):
         '''
         self.src_dir = src_dir
         self.build_dir = build_dir
-        self.version = version
+        self.version = VERSION
         self.url = url
         self.target = target
         self.filename = os.path.basename(url)
@@ -33,7 +33,7 @@ class Package(object):
 
     def vars(self):
         '''Create the default package variables'''
-        ret = var_name("version") + " := " + self.version + "\n"
+        ret = var_name("VERSION") + " := " + self.version + "\n"
         ret += var_name("src_dir") + " := " + self.src_dir + "\n"
         ret += var_name("build_dir") + " := "
         if self.build_dir == "":
