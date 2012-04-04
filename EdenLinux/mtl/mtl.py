@@ -17,23 +17,79 @@ import plugin
 from namespace import namespaces
 from StringIO import StringIO
 
-#VERSION = 0.2
-#PLUGIN_DESTROY = list()
-
 class MTL(object):
     '''
     Class to hold stuff from mtl, available in the global namespace as mtl.
     '''
-    def __init__(self, output_dir):
+    def __init__(self, output_dir, project_dir):
         '''
         Create the mtl object.
         
-        @param output_dir: The root ouput directory.
-        @type output_dir: str  
+        @param output_dir: The root output directory.
+        @type output_dir: str
+        @type project_dir: str
+        @param project_dir: Root directory of project.        
         '''
         self.version = 0.2
         self.plugins = list()
         self.output_dir = output_dir
+        self.project_dir = project_dir
+        self.plugins_dir = self.project_dir + "/plugins"
+        self.template_path = self.project_dir + "/tmpl"
+        log.logger.info("Make file Template engine V" + str(self.version))
+
+    def load_plugins(self):
+        '''
+        Load plugins.
+        '''
+        log.logger.info("Loading plugins from: " + self.plugins_dir)
+        #Get a list of files in the plugin directory
+        plugins = os.listdir(self.plugins_dir)
+        index = 0
+        stop = False
+        entry = ""
+        errors = 0
+        #Run through all the plugins in the directory
+        while len(plugins) > 0:
+            #If there are as many errors loading the plugins, as there are plugins
+            #there is no chance of solving the missing dependencies. So we stop.
+            if errors == len(plugins):
+                stop = True
+            #We have reached the end, start over.
+            if index >= len(plugins):
+                index = 0
+                errors = 0
+            #Get the current source file
+            entry = plugins[index]
+            #Check if it is a python source file
+            if entry.endswith(".py"):
+                try:
+                    #Create a default plugin object
+                    plugin_info = plugin.Plugin(entry.replace('.py', ''))
+                    #Make the object available as 'mtl_plugin'
+                    namespaces["global"].env["mtl_plugin"] = plugin_info
+                    #RUN the plugin code in the global namespace
+                    execfile(self.plugins_dir + "/" + entry, namespaces["global"].env)
+                    #Remove the entry
+                    del plugins[index]
+                    #Add the plugin object to the list
+                    self.plugins.append(namespaces["global"].env["mtl_plugin"])
+                    log.logger.info(entry + "...OK")
+                    #Catch any exception and try loading the plugin at a later time.
+                    #Simple way of trying to solve missing stuff that are not yet
+                    #loaded from other plugins
+                except Exception as exception:
+                    #If stop is set, we have a real error
+                    if stop:
+                        #Re-raise
+                        raise exception
+                    index += 1
+                    errors += 1
+                    log.logger.info(entry + "..." + str(exception) + "...waiting")
+            else:
+                #Remove the entry if it is not a python source file
+                del plugins[index]
+
 
 def istemplate(lines):
     '''
@@ -48,58 +104,6 @@ def istemplate(lines):
         return(True)
     else:
         return(False)
-
-def load_plugins(root_dir):
-    '''
-    Load plugins.
-    
-    @type root_dir: str
-    @param root_dir: The directory to lo#Remove the entryad the plugins from.
-    '''
-    log.logger.info("Loading plugins from: " + root_dir)
-    plugins = os.listdir(root_dir)
-    index = 0
-    stop = False
-    entry = ""
-    errors = 0
-    #Run through all the plugins in the directory
-    while len(plugins) > 0:
-        #If there are as many errors loading the plugins, as there are plugins
-        #there is no chance of solving the missing dependencies. So we stop.
-        if errors == len(plugins):
-            stop = True
-        #We have reached the end, start over.
-        if index >= len(plugins):
-            index = 0
-            errors = 0
-        #Get the current source file
-        entry = plugins[index]
-        #Check if it is a python source file
-        if entry.endswith(".py"):
-            try:
-                #TODO: Don't do this for every file
-                namespaces["global"].env["namespace"] = namespace
-                namespaces["global"].env["plugin"] = plugin
-                namespaces["global"].env["ordereddict"] = ordereddict
-                #RUN the plugin code in the global namespace
-                execfile(root_dir + "/" + entry, namespaces["global"].env)
-                #Remove the entry
-                del plugins[index]
-                log.logger.info(entry + "...OK")
-                #Catch any exception and try loading the plugin at a later time.
-                #Simple way of trying to solve missing stuff that are not yet
-                #loaded from other plugins
-            except Exception as exception:
-                #If stop is set, we have a real error
-                if stop:
-                    #Re-raise
-                    raise exception
-                index += 1
-                errors += 1
-                log.logger.info(entry + "..." + str(exception) + "...waiting")
-        else:
-            #Remove the entry if it is not a python source file
-            del plugins[index]
 
 
 def process_templates(root_dir, output_dir):
@@ -237,7 +241,7 @@ def process_file(input_filename, output_filename):
 
 def main():
     '''Main entry point.'''
-    usage = "usage: %prog [options] template_path output_dir"
+    usage = "usage: %prog [options] project_dir output_dir"
     arg_parser = optparse.OptionParser(usage=usage)
     arg_parser.add_option("-v", "--verbose",
                           action="store_true", dest="verbose",
@@ -248,7 +252,8 @@ def main():
                           help="Set the logging level for the log files (0-5)"
                           )
     (options, args) = arg_parser.parse_args()
-    if len(args) == 0:
+    #Not enough arguments?
+    if len(args) < 2:
         arg_parser.print_help()
         return
     if options.log_level == 0:
@@ -270,17 +275,21 @@ def main():
     else:
         log.init_console_log()
     #Save the config path
-    template_path = args[0]
+    project_dir = args[0]
     output_dir = args[1]
-    #Make the output directory available in the global namespace
-    #namespaces["global"].env["mtl_output_dir"] = output_dir
-    mtl_info = MTL(output_dir)
+    #Create the mtl info object 
+    mtl_info = MTL(output_dir, project_dir)
+    #Make the namespace module available to plugins
+    namespaces["global"].env["namespace"] = namespace
+    #Make the plugin module available to plugins
+    namespaces["global"].env["plugin"] = plugin
+    namespaces["global"].env["ordereddict"] = ordereddict
+    #Make the mtl_info available as 'mtl' to plugins
     namespaces["global"].env["mtl"] = mtl_info
-    log.logger.info("Make file Template engine V" + str(mtl_info.version))
-    load_plugins("plugins")
-    log.logger.info("Processing templates in: " + template_path)
-    process_templates(template_path, output_dir)
-    clean_output_dir(template_path, output_dir)
+    mtl_info.load_plugins()
+    log.logger.info("Processing templates in: " + mtl_info.template_path)
+    process_templates(mtl_info.template_path, output_dir)
+    clean_output_dir(mtl_info.template_path, output_dir)
     for mtl_plugin in mtl_info.plugins:
         mtl_plugin.destroy()
 

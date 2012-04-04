@@ -7,7 +7,7 @@ Support for writing YAML files.
 import yaml
 
 yaml_filename = mtl.output_dir + "/.config.yaml"
-yaml_file = file(yaml_filename, 'w')
+yaml_file = open(yaml_filename, 'w')
 yaml_doc = list()
 
 def yaml_save():
@@ -16,6 +16,7 @@ def yaml_save():
     '''
     for config_var in yaml_doc:
         yaml_file.writelines(config_var)
+    yaml_file.close()
 
-plg_yaml = plugin.Plugin("yaml", yaml_save)
-mtl.plugins.append(plg_yaml)
+mtl_plugin = plugin.Plugin("yaml", yaml_save)
+
