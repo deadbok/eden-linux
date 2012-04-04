@@ -69,15 +69,16 @@ class MTL(object):
                     #Make the object available as 'mtl_plugin'
                     namespaces["global"].env["mtl_plugin"] = plugin_info
                     #RUN the plugin code in the global namespace
-                    execfile(self.plugins_dir + "/" + entry, namespaces["global"].env)
+                    execfile(self.plugins_dir + "/" + entry,
+                             namespaces["global"].env)
                     #Remove the entry
                     del plugins[index]
                     #Add the plugin object to the list
                     self.plugins.append(namespaces["global"].env["mtl_plugin"])
                     log.logger.info(entry + "...OK")
-                    #Catch any exception and try loading the plugin at a later time.
-                    #Simple way of trying to solve missing stuff that are not yet
-                    #loaded from other plugins
+                    #Catch any exception and try loading the plugin at a later
+                    #time. Simple way of trying to solve missing stuff that are 
+                    #not yet loaded from other plugins
                 except Exception as exception:
                     #If stop is set, we have a real error
                     if stop:

@@ -18,5 +18,5 @@ def yaml_save():
         yaml_file.writelines(config_var)
     yaml_file.close()
 
-mtl_plugin = plugin.Plugin("yaml", yaml_save)
+mtl_plugin = plugin.Plugin("yamlfile", yaml_save)
 
