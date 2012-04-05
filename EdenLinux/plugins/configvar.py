@@ -38,12 +38,13 @@ class ConfigVar(YAMLObject):
         self.short_desc = short_desc
         self.desc = desc
         self.values = values
+        self.namespace = namespace.current
 
     def __repr__(self):
         '''
         Yaml.
         '''
-        return "%s(name=%r, value=%r, short_desc=%r, desc=%r, val)" % (self.__class__.__name__, self.name, self.value, self.short_desc, self.desc, self.values)
+        return "%s(name=%r, value=%r, short_desc=%r, desc=%r, value=%r, namespace=%r)" % (self.__class__.__name__, self.name, self.value, self.short_desc, self.desc, self.values, self.namespace)
 
     def __str__(self):
         '''Stringify the config varfrom yaml import YAMLObjectiable'''
