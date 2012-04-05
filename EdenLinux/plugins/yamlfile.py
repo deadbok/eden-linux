@@ -14,9 +14,7 @@ def yaml_save():
     '''
     Save the config variables to a YAML file.
     '''
-    for config_var in yaml_doc:
-        yaml_file.writelines(config_var)
-    yaml_file.close()
+    yaml.dump_all(yaml_doc, yaml_file)
 
 mtl_plugin = plugin.Plugin("yamlfile", yaml_save)
 

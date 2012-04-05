@@ -47,6 +47,6 @@ class ConfigVar(YAMLObject):
 
     def __str__(self):
         '''Stringify the config varfrom yaml import YAMLObjectiable'''
-        yaml_doc.append(yaml.dump(self))
+        yaml_doc.append(self)
         ret = ''
         return(ret)

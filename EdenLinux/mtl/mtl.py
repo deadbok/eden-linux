@@ -30,13 +30,13 @@ class MTL(object):
         @type project_dir: str
         @param project_dir: Root directory of project.        
         '''
-        self.version = 0.2
+        self.version = "0.2.1"
         self.plugins = list()
         self.output_dir = output_dir
         self.project_dir = project_dir
         self.plugins_dir = self.project_dir + "/plugins"
         self.template_path = self.project_dir + "/tmpl"
-        log.logger.info("Make file Template engine V" + str(self.version))
+        log.logger.info("Make file Template engine V" + self.version)
 
     def load_plugins(self):
         '''
