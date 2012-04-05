@@ -1,3 +1,8 @@
+2012-04-04  oblivion  <oblivion@cube>
+
+	* config/loader.py: Changes for YAML input support
+	* config/config.py: Shebang
+
 2012-03-20  oblivion  <oblivion@cube>
 
 	* config/writer.py: Basic save_tree logic

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
 Main program.
 
@@ -39,8 +41,10 @@ class App(object):
         return(True)
 
     def handle_save(self, widget, *args):
-        log.logger.debug("Saving to: " + self.loader.dir)
-        self.writer = writer.Writer(self.loader.dir)
+        '''
+        Save YAML file.
+        '''
+        log.logger.info("Saving to: " + self.writer.dir)
         self.writer.save_tree(self.loader.config_tree)
 
 
@@ -49,7 +53,8 @@ class App(object):
         @param makefiles_dir: Path to find the make files
         @type makefiles_dir: str
         '''
-        self.loader = loader.Loader(makefiles_dir)
+        self.loader = loader.Loader(makefiles_dir + "/.config.yaml")
+        self.writer = writer.Writer(makefiles_dir)
         self.display = ui.configdisplay.ConfigDisplay(self.loader)
         urwid.connect_signal(self.display, 'save', self.handle_save)
         self.loop = urwid.MainLoop(self.display, self.display.palette,
