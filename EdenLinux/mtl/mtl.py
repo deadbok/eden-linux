@@ -30,7 +30,7 @@ class MTL(object):
         @type project_dir: str
         @param project_dir: Root directory of project.        
         '''
-        self.version = "0.2.1"
+        self.version = "0.2.2"
         self.plugins = list()
         self.output_dir = output_dir
         self.project_dir = project_dir
