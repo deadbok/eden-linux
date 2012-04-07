@@ -69,6 +69,8 @@ app = App()
 
 def main():
     '''Main entry point.'''
+    #PyDev remote debugging
+    #import pysrc.pydevd;pysrc.pydevd.settrace()
     usage = "usage: %prog [options] [Make files directory]"
     arg_parser = optparse.OptionParser(usage=usage)
     arg_parser.add_option("-v", "--verbose",

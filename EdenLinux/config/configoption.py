@@ -4,13 +4,10 @@ Class to hold a configuration option.
 @since:  5 Jan 2012
 @author: oblivion
 '''
-from yaml import YAMLObject
-
-class ConfigOption(YAMLObject):
+class ConfigOption(object):
     '''
     Class to hold a configuration option.
     '''
-    yaml_tag = u'!ConfigVar'
     def __init__(self, parent=None):
         '''
         Constructor
@@ -36,12 +33,6 @@ class ConfigOption(YAMLObject):
         ret += 'Short description: ' + self.short_desc + ', '
         ret += 'Description: ' + self.desc + ','
         return(ret)
-
-    def __repr__(self):
-        '''
-        Yaml.
-        '''
-        return "%s(name=%r, value=%r, short_desc=%r, desc=%r, values=%r, namespace=%r)" % (self.__class__.__name__, self.name, self.value, self.short_desc, self.desc, self.values, self.namespace)
 
     def iter(self):
         '''

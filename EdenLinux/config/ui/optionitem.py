@@ -39,7 +39,10 @@ class OptionItem(urwid.WidgetWrap):
         '''
         Handle updating entries, when changed in the UI.
         '''
-        self.entry.value = changed
+        #BUG: urwid updates this value after the handler is called, so we make
+        #do with a toggle
+        #self.entry.value = changed.get_state()
+        self.entry.value = not self.entry.value
 
     def show_list(self, button, *args):
         '''
