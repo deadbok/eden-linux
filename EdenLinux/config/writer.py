@@ -30,7 +30,7 @@ class Writer(object):
         @type config_tree: L{ConfigTree}  
         '''
         filename = self.dir + "/.config.yaml"
-        log.logger.info("Saving tree in: " + filename)
+        log.logger.debug("Saving tree in: " + filename)
         self.config_tree = config_tree
 
         config_file = open(filename, "w")
