@@ -47,7 +47,15 @@ class ConfigVar(YAMLObject):
         return "%s(name=%r, value=%r, short_desc=%r, desc=%r, value=%r, namespace=%r)" % (self.__class__.__name__, self.name, self.value, self.short_desc, self.desc, self.values, self.namespace)
 
     def __str__(self):
-        '''Stringify the config varfrom yaml import YAMLObjectiable'''
+        '''Stringify the config var.'''
         yaml_doc.append(self)
         ret = ''
+        #Handle boolean as a defined/undefined variable
+        if isinstance(self.value, bool):
+            if self.value:
+                ret += self.name.upper() + ' = 1'
+            else:
+                ret += '#' + self.name.upper() + ' = 1'
+        else:
+            ret += self.name.upper() + ' := ' + str(self.value)
         return(ret)
