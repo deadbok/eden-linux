@@ -1,7 +1,8 @@
 #mtl
 ${local_namespace("target.image")}
 
-${local()}SIZE = 256
+${ConfigVar(local()+'SIZE', '256', "Target image size in Mb", "Size of the target image in Mb, make sure to have enough for the system")}
+#${local()}SIZE = 256
 ${local()}FILENAME = root.img
 
 $(TARGET_IMAGE_FILE) := $(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)

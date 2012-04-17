@@ -1,3 +1,7 @@
+2012-04-11  oblivion  <oblivion@cube>
+
+	* plugins/configvar.py: Spelling error.
+
 2012-04-04  oblivion  <oblivion@cube>
 
 	* config/loader.py: Changes for YAML input support

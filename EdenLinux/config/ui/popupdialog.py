@@ -8,7 +8,7 @@ import log
 import window
 
 
-class ChoicePopUpDialog(window.Window):
+class PopUpDialog(window.Window):
     '''
     General purpose pop up dialog.
     '''

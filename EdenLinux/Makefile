@@ -1,4 +1,4 @@
-EPYDOC = epydoc-2.7
+EPYDOC = epydoc
 
 ifdef VERBOSE
 VERBOSE_FLAG = --verbose

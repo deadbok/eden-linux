@@ -8,7 +8,7 @@ import log
 import popupdialog
 
 
-class ChoicePopUp(urwid.PopUpLauncher):
+class EditPopUp(urwid.PopUpLauncher):
     '''
     Class with urwid pop up logic.
     '''
@@ -18,10 +18,11 @@ class ChoicePopUp(urwid.PopUpLauncher):
         '''
         Constructor
         '''
-        log.logger.debug('Creating choice pop up with base: ' + str(original_widget))
+        log.logger.debug('Creating edit pop up with base: '
+                         + str(original_widget))
         urwid.PopUpLauncher.__init__(self, original_widget)
         self.entry = entry
-        self.item_list = list()
+        self.edit = None
         self.value = ''
 #        self.__super.__init__(original_widget)
 
@@ -33,31 +34,19 @@ class ChoicePopUp(urwid.PopUpLauncher):
     def pop_up_set(self):
         '''Called when the selection has been made in the pop up.'''
         log.logger.debug("Getting value from pop up")
-        #Find selected item
-        for item in self.item_list:
-            if item.get_state() == True:
-                #Save value
-                self.value = item.get_label()
-                #Announce that the value has changed
-                self._emit("change")
-                #Close the pop up
-                urwid.PopUpLauncher.close_pop_up(self)
+        self.value = self.edit.get_edit_text()
+        #Announce that the value has changed
+        self._emit("change")
+        #Close the pop up
+        urwid.PopUpLauncher.close_pop_up(self)
 
     def create_pop_up(self):
         '''Called to create the pop up.'''
         log.logger.debug('Creating pop up')
         #body
-        #List of radio-buttons with values
-        self.item_list = list()
-        for value in self.entry.values:
-            #Handle the selected value
-            if self.entry.value == value:
-                urwid.RadioButton(self.item_list, value, True)
-            else:
-                urwid.RadioButton(self.item_list, value, False)
-
-        body = urwid.AttrMap(urwid.ListBox(urwid.SimpleListWalker(self.item_list)),
-                             'option')
+        #EditBox
+        self.edit = urwid.Edit(self.entry.value)
+        body = urwid.AttrMap(urwid.Filler(self.edit), 'option')
         #pop up
         pop_up = popupdialog.PopUpDialog(body)
         urwid.connect_signal(pop_up, 'close',

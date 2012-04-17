@@ -20,10 +20,12 @@ endif
 include target/iso.mk
 include target/services.mk
 
+${ConfigVar('compress_man_pages', False, 'Compress man pages', 'Compress the unix man pages to save space')}
 ifdef COMPRESS_MAN_PAGES
 include target/zip-man.mk
 endif
 
+${ConfigVar('remove_headers', False, 'Remove headers', 'Remove headers used for development, to save space')}
 ifdef REMOVE_HEADERS
 include target/headers.mk
 endif
