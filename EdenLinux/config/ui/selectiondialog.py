@@ -30,7 +30,7 @@ Enter or Space. Change focus with the Tab key.'''
                                   widget])
         #Create a list of option for the current page
         self.options_widget = optionswidget.OptionWidgets(loader.config_tree)
-        self.options_widget.generate_page('global')
+        self.options_widget.generate_page(loader.config_tree)
         urwid.connect_signal(self.options_widget,
                              'change', self.page_change)
         #Add them to a listbox
@@ -81,13 +81,13 @@ Enter or Space. Change focus with the Tab key.'''
         Go back a page or exit at root.
         '''
         page = self.options_widget.page
-        log.logger.debug("Going back from page: " + page)
-        if page == 'global':
+        log.logger.debug("Going back from page: " + page.name)
+        if page.name == 'global':
             log.logger.debug("Closing UI.")
             raise urwid.ExitMainLoop()
         else:
-            page = self.loader.config_tree.find(page).parent.name
-            log.logger.debug("Going back to page: " + page)
+            page = self.options_widget.page.parent
+            log.logger.debug("Going back to page: " + page.name)
             self.options_widget.generate_page(page)
 
     def page_change(self):

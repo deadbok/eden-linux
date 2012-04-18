@@ -1,3 +1,11 @@
+2012-04-18  oblivion  <oblivion@cube>
+
+	* config/config.py: A little louder. 
+	* config/ui/editpopup.py: Pop up for editing values.
+	* config/ui/optionswidget.py: More intelligent page handling.
+	* config/ui/selectiondialog.py: Changes in page handling.
+	* config/configtree.py: Bug when adding a node.
+
 2012-04-11  oblivion  <oblivion@cube>
 
 	* plugins/configvar.py: Spelling error.

@@ -59,4 +59,4 @@ class EditPopUp(urwid.PopUpLauncher):
     def get_pop_up_parameters(self):
         '''This method is called each time this widget is rendered.'''
         log.logger.debug('Giving pop up parameters')
-        return {'left': 0, 'top': 1, 'overlay_width': 30, 'overlay_height': 15}
+        return {'left': 0, 'top': 1, 'overlay_width': 30, 'overlay_height': 10}

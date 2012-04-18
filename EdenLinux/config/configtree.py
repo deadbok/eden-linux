@@ -41,6 +41,7 @@ class ConfigTree(configoption.ConfigOption):
             for subnode in node.nodes:
                 if subnode.name == name:
                     return(subnode)
+        log.logger.warning("Could not find node: " + name)
         return(None)
 
     def add(self, node):
@@ -76,7 +77,7 @@ class ConfigTree(configoption.ConfigOption):
                     #Add node
                     current_node.nodes.append(next_node)
                     current_node = next_node
-                    #Add node
-                current_node.nodes.append(node)
+            #Add node
+            current_node.nodes.append(node)
             log.logger.debug('Adding node: ' + str(node))
 

@@ -21,6 +21,7 @@ VERSION = 0.2
 
 class App(object):
     '''Class with main application control.'''
+    #TODO: exception handling?
     def __init__(self):
         '''Constructor.'''
         self.loader = None
@@ -61,6 +62,7 @@ class App(object):
                               unhandled_input=self.handle_global, pop_ups=True)
         screen_size = self.loop.screen.get_cols_rows()
         log.logger.debug("Screen size: " + str(screen_size))
+        log.logger.info("Entering UI")
         self.loop.run()
 
 

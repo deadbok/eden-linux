@@ -23,30 +23,35 @@ class OptionWidgets(urwid.SimpleListWalker):
         urwid.SimpleListWalker.__init__(self, self.widgets)
         urwid.register_signal(OptionWidgets, 'page_change')
 
-    def generate_page(self, name):
+    def generate_page(self, node):
         '''
         Generate widgets for a level in the menu.
+        
+        @param node: The node from which to generate the page.
+        @type node: L{ConfigOption}  
         '''
-        node = self.config_tree.find(name)
-        log.logger.debug("Generating page: " + name)
+#        node = self.config_tree.find(name)
+        log.logger.debug("Generating page: " + node.name)
         #Remove old entries
         del self[0:len(self)]
-        for entry in node.nodes:
-            #Skip the root node
-            if entry.name == 'global':
-                log.logger.debug('Skipping global')
-                continue
-            #If all lower case, this node has sub-nodes
-            if entry.name.islower():
-                log.logger.debug('Adding page button: ' + entry.name)
-                widget = custombutton.CustomButton(entry.name, right='>')
-                urwid.connect_signal(widget, 'click', self.change_page, entry)
-                widget = urwid.AttrMap(widget, 'option', 'focus')
-            else:
-                widget = optionitem.OptionItem(entry)
-            self.append(widget)
+        #Handle an empty page
+        if node.nodes != None:
+            for entry in node.nodes:
+                #Skip the root node
+                if entry.name == 'global':
+                    log.logger.debug('Skipping global')
+                    continue
+                #If all lower case, this node has sub-nodes
+                if entry.name.islower():
+                    log.logger.debug('Adding page button: ' + entry.name)
+                    widget = custombutton.CustomButton(entry.name, right='>')
+                    urwid.connect_signal(widget, 'click', self.change_page, entry)
+                    widget = urwid.AttrMap(widget, 'option', 'focus')
+                else:
+                    widget = optionitem.OptionItem(entry)
+                self.append(widget)
 
-        self.page = name
+        self.page = node
         urwid.emit_signal(self, 'change')
 
     def change_page(self, button, entry):
@@ -55,4 +60,4 @@ class OptionWidgets(urwid.SimpleListWalker):
         '''
         log.logger.debug('"Change" signal from: ' + button.get_label())
         log.logger.debug("Changing to page: " + entry.name)
-        self.generate_page(entry.name)
+        self.generate_page(entry)
