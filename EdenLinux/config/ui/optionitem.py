@@ -39,7 +39,7 @@ class OptionItem(urwid.WidgetWrap):
                                                     + entry.short_desc)
             self.pop_up = editpopup.EditPopUp(self.button, entry)
             urwid.connect_signal(self.button, 'click', self.show_edit)
-#            urwid.connect_signal(self.pop_up, 'change', self.update_list)
+            urwid.connect_signal(self.pop_up, 'change', self.update_str)
             widget = urwid.AttrMap(self.pop_up, 'option', 'focus')
         else:
             log.logger.debug("Unknown item type for item: " + entry.name)
@@ -77,5 +77,13 @@ class OptionItem(urwid.WidgetWrap):
         Update selected value.
         '''
         self.entry.value = self.pop_up.value
+        self.button.set_label(('[' + self.entry.value + '] ')
+                        + self.entry.short_desc)
+
+    def update_str(self, item, *args):
+        '''
+        Update selected value.
+        '''
+        self.entry.value = str(self.pop_up.value)
         self.button.set_label(('[' + self.entry.value + '] ')
                         + self.entry.short_desc)

@@ -1,5 +1,6 @@
 2012-04-18  oblivion  <oblivion@cube>
 
+	* Makefile: Include log in epydoc.
 	* config/config.py: A little louder. 
 	* config/ui/editpopup.py: Pop up for editing values.
 	* config/ui/optionswidget.py: More intelligent page handling.
