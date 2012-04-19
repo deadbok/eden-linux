@@ -95,7 +95,7 @@ Enter or Space. Change focus with the Tab key.'''
         Update stuff on page change.
         '''
         log.logger.debug('"page_change" signal')
-        if self.options_widget.page == 'global':
+        if self.options_widget.page.name == 'global':
             self.back_button.original_widget.set_label('Exit')
         else:
             self.back_button.original_widget.set_label('Back')
@@ -112,12 +112,14 @@ Enter or Space. Change focus with the Tab key.'''
         Change the focus item in the dialog.
         '''
         #Focus on options
+        log.logger.debug("Current focus: " + self.body.get_focus())
         if self.body.get_focus() == 'body':
             self.body.set_focus('footer')
             self.button_bar.set_focus(self.save_button)
             log.logger.debug('Change focus: save')
         #Focus on buttons
         elif self.body.get_focus() == 'footer':
+            log.logger.debug("Button bar is in focus")
             if self.button_bar.get_focus() == self.save_button:
                 self.button_bar.set_focus(self.back_button)
                 log.logger.debug('Change focus: back')
@@ -127,9 +129,13 @@ Enter or Space. Change focus with the Tab key.'''
 
     def keypress(self, size, key):
         '''Handle tab key to change focus.'''
-        self._w.keypress(size, key)
+        #self._w.keypress(size, key)
         if key == 'tab':
             log.logger.debug('Handle key: tab')
             self.change_focus()
             return(None)
-        return(key)
+        if key == 'right':
+            log.logger.debug('Handle key: right')
+            self.change_focus()
+            return(None)
+        return(self._w.keypress(size, key))
