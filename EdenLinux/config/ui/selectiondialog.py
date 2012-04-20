@@ -5,6 +5,7 @@
 '''
 import urwid
 import optionswidget
+import optionitem
 import log
 import window
 
@@ -31,16 +32,22 @@ Enter or Space. Change focus with the Tab key.'''
         #Create a list of option for the current page
         self.options_widget = optionswidget.OptionWidgets(loader.config_tree)
         self.options_widget.generate_page(loader.config_tree)
-        urwid.connect_signal(self.options_widget,
-                             'change', self.page_change)
+        #Handle page change, and selection focus
+        urwid.connect_signal(self.options_widget, 'change',
+                             self.page_change)
+        urwid.connect_signal(self.options_widget, 'modified',
+                             self.list_modified)
         #Add them to a listbox
         self.options = urwid.AttrMap(urwid.ListBox(self.options_widget),
                                      'option')
         #Widget for help on the current option
         widget, _ = self.options_widget.get_focus()
-        option_help = ''
-        self.option_help = urwid.AttrMap(urwid.Filler(urwid.Text(option_help)),
+        self.option_help_text_str = ''
+        self.option_help_text = urwid.Text(self.option_help_text_str)
+        self.option_help = urwid.AttrMap(urwid.Filler(self.option_help_text,
+                                                      valign='top'),
                                          'option')
+        self.list_modified()
         #Used to create a margin at the left and right side of the main widgets
         margin = urwid.Filler(urwid.Text(''))
         #Arrange the listbox, and the text in two columns
@@ -100,6 +107,20 @@ Enter or Space. Change focus with the Tab key.'''
         else:
             self.back_button.original_widget.set_label('Back')
 
+    def list_modified(self):
+        '''
+        Update the help option help, when a new option is selected.
+        '''
+        log.logger.debug("New option selected")
+        option = self.options_widget.get_focus()[0]
+        if isinstance(option,
+                      optionitem.OptionItem):
+            log.logger.debug("Selected option: " + option.entry.name)
+            self.option_help_text_str = option.entry.desc
+            log.logger.debug("New help text: " + option.entry.desc)
+            self.option_help_text.set_text(self.option_help_text_str)
+
+
     def back_handler(self, button):
         '''
         Handle back/exit button.
@@ -138,4 +159,5 @@ Enter or Space. Change focus with the Tab key.'''
             log.logger.debug('Handle key: right')
             self.change_focus()
             return(None)
+        #Pass unhandled keys along
         return(self._w.keypress(size, key))
