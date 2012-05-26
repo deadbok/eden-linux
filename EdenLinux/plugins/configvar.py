@@ -12,19 +12,20 @@ def configfile():
     '''
     return("##config")
 
-
 class ConfigVar(YAMLObject):
     '''
     Class to generate config option variables
     '''
     yaml_tag = u'!ConfigVar'
-    def __init__(self, name="", value="", short_desc="", desc="",
+    def __init__(self, name="", valtype="invisible", value="", short_desc="", desc="",
                  values=""):
         '''
         Constructor.
 
         @param name: The name of the variable to create
         @type name: str
+        @param valtype: The type of the config option
+        @type valtype: str
         @param value: The value to assign the variable
         @type value: object
         @param short_desc: Short description of the config option
@@ -32,8 +33,10 @@ class ConfigVar(YAMLObject):
         @param desc: Full description of the config option
         @type desc: str
         @param values: A list of possible values if option is a selection list
+        
         '''
         self.name = name
+        self.valtype = valtype
         self.value = value
         self.short_desc = short_desc
         self.desc = desc

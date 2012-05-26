@@ -1,3 +1,9 @@
+2012-05-26  oblivion  <oblivion@cube2>
+
+	* tmpl/config.mk: Coverting to specialised ConfigVars  
+	* plugins/configvaritem.py: New file.
+	* plugins/configvar.py: Nothing.
+
 2012-03-20  oblivion  <oblivion@cube>
 
 	* config/writer.py: Basic save_tree logic
