@@ -163,7 +163,11 @@ def update_template(tmpl_file, input_filename, output_filename):
     #Dirty trick. I use StringIO to make sure the output lines are
     #formatted as the would be, when read from a file
     temp_strio = StringIO()
-    temp_strio.writelines(template.substitute(keywords.keywords))
+    try:
+        temp_strio.writelines(template.substitute(keywords.keywords))
+    except NameError as exception:
+        log.logger.error(exception.args[0] + " in: " + input_filename)
+        raise exception
     temp_strio.seek(0)
     output_lines = temp_strio.readlines()
 

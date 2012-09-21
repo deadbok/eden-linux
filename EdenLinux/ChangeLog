@@ -1,3 +1,7 @@
+2012-08-27  oblivion  <oblivion@kukkassen>
+
+	* mtl/mtl.py: Better exception handling.
+
 2012-05-26  oblivion  <oblivion@cube2>
 
 	* tmpl/config.mk: Coverting to specialised ConfigVars  

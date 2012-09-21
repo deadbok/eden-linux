@@ -4,7 +4,7 @@ config related stuff.
 @since: 2 Jan 2012
 @author: oblivion
 '''
-from yaml import YAMLObject
+#from yaml import YAMLObject
 
 def configfile():
     '''
@@ -12,11 +12,12 @@ def configfile():
     '''
     return("##config")
 
-class ConfigVar(YAMLObject):
+#class ConfigVar(YAMLObject):
+class ConfigVar(object):
     '''
     Class to generate config option variables
     '''
-    yaml_tag = u'!ConfigVar'
+#    yaml_tag = u'!ConfigVar'
     def __init__(self, name="", valtype="invisible", value="", short_desc="", desc="",
                  values=""):
         '''
@@ -50,27 +51,27 @@ class ConfigVar(YAMLObject):
 
     def __str__(self):
         '''Stringify the config varfrom yaml import YAMLObjectiable'''
-#        ret = '##CONFIG: ' + self.name.upper() + '\n'
-#        if isinstance(self.value, bool):
-#            if self.value:
-#                ret += '##True'
-#            else:
-#                ret += '##False'
-#            ret += '\n'
-#        else:
-#        ret += '##' + repr(self.value) + '\n'
-#        ret += '##' + repr(self.values) + '\n'
-#        ret += '##' + namespace.current + '\n'
-#        ret += '##' + self.short_desc + '\n'
-#        ret += '##' + self.desc + '\n'
-#        #Handle boolean as a defined/undefined variable
-#        if isinstance(self.value, bool):
-#            if self.value:
-#                ret += self.name.upper() + ' = 1'
-#            else:
-#                ret += '#' + self.name.upper() + ' = 1'
-#        else:
-#            ret += self.name.upper() + ' := ' + str(self.value)
-        yaml_doc.append(yaml.dump(self))
-        ret = '\n'
+        ret = '##CONFIG: ' + self.name.upper() + '\n'
+        if isinstance(self.value, bool):
+            if self.value:
+                ret += '##True'
+            else:
+                ret += '##False'
+            ret += '\n'
+        else:
+            ret += '##' + repr(self.value) + '\n'
+            ret += '##' + repr(self.values) + '\n'
+            ret += '##' + namespace.current + '\n'
+            ret += '##' + self.short_desc + '\n'
+            ret += '##' + self.desc + '\n'
+        #Handle boolean as a defined/undefined variable
+        if isinstance(self.value, bool):
+            if self.value:
+                ret += self.name.upper() + ' = 1'
+            else:
+                ret += '#' + self.name.upper() + ' = 1'
+        else:
+            ret += self.name.upper() + ' := ' + str(self.value)
+#        yaml_doc.append(yaml.dump(self))
+#        ret = '\n'
         return(ret)

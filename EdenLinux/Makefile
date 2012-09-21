@@ -25,20 +25,24 @@ all: $(BUILDSYS_DIR)/.mtlstamp
 	
 install:
 	$(MAKE) -C build install 2>&1 | tee install.log 
-	
-html-doc:
+
+.PHONY: docs	
+docs:
+#Python library API docs
 	mkdir -p mtl/doc/html
 	$(EPYDOC) $(VERBOSE_FLAG) --graph all --html --include-log --output mtl/doc/html mtl
 	mkdir -p plugins/doc/html
 	$(EPYDOC) $(VERBOSE_FLAG) --graph all --html --include-log --output plugins/doc/html plugins
 	mkdir -p config/doc/html
 	$(EPYDOC) $(VERBOSE_FLAG) --graph all --html --include-log --output config/doc/html config
+#Lyx documentation
+	lyx --export pdf2 docs/config-fmt.lyx
 
 $(BUILDSYS_DIR)/.mtlstamp: $(TMPL_FILES) $(MTL_FILES)
 	./mtl/mtl.py $(LOG_LEVEL) tmpl $(BUILDSYS_DIR)
 	touch $@
 
-.PHONY: makefiles
+#.PHONY: makefiles
 makefiles: $(BUILDSYS_DIR)/.mtlstamp
 
 %:
