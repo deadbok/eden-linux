@@ -54,7 +54,7 @@ class App(object):
         @param makefiles_dir: Path to find the make files
         @type makefiles_dir: str
         '''
-        self.loader = loader.Loader(makefiles_dir + "/.config.yaml")
+        self.loader = loader.Loader(makefiles_dir)
         self.writer = writer.Writer(makefiles_dir)
         self.display = ui.configdisplay.ConfigDisplay(self.loader)
         urwid.connect_signal(self.display, 'save', self.handle_save)
