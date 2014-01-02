@@ -32,7 +32,7 @@ html-doc:
 	$(EPYDOC) $(VERBOSE_FLAG) --graph=all --html --include-log --output plugins/doc/html plugins
 
 $(BUILDSYS_DIR)/.mtlstamp: $(TMPL_FILES)
-	./mtl/mtl.py $(LOG_LEVEL) tmpl $(BUILDSYS_DIR)
+	python2 ./mtl/mtl.py $(LOG_LEVEL) tmpl $(BUILDSYS_DIR)
 	touch $@
 
 .PHONY: makefiles
