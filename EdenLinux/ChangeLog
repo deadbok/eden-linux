@@ -1,3 +1,13 @@
+2014-01-13  oblivion  <oblivion@ace2>
+
+	* tmpl/target/fsh.mk: Fixed a path bug
+	* tmpl/packages/packages.mk: Enabled package build
+	* tmpl/target/config/qemux86.mk: Changed config files path
+	* tmpl/target/config/rpi.mk: Added local() and changed config files path
+								 Added real kernel version
+	* tmpl/target/config/rpi/kernel.mk: Adapted install from x86 arch
+	* tmpl/toolchain/toolchain.mk: Removed GO and gold from the toolchain environment
+
 2014-01-11  oblivion  <oblivion@ace2>
 
 	* tmpl/target/config/rpi.mk: New file. Config for the Raspberry Pi 

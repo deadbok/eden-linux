@@ -11,9 +11,12 @@ FLOAT_SUPPORT := hard
 FPU_VER := vfp
 CPU_ARCH := armv6j
 
-TARGET_CFLAGS := "-O2 -pipe -march=armv6j -mfpu=vfp -mfloat-abi=hard"
-TARGET_CXXFLAGS := $(TARGET_CFLAGS)
-TARGET_LDFLAGS := "-mfpu=vfp -mfloat-abi=hard"
+#Real version number used when installing modules
+RPI_KERNEL_VERSION := 3.10.26
+
+${local()}CFLAGS := "-O2 -pipe -march=armv6j -mfpu=vfp -mfloat-abi=hard"
+${local()}CXXFLAGS := $(TARGET_CFLAGS)
+${local()}LDFLAGS := "-mfpu=vfp -mfloat-abi=hard"
 
 BOOT_DEVICE := /dev/mmcblk0p1
 ROOT_DEVICE := /dev/mmcblk0p2
@@ -21,6 +24,6 @@ SWAP_DEVICE := /dev/mmcblk0p3
 
 ${local()}PROCESSOR = armv6j
 ${local()}FILE_SYSTEM = iso
-${local()}UCLIBC_CONFIG = $(ROOT)/target/config/rpi/uclibc_config
-${local()}KERNEL_CONFIG = $(ROOT)/target/config/rpi/kernel_config
-${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/busybox_config
+${local()}UCLIBC_CONFIG = $(ROOT)/target/config/rpi/config/uclibc_config
+${local()}KERNEL_CONFIG = $(ROOT)/target/config/rpi/config/kernel_config
+${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/config/busybox_config

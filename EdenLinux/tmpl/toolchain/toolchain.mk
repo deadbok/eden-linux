@@ -3,11 +3,11 @@ ${local_namespace("toolchain")}
 #Toolchain names
 ${local()}CC := $(ARCH_TARGET)-gcc
 ${local()}CXX := $(ARCH_TARGET)-g++
-${local()}GO := $(ARCH_TARGET)-gccgo
+#${local()}GO := $(ARCH_TARGET)-gccgo
 ${local()}AR := $(ARCH_TARGET)-ar
 ${local()}AS := $(ARCH_TARGET)-as
 ${local()}LD := $(ARCH_TARGET)-ld
-${local()}GOLD := $(ARCH_TARGET)-ld.gold
+#${local()}GOLD := $(ARCH_TARGET)-ld.gold
 ${local()}RANLIB := $(ARCH_TARGET)-ranlib
 ${local()}READELF := $(ARCH_TARGET)-readelf
 ${local()}STRIP := $(ARCH_TARGET)-strip
