@@ -1,9 +1,10 @@
-EPYDOC = epydoc-2.7
+EPYDOC = epydoc
+MKDIR = mkdir -p
 
-ifdef VERBOSE
-VERBOSE_FLAG = --verbose
+ifdef  VERBOSE
+export VERBOSE_FLAG = --verbose
 else
-VERBOSE_FLAG =
+export VERBOSE_FLAG =
 endif
 
 ifdef DEBUG
@@ -31,7 +32,10 @@ html-doc:
 	mkdir -p plugins/doc/html
 	$(EPYDOC) $(VERBOSE_FLAG) --graph=all --html --include-log --output plugins/doc/html plugins
 
-$(BUILDSYS_DIR)/.mtlstamp: $(TMPL_FILES)
+$(BUILDSYS_DIR):
+	$(MKDIR) build
+
+$(BUILDSYS_DIR)/.mtlstamp: $(BUILDSYS_DIR) $(TMPL_FILES)
 	python2 ./mtl/mtl.py $(LOG_LEVEL) tmpl $(BUILDSYS_DIR)
 	touch $@
 

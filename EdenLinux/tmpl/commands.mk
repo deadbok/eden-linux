@@ -1,9 +1,9 @@
 #mtl
-ifdef VERBOSE
-VERBOSE_FLAG = --verbose
-else
-VERBOSE_FLAG =
-endif
+#ifdef VERBOSE
+#VERBOSE_FLAG = --verbose
+#else
+#VERBOSE_FLAG =
+#endif
 
 MKDIR = mkdir -p $(VERBOSE_FLAG)
 
@@ -17,8 +17,6 @@ MV = mv $(VERBOSE_FLAG)
 
 LN = ln  $(VERBOSE_FLAG)
 
-MAKE_PROCESSES = 1
-MAKE_LOAD =
 MAKEFLAGS = -j $(MAKE_PROCESSES) -l $(MAKE_LOAD)
 
 TOUCH = touch

@@ -45,7 +45,7 @@ include packages/packages.mk
 include target/target.mk
 
 .PHONY: all
-all: $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(PACKAGES_BUILD)
+all: $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) $(PACKAGES_BUILD)
 	$(TOUCH) $(TEMP_DIR)/.all
 
 #Cry out if trying install before all

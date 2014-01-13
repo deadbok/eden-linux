@@ -18,9 +18,9 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
-${py e2fsprogs = AutoconfPackage('$(PACKAGES_BUILD_DIR)/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION)', '$(PACKAGES_BUILD_DIR)/e2fsprogs-build', '1.41.6', "http://dfn.dl.sourceforge.net/sourceforge/e2fsprogs/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION).tar.gz", "$(ROOTFS_DIR)/sbin/mke2fs")}
-${e2fsprogs}
-
+#${py e2fsprogs = AutoconfPackage('$(PACKAGES_BUILD_DIR)/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION)', '$(PACKAGES_BUILD_DIR)/e2fsprogs-build', '1.41.6', "http://dfn.dl.sourceforge.net/sourceforge/e2fsprogs/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION).tar.gz", "$(ROOTFS_DIR)/sbin/mke2fs")}
+#${e2fsprogs}
+${AutoconfPackage('$(PACKAGES_BUILD_DIR)/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION)', '$(PACKAGES_BUILD_DIR)/e2fsprogs-build', '1.41.6', "http://dfn.dl.sourceforge.net/sourceforge/e2fsprogs/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION).tar.gz", "$(ROOTFS_DIR)/sbin/mke2fs")}
 	
 #${make("$(PACKAGES_ENV)", '', "all", "$(PACKAGES_E2FSPROGS_BUILD_DIR)/misc/mke2fs", "$(PACKAGES_E2FSPROGS_CONFIG)")}
 

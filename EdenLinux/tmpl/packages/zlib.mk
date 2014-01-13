@@ -13,7 +13,7 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 ${local()}BUILD_PARAM = -j1
 ${local()}BUILD_ENV = $(PACKAGES_ENV)  
 
-${py zlib = AutoconfPackage('$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)', '', '1.2.5', "http://www.zlib.net/zlib-$(PACKAGES_ZLIB_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/lib/libz.a")}
+${py zlib = AutoconfPackage('$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)', '', '1.2.8', "http://www.zlib.net/zlib-$(PACKAGES_ZLIB_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/lib/libz.a")}
 ${zlib}
 #${download()}
 

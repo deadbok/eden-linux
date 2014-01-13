@@ -1,3 +1,20 @@
+2014-01-11  oblivion  <oblivion@ace2>
+
+	* tmpl/target/config/rpi.mk: New file. Config for the Raspberry Pi 
+	* tmpl/packages/packages.mk: Don't build any packages 
+	* tmpl/toolchain/binutils/binutils-2.23.2-musl-1.patch: Patch for musl (unused)
+	* tmpl/toolchain/uclibc/epoll_pwait.patch.ignore: Renamed to ignore.
+	* Makefile: Can't remember
+	* tmpl/config.mk: Added include file and changed values for the Raspberry Pi
+	* tmpl/packages/packages.mk: Added target CFLAGS
+	* tmpl/toolchain/binutils.mk: Version 2.33.2
+	* tmpl/toolchain/gcc-cross.mk: Version 4.7.3
+	* tmpl/toolchain/gcc-static.mk: Versio  4.7.3 
+	* tmpl/toolchain/gmp.mk: Version 5.1.3
+	* tmpl/toolchain/mpfr.mk: Version 3.1.2
+	* tmpl/toolchain/toolchain.mk: Changed CFLAGS to -O2
+	* tmpl/toolchain/uclibc.mk: Version 0.9.33.2
+	
 2011-12-25  oblivion  <oblivion@laptoblivion>
 
 	* tmpl/target/headers.mk: New file.
