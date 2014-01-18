@@ -1,6 +1,7 @@
-The overall goal for this project was to build a system to build tailor-made 
+The overall goal for this project is to build a system that builds tailor-made 
 Linux distributions. There are a whole range of these tools available on the net
-but when I began trying to add more software, found it awkward and tiresome.
+but when I began trying to add more software, found it awkward and tiresome, 
+this was at least 3 years ago and things may have gotten better.
 
 As it stands now, this is not easier to use, but I know the ins and outs of
 my own build system better.
@@ -22,7 +23,10 @@ The main problem is the complexity of tweaking and building a Linux distribution
 cross-compiled. There are all sorts of bad behavior and corner cases, for a lot
 of packages. This means that the makefiles needed to build a distribution are a
 pretty complex matter in itself. The template engine does succeed in simplifying
-the makefiles, but it also ads more complexity on top of the use of makefiles.  
+the makefiles, but it also ads more complexity on top of the use of makefiles.
+To use the template engine you need to have a good knowledge og how Make works.
+All in all you end up needing to know a lot about Make, and how the template
+engine works, instead of just knowing how make works.  
 
 Directories:
 	build	-	Where the makefiles are created and everything is build

@@ -36,6 +36,7 @@ class Package(object):
         ret = var_name("version") + " := " + self.version + "\n"
         ret += var_name("src_dir") + " := " + self.src_dir + "\n"
         ret += var_name("build_dir") + " := "
+        #Use source dir, if no build directory is given.
         if self.build_dir == "":
             ret += self.src_dir + "\n"
         else:

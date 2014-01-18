@@ -1,3 +1,28 @@
+2014-01-18  oblivion  <oblivion@librebook>
+
+	* tmpl/target/config/rpi/packages/kernel.mk: Symlinking sources and building out of tree
+	* tmpl/target/config/rpi/packages/kernel-headers.mk: Symlinking sources and building out of tree
+
+2014-01-17  oblivion  <oblivion@librebook>
+
+	* plugins/package.py: Comments
+	* README: New file.
+	* tmpl/target/config/qemux86/packages/kernel-headers.mk: New file.
+	* tmpl/target/config/rpi/packages/kernel-headers.mk: New file.
+	* INSTALL: Updated with a little info on how to build
+	* tmpl/config.mk: Upped parallel make processes
+	* tmpl/toolchain/binutils.mk: Updated syntax and added comments
+	* tmpl/toolchain/gmp.mk: Removed the ABI=32 thing, this is going to kill me
+							 later as this won't build on an at least an Atom
+							 CPU without.
+	* tmpl/toolchain/toolchain.mk: Just some cleanup 
+2014-01-14  oblivion  <oblivion@librebook>
+
+	* tmpl/packages/busybox.mk: Updated syntax
+	* mtl/log.py: Changes log file name to "mtl.log"
+	* tmpl/Makefile: Added deletion of the toolchain to the clean rule
+	* tmpl/toolchain/uclibc.mk: Updated to reflect the moved kernel-headers.mk file
+
 2014-01-13  oblivion  <oblivion@ace2>
 
 	* tmpl/target/fsh.mk: Fixed a path bug

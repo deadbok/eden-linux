@@ -1,4 +1,9 @@
-
+Find a perfect world where everything works as expected.
+Do:
+	make
+	sudo make install
+	
+You can add VERBOSE=1 to the make command to see more info while building.
 
 note:
 en_US.UTF-8 needs to be available for uClibc to build

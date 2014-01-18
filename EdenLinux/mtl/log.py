@@ -8,12 +8,12 @@ import logging
 from logging import handlers
 import sys
 
-logger = logging.getLogger("TemplateEden")
+logger = logging.getLogger("mtl")
 '''Our Logger object'''
 
 logger.setLevel(logging.DEBUG)
 
-file_log = handlers.RotatingFileHandler("templateeden.log",
+file_log = handlers.RotatingFileHandler("mtl.log",
                                        maxBytes = 10000000,
                                        backupCount = 5)
 '''Handler for logging to a file.'''

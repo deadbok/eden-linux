@@ -63,7 +63,7 @@ else
 endif
 
 .PHONY: clean
-clean: $(CLEAN_TARGETS)
+clean: $(CLEAN_TARGETS) toolchain-distclean
 	-$(RM) -Rf $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR)
 
 .PHONY: distclean

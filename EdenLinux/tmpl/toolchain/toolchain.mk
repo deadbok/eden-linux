@@ -37,7 +37,7 @@ ${local()}ENV := $(TOOLCHAIN_CMDS) PATH=$(TOOLCHAIN_PATH) $(TOOLCHAIN_FLAGS)
 ifeq ($(ARCH),arm)
 	GCC_EXTRA_CONFIG := --with-float=$(FLOAT_SUPPORT) --with-fpu=$(FPU_VER) --with-arch=$(CPU_ARCH)
 else
-	GCC_EXTRA_CONFIG
+	GCC_EXTRA_CONFIG :=
 endif 
 
 $(TOOLCHAIN_BUILD_DIR):
@@ -47,8 +47,6 @@ include toolchain/gcc-cross.mk
 include target/fsh.mk
 
 ${local()}INSTALL := $(TOOLCHAIN_BUILD_DIR) $(TARGET_FSH_INSTALL) $(TOOLCHAIN_GCC-CROSS_INSTALL)
-
-#clean = ${clean.gcc-cross.toolchain} ${clean.uclibc.toolchain} ${clean.gcc-static.toolchain} ${clean.binutils.toolchain} ${clean.mpfr.toolchain} ${clean.gmp.toolchain}
 
 .PHONY: toolchain-distclean
 ${Rule("toolchain-distclean")}

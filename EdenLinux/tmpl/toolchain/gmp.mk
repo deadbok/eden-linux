@@ -4,7 +4,8 @@ ${local_namespace("toolchain.gmp")}
 ${local()}INSTALL_PARAM = 
 ${local()}INSTALL_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)
 
-${local()}CONFIG_PARAM = --prefix=$(TOOLCHAIN_ROOT_DIR) ABI=$(ABI)
+${local()}CONFIG_PARAM = --prefix=$(TOOLCHAIN_ROOT_DIR) 
+#ABI=$(ABI)
 ${local()}CONFIG_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)
 
 ${local()}BUILD_PARAM = 

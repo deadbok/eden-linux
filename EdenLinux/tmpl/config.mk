@@ -18,7 +18,7 @@ ROOT_DEVICE := /dev/sda1
 SWAP_DEVICE := /dev/sda2
 
 #Make processes to run in parrallel when possible
-MAKE_PROCESSES = 2
+MAKE_PROCESSES = 4
 MAKE_LOAD =
 
 #Override with board specific values

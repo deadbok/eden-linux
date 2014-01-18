@@ -20,7 +20,7 @@ $(TOOLCHAIN_UCLIBC_CONFIG_FILE): $(TARGET_UCLIBC_CONFIG) $(TOOLCHAIN_UCLIBC_UNPA
 	$(CP) -a $(TARGET_UCLIBC_CONFIG) $(TOOLCHAIN_UCLIBC_CONFIG_FILE)
 	
 include toolchain/gcc-static.mk
-include toolchain/kernel-headers-rpi.mk
+include target/config/$(TARGET)/packages/kernel-headers.mk
 
 #${make('CFLAGS="" CXXFLAGS="" PATH=$(TOOLCHAIN_PATH)', "", "oldconfig", "$(TOOLCHAIN_UCLIBC_SRC_DIR)/include/config/auto.conf", "$(TOOLCHAIN_UCLIBC_CONFIG) $(TOOLCHAIN_UCLIBC_PATCHALL)")}
 ${MakeRule('CFLAGS="" CXXFLAGS="" PATH=$(GCC-STATIC_PATH)', '', "$(TOOLCHAIN_UCLIBC_BUILD_DIR)", "oldconfig", "$(TOOLCHAIN_UCLIBC_SRC_DIR)/include/config/auto.conf", "$(TOOLCHAIN_UCLIBC_CONFIG_FILE) $(TOOLCHAIN_UCLIBC_PATCHALL)", "TOOLCHAIN_UCLIBC_CONFIG")}
