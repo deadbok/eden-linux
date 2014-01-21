@@ -36,7 +36,7 @@ def repl(matchobj):
 class Inline(object):
     '''Class to handle in line templates'''
     #${*}
-    inline_re = re.compile(r'\$\{py\s+(.+)}')
+    inline_re = re.compile(r'\$\{py\s+([^}]+)\}')
 
     def __init__(self, template):
         '''

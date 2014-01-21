@@ -1,3 +1,33 @@
+2014-01-21  oblivion  <oblivion@librebook>
+
+	* tmpl/packages/packages.mk: Changed kernel namespace
+								 Include board specific packages
+	* tmpl/target/config/rpi/toolchain/kernel-headers.mk: Changed namespace
+	* tmpl/target/config/rpi.mk: Added boot partition size
+	* tmpl/Makefile: Moved directory options to config.mk
+	* INSTALL: Created section on stuff needed on the host
+	* tmpl/target/config/rpi/target/image.mk: New file.
+											  Added partition and filesystem creation
+	* tmpl/config.mk: Moved directory options here
+					  Added image file name
+	* tmpl/target/config/rpi/config/busybox_config: Added some stuff 
+	* tmpl/target/config/rpi/packages/kernel-headers.mk: 
+	* tmpl/target/config/rpi/packages/kernel.mk: Changed namespace
+	* tmpl/target/target.mk: Added target image to install	 
+	* mtl/inline.py: Maybe fixed regular expression
+
+2014-01-20  oblivion  <oblivion@librebook>
+
+	* plugins/namespace.py: Fixed var_name conversion of dot notation
+
+2014-01-19  oblivion  <oblivion@librebook>
+
+	* tmpl/target/target.mk: Removed most off the stuff, starting over.
+	* tmpl/target/image.mk: Updated syntax
+							Moved size configuration to config file
+	* tmpl/target/config/rpi/packages/kernel.mk: Changed rule name to link-src
+	* tmpl/target/config/rpi/packages/kernel-headers.mk: Changed rule name to link-src
+
 2014-01-18  oblivion  <oblivion@librebook>
 
 	* tmpl/target/config/rpi/packages/kernel.mk: Symlinking sources and building out of tree

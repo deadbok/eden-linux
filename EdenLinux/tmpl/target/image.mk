@@ -1,12 +1,11 @@
 #mtl
-${local_namespace("target.image")}
+${local_namespace("target.image.rpi")}
 
-${local()}SIZE = 256
 ${local()}FILENAME = root.img
 
-$(TARGET_IMAGE_FILE) := $(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)
-$(TARGET_IMAGE_FILE):
-	$(DD) if=/dev/zero of=$(TARGET_IMAGE_FILE) bs=1M count=$(TARGET_IMAGE_SIZE)
+
+${Rule("$(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)", rule_var_name= var_name("file"))}
+	$(DD) if=/dev/zero of=$(TARGET_IMAGE_FILE) bs=1M count=$(IMAGE_SIZE)
 
 #target:
 #	image:

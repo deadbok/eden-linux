@@ -5,5 +5,11 @@ Do:
 	
 You can add VERBOSE=1 to the make command to see more info while building.
 
+Needed software:
+parted
+kpartx (multipath-tools)
+bc
+git
+
 note:
 en_US.UTF-8 needs to be available for uClibc to build

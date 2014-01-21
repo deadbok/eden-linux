@@ -28,8 +28,8 @@ ${udev.rules['build']}
 ${py udev.rules['install'].dependencies += " $(PACKAGES_BOOTSCRIPTS_INSTALL)"}
 ${udev.rules['install']}
 	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/80-drivers.rules $(ROOTFS_DIR)/etc/udev/rules.d/80-drivers.rules
-	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/udev $(ROOTFS_DIR)/etc/init.d/udev
-	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev
+#	$(CP) $(ROOT)/${namespace.current.replace(".", "/")}/udev $(ROOTFS_DIR)/etc/init.d/udev
+#	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev
 
 #${make("$(PACKAGES_ENV)", 'DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"', "all", "$(PACKAGES_UDEV_BUILD_DIR)/udev/udevd", "$(PACKAGES_UDEV_CONFIG)")}
 

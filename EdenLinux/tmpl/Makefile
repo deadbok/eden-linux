@@ -7,17 +7,6 @@ include functions.mk
 #Get the userid
 UID := $(shell id -u)
 
-#Directories
-ROOT = $(shell pwd)
-BUILD_DIR := $(ROOT)/build
-DOWNLOAD_DIR := $(BUILD_DIR)/dl
-IMAGES_DIR := $(BUILD_DIR)/images
-ROOTFS_DIR := $(BUILD_DIR)/rootfs
-STRIPPED_ROOTFS_DIR := $(BUILD_DIR)/stripped_rootfs
-#template_dir = templates
-ETC_DIR := $(ROOTFS_DIR)/etc
-TEMP_DIR := $(BUILD_DIR)/tmp
-
 SERVICES :=
 
 $(DOWNLOAD_DIR):
