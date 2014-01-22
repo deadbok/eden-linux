@@ -1,57 +1,67 @@
 #mtl
 ${local_namespace("target.image")}
 
-${Rule("$(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)", rule_var_name= var_name("file"))}
-	$(DD) if=/dev/zero of=$(TARGET_IMAGE_FILE) bs=1M count=$(IMAGE_SIZE)
-
-#Calculate the root partition size with a 100m b
-${local()}ROOT_SIZE := $(shell echo $(IMAGE_SIZE)\-$(TARGET_IMAGE_BOOT_SIZE) | bc)
-
 #Get a free loop device
 ifeq ($(UID), 0)
 LOOP_DEVICE = $(shell losetup -f)
 endif
 
+BOOT_MOUNT_PATH = $(TEMP_DIR)/boot
+ROOT_MOUNT_PATH = $(TEMP_DIR)/root 
+
+${Rule("$(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)", rule_var_name= var_name("file"))}
+	$(DD) if=/dev/zero of=$(TARGET_IMAGE_FILE) bs=1M count=$(IMAGE_SIZE)
+
+#Calculate the root partition size 
+${local()}ROOT_SIZE := $(shell echo $(IMAGE_SIZE)\-$(TARGET_IMAGE_BOOT_SIZE) | bc)
+
 ${Rule('$(TEMP_DIR)/.fs', '$(TARGET_IMAGE_FILE)', rule_var_name= var_name('filesystem'))}
 	#Create an msdos partition table
-	parted -s $(TARGET_IMAGE_FILE) mklabel msdos
+	$(PARTED) -s $(TARGET_IMAGE_FILE) mklabel msdos
 	#Create a FAT boot partition
-	parted -s $(TARGET_IMAGE_FILE) mkpart primary fat32 1 $(strip $(TARGET_IMAGE_BOOT_SIZE))m
-	#Create an ext2 root partition
-	parted -s $(TARGET_IMAGE_FILE) mkpart primary ext2  $(strip $(TARGET_IMAGE_BOOT_SIZE))m $(strip $(TARGET_IMAGE_ROOT_SIZE))m
-#	parted -s $(TARGET_IMAGE_FILE) set 1 boot on
-	losetup $(LOOP_DEVICE) $(TARGET_IMAGE_FILE)
-	kpartx -av $(LOOP_DEVICE)
-	#Create boot partition filesystem
-	mkfs.vfat /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1
+	$(PARTED) -s $(TARGET_IMAGE_FILE) unit cyl mkpart primary fat32 -- 1 $(strip $(TARGET_IMAGE_BOOT_SIZE))m
+	#Set boot flag
+	$(PARTED) -s $(TARGET_IMAGE_FILE) toggle 1 boot
+	#Create an ext4 root partition
+	$(PARTED) -s $(TARGET_IMAGE_FILE) mkpart primary ext4  -- $(strip $(TARGET_IMAGE_BOOT_SIZE))m $(strip $(TARGET_IMAGE_ROOT_SIZE))m
+ifdef VERBOSE
+	$(PARTED) -s $(TARGET_IMAGE_FILE) print all
+endif
+	$(LOSETUP) $(LOOP_DEVICE) $(TARGET_IMAGE_FILE)
+	$(KPARTX) -av $(LOOP_DEVICE)
+	#Create boot partition FAT32 filesystem
+	$(MKFS_VFAT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1
 	#Create root partition filesystem
-	mkfs.ext2 -b 1024 /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2
+	$(MKFS_EXT4) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2
+	#Remove loop device
+	$(KPARTX) -d $(LOOP_DEVICE)
+	$(LOSETUP) -d $(LOOP_DEVICE)
 	$(TOUCH) $(TEMP_DIR)/.fs
+	
+${Rule('$(TEMP_DIR)/.fs-copy', '$(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_name('copy'))}
+	#Create a loop device for the disk image
+	$(LOSETUP) $(LOOP_DEVICE) $(TARGET_IMAGE_FILE)
+	$(KPARTX) -av $(LOOP_DEVICE)
+	#Mount boot partition
+	$(MKDIR) $(BOOT_MOUNT_PATH)
+	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1 $(BOOT_MOUNT_PATH)
+	#Copy boot files
+	$(CP) -R $(ROOTFS_DIR)/boot/* $(BOOT_MOUNT_PATH)
+	#Unmount boot partition
+	$(UMOUNT) $(BOOT_MOUNT_PATH)
+	#Mount root partition
+	$(MKDIR) $(ROOT_MOUNT_PATH)
+	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2 $(ROOT_MOUNT_PATH)
+	#Copy everything but the boot files
+	$(RSYNC) -a --exclude=boot $(ROOTFS_DIR)/* $(ROOT_MOUNT_PATH)
+	#Unmount root partition
+	$(UMOUNT) $(ROOT_MOUNT_PATH)
+	#Remove loop device
+	$(KPARTX) -d $(LOOP_DEVICE)
+	$(LOSETUP) -d $(LOOP_DEVICE)
+	$(TOUCH) $(TEMP_DIR)/.fs-copy
 
-${Rule('$(TEMP_DIR)/.image', '$(TARGET_IMAGE_FILE) $(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_name('create'))}
+${Rule('$(TEMP_DIR)/.image', '$(TARGET_IMAGE_COPY)', rule_var_name= var_name('create'))}
 	$(TOUCH) $(TEMP_DIR)/.image
-
-#target:
-#	image:
-#		dir = images
-#		filename = root.img
-#		size = 256
-#		
-#		mkdir(${root}/${distbuild_dir}/${dir})
-#		{
-#			${target}: ${target}/.dir
-#			
-#				
-#			${target}/.dir:
-#				$mkdir ${target}
-#				$touch ${target}/.dir		
-#		}
-#		file(${root}/${distbuild_dir}/${dir}/${filename}, ${root}/${distbuild_dir}/${dir}/.dir)
-#		{
-#			${target}: ${dependencies}
-#				dd if=/dev/zero of=${target} bs=1M count=${size}
-#		}
-#	:image
-#:target
 
 .NOTPARALLEL:

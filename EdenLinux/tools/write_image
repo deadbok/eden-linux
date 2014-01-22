@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+#Write an image with dd and a nice progress bar.
+#
+
+
+pv -tpreb build/build/images/$1 | dd of=$2 bs=1M
+

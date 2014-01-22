@@ -1,3 +1,12 @@
+2014-01-22  oblivion  <oblivion@librebook>
+
+	* tmpl/target/config/rpi/packages/boot-config/boot/cmdline.txt: Config file for Raspberry Pi boot
+	* tmpl/target/config/rpi/packages/boot-config/boot/config.txt: Config file for Raspberry Pi boot
+	* tmpl/target/config/rpi/packages/boot-config/Makefile: Package to install bor configuration files
+	* tmpl/target/config/rpi/packages/boot-config.mk: Install boot configuration files
+	* tmpl/target/config/rpi/target/image.mk: Added root and boot fs copying into image
+	* tmpl/commands.mk: Added some fs related commands
+
 2014-01-21  oblivion  <oblivion@librebook>
 
 	* tmpl/packages/packages.mk: Changed kernel namespace

@@ -15,7 +15,7 @@ HOST := $(shell gcc -dumpmachine)
 ABI=32
 
 #Size of the final root image in Mb
-IMAGE_SIZE = 256
+IMAGE_SIZE = 450
 #Image name
 TARGET_IMAGE_FILENAME = sd.img
 

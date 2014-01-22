@@ -1,15 +1,12 @@
 #mtl
-#ifdef VERBOSE
-#VERBOSE_FLAG = --verbose
-#else
-#VERBOSE_FLAG =
-#endif
 
 MKDIR = mkdir -p $(VERBOSE_FLAG)
 
 CD = cd
 
 CP = cp $(VERBOSE_FLAG)
+
+RSYNC = rsync $(VERBOSE_FLAG)
 
 CAT = cat
 
@@ -44,3 +41,16 @@ CHMOD = chmod
 
 GIT_FLAGS = 
 GIT = git $(GIT_FLAGS)
+
+PARTED = parted
+
+LOSETUP = losetup
+
+KPARTX = kpartx
+
+MKFS_VFAT = mkfs.vfat
+MKFS_EXT2 = mkfs.ext2
+MKFS_EXT4 = mkfs.ext4
+
+MOUNT = mount
+UMOUNT = umount

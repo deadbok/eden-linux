@@ -12,7 +12,7 @@ FPU_VER := vfp
 CPU_ARCH := armv6j
 
 #Real version number used when installing modules
-RPI_KERNEL_VERSION := 3.10.26+
+RPI_KERNEL_VERSION := 3.10.27+
 
 ${local()}CFLAGS := "-O2 -pipe -march=armv6j -mfpu=vfp -mfloat-abi=hard"
 ${local()}CXXFLAGS := $(TARGET_CFLAGS)
@@ -29,4 +29,4 @@ ${local()}KERNEL_CONFIG = $(ROOT)/target/config/rpi/config/kernel_config
 ${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/config/busybox_config
 
 #Boot partition size
-TARGET_IMAGE_BOOT_SIZE = 64 
+TARGET_IMAGE_BOOT_SIZE = 128
