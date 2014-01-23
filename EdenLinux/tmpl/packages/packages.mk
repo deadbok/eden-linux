@@ -17,29 +17,32 @@ ${local()}ENV = PATH=$(TOOLCHAIN_PATH) $(TOOLCHAIN_CMDS) CFLAGS=$(TARGET_CFLAGS)
 
 SERVICES := 
 
+#WARNING: These are ordered according to dependencies
+include packages/openrc.mk
+include packages/bootscripts.mk
 include packages/busybox.mk
-include packages/e2fsprogs.mk
-include packages/iana-etc.mk
 include packages/bootdevs.mk
-include packages/zlib.mk
-include packages/ncurses.mk
 include packages/baseconf.mk
+include packages/iana-etc.mk
+include packages/ncurses.mk
 include packages/nano.mk
-include packages/dropbear.mk
-include packages/udev.mk
-include packages/aufs-util.mk
-include packages/dnsmasq.mk
+
+#include packages/e2fsprogs.mk
+#include packages/zlib.mk
+#include packages/dropbear.mk
+#include packages/udev.mk
 
 #include board specific packages
 include target/config/$(TARGET)/packages/*.mk
 
+#Build toolchain, FSH dir structure, base packages, board specific packages
 ${local()}BUILD := packages-build 
 .PHONY: $(${local()}BUILD)
-$(${local()}BUILD): $(TOOLCHAIN_INSTALL) $(TARGET_FSH_INSTALL) $(PACKAGES_BUILD_DIR) $(PACKAGES_BOARD_BUILD) $(PACKAGES_BUSYBOX_BUILD) $(PACKAGES_E2FSPROGS_INSTALL) $(PACKAGES_IANA-ETC_BUILD) $(PACKAGES_ZLIB_INSTALL) $(PACKAGES_NCURSES_INSTALL) $(PACKAGES_NANO_INSTALL) $(PACKAGES_DROPBEAR_BUILD) $(PACKAGES_UDEV_BUILD) 
+$(${local()}BUILD): $(TOOLCHAIN_INSTALL) $(TARGET_FSH_INSTALL) $(PACKAGES_BUILD_DIR) $(PACKAGES_BUILD_TARGETS) $(PACKAGES_BOARD_BUILD) 
 
 
 ${local()}INSTALL := $(PACKAGES_BUILD_DIR)/.installed
-$(${local()}INSTALL): $(PACKAGES_BOARD_INSTALL) $(PACKAGES_KERNEL_INSTALL) $(PACKAGES_BUSYBOX_INSTALL) $(PACKAGES_IANA-ETC_INSTALL) $(PACKAGES_BOOTDEVS_INSTALL) $(PACKAGES_BASECONF_INSTALL) $(PACKAGES_DROPBEAR_INSTALL) $(PACKAGES_BOOTSCRIPTS_INSTALL) $(PACKAGES_UDEV_DEVICES) $(PACKAGES_UDEV_INSTALL) 
+$(${local()}INSTALL): $(PACKAGES_BOARD_INSTALL) $(PACKAGES_KERNEL_INSTALL) $(PACKAGES_INSTALL_TARGETS)
 	$(TOUCH) $(PACKAGES_BUILD_DIR)/.installed
 
 #Temporarily stop make from building any packages

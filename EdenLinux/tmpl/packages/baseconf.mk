@@ -7,4 +7,6 @@ ${var_name("etc_files")} = $(call rwildcard,$(PACKAGES_BASECONF_BUILD_DIR)/etc,*
 
 ${MakeRule("", "DESTDIR=$(ROOTFS_DIR)", "$(PACKAGES_BASECONF_BUILD_DIR)", "install", "$(ROOTFS_DIR)/etc/hosts", var_name("etc_files", True) + " $(PACKAGES_BASECONF_BUILD_DIR)/Makefile", var_name("install"))} 
 
+#Add to targets
+PACKAGES_INSTALL_TARGETS += $(PACKAGES_BASECONF_INSTALL)
 .NOTPARALLEL:

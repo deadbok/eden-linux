@@ -18,21 +18,17 @@ ${local()}ROOT_SIZE := $(shell echo $(IMAGE_SIZE)\-$(TARGET_IMAGE_BOOT_SIZE) | b
 ${Rule('$(TEMP_DIR)/.fs', '$(TARGET_IMAGE_FILE)', rule_var_name= var_name('filesystem'))}
 	#Create an msdos partition table
 	$(PARTED) -s $(TARGET_IMAGE_FILE) mklabel msdos
-	#Create a FAT boot partition
-	$(PARTED) -s $(TARGET_IMAGE_FILE) unit cyl mkpart primary fat32 -- 1 $(strip $(TARGET_IMAGE_BOOT_SIZE))m
-	#Set boot flag
-	$(PARTED) -s $(TARGET_IMAGE_FILE) toggle 1 boot
 	#Create an ext4 root partition
 	$(PARTED) -s $(TARGET_IMAGE_FILE) mkpart primary ext4  -- $(strip $(TARGET_IMAGE_BOOT_SIZE))m $(strip $(TARGET_IMAGE_ROOT_SIZE))m
+	#Set boot flag
+	$(PARTED) -s $(TARGET_IMAGE_FILE) toggle 1 boot	
 ifdef VERBOSE
 	$(PARTED) -s $(TARGET_IMAGE_FILE) print all
 endif
 	$(LOSETUP) $(LOOP_DEVICE) $(TARGET_IMAGE_FILE)
 	$(KPARTX) -av $(LOOP_DEVICE)
-	#Create boot partition FAT32 filesystem
-	$(MKFS_VFAT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1
 	#Create root partition filesystem
-	$(MKFS_EXT4) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2
+	$(MKFS_EXT4) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1
 	#Remove loop device
 	$(KPARTX) -d $(LOOP_DEVICE)
 	$(LOSETUP) -d $(LOOP_DEVICE)
@@ -42,13 +38,6 @@ ${Rule('$(TEMP_DIR)/.fs-copy', '$(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_
 	#Create a loop device for the disk image
 	$(LOSETUP) $(LOOP_DEVICE) $(TARGET_IMAGE_FILE)
 	$(KPARTX) -av $(LOOP_DEVICE)
-	#Mount boot partition
-	$(MKDIR) $(BOOT_MOUNT_PATH)
-	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1 $(BOOT_MOUNT_PATH)
-	#Copy boot files
-	$(CP) -R $(ROOTFS_DIR)/boot/* $(BOOT_MOUNT_PATH)
-	#Unmount boot partition
-	$(UMOUNT) $(BOOT_MOUNT_PATH)
 	#Mount root partition
 	$(MKDIR) $(ROOT_MOUNT_PATH)
 	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2 $(ROOT_MOUNT_PATH)

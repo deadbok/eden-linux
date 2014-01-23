@@ -7,17 +7,17 @@ STRIP_TARGET = 1
 #Delete header files from the target
 REMOVE_HEADERS = 1
 
-TARGET := armv6j
-ARCH := arm
-KERNEL_ARCH := arm
-ARCH_TARGET := $(ARCH)-unknown-linux-uclibcgnueabihf
+TARGET :=
+ARCH :=
+KERNEL_ARCH := 
+ARCH_TARGET := 
 HOST := $(shell gcc -dumpmachine)
-ABI=32
+ABI=
 
 #Size of the final root image in Mb
 IMAGE_SIZE = 450
 #Image name
-TARGET_IMAGE_FILENAME = sd.img
+TARGET_IMAGE_FILENAME = root.img
 
 #Make processes to run in parrallel when possible
 MAKE_PROCESSES = 4
@@ -34,6 +34,5 @@ STRIPPED_ROOTFS_DIR := $(BUILD_DIR)/stripped_rootfs
 ETC_DIR := $(ROOTFS_DIR)/etc
 TEMP_DIR := $(BUILD_DIR)/tmp
 
-
 #Override with board specific values
-include target/config/rpi.mk
+include target/config/qemux86.mk

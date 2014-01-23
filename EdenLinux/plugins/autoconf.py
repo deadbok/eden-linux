@@ -22,7 +22,8 @@ class Autoconf(object):
 
 class AutoconfRule(Rule):
     '''General autoconf configure rule.'''
-    def __init__(self, env = "", param = "", src_dir = ".", build_dir = ".", target = "", dependencies = "", rule_var_name = None):
+    def __init__(self, env = "", param = "", src_dir = ".", build_dir = ".", 
+                 target = "", dependencies = "", rule_var_name = None):
         if rule_var_name == None:
             rule_var_name = var_name("config")
         Rule.__init__(self, target, dependencies, None, rule_var_name)
@@ -48,6 +49,7 @@ class AutoconfPackage(Package):
     Uses: $(${local()}CONFIG_PARAM)
     Uses: $(${local()}BUILD_PARAM)
     Uses: $(${local()}INSTALL_PARAM)
+    USes: $(${local()}DEPENDENCIES)
     '''
     def __init__(self, src_dir = ".", build_dir = "", version = "0.0",
                  url = "http://localhost", target = ".", env = ""):
@@ -60,22 +62,37 @@ class AutoconfPackage(Package):
         self.rules['download'] = download
 
         #Unpack rule
-        unpack = Rule(var_name("src_dir", True) + "/configure", "$(DOWNLOAD_DIR)/" + var_name("file", True), rule_var_name = var_name("unpack"))
-        unpack.recipe.append(Unpack("$(DOWNLOAD_DIR)/" + var_name("file", True), "$(abspath " + var_name("src_dir", True) + "/../)"))
+        unpack = Rule(var_name("src_dir", True) + "/configure", 
+                      "$(DOWNLOAD_DIR)/" + var_name("file", True), 
+                      rule_var_name = var_name("unpack"))
+        unpack.recipe.append(Unpack("$(DOWNLOAD_DIR)/" + var_name("file", True), 
+                                    "$(abspath " + var_name("src_dir", True) + "/../)"))
         self.rules['unpack'] = unpack
 
         #Autoconf
-        autoconf = Rule(var_name("build_dir", True) + "/Makefile", var_name("unpack", True), rule_var_name = var_name("config"))
-        autoconf.recipe.append(Autoconf("$(" + local() + "CONFIG_ENV)", "$(" + local() + "CONFIG_PARAM)", var_name("src_dir", True), var_name("build_dir", True)))
+        autoconf = Rule(var_name("build_dir", True) + "/Makefile", 
+                        var_name("unpack", True) + " $(" + local() + "DEPENDENCIES)", 
+                        rule_var_name = var_name("config"))
+        autoconf.recipe.append(Autoconf("$(" + local() + "CONFIG_ENV)", 
+                                        "$(" + local() + "CONFIG_PARAM)", 
+                                        var_name("src_dir", True), 
+                                        var_name("build_dir", True)))
         self.rules['config'] = autoconf
 
         #Build
-        build = Rule(var_name("build_dir", True) + "/.build", var_name("config", True), rule_var_name = var_name("build"))
-        build.recipe.append(Make("$(" + local() + "BUILD_ENV)", "$(" + local() + "BUILD_PARAM)", var_name("build_dir", True), "all"))
+        build = Rule(var_name("build_dir", True) + "/.build", 
+                     var_name("config", True), 
+                     rule_var_name = var_name("build"))
+        build.recipe.append(Make("$(" + local() + "BUILD_ENV)", 
+                                 "$(" + local() + "BUILD_PARAM)", 
+                                 var_name("build_dir", True), "all"))
         build.recipe.append("$(TOUCH) " + var_name("build_dir", True) + "/.build\n")
         self.rules['build'] = build
 
         #Install
-        install = Rule(target, var_name("build", True), rule_var_name = var_name("install"))
-        install.recipe.append(Make("$(" + local() + "INSTALL_ENV)", "$(" + local() + "INSTALL_PARAM)", var_name("build_dir", True), "install"))
+        install = Rule(target, var_name("build", True), 
+                       rule_var_name = var_name("install"))
+        install.recipe.append(Make("$(" + local() + "INSTALL_ENV)", 
+                                   "$(" + local() + "INSTALL_PARAM)", 
+                                   var_name("build_dir", True), "install"))
         self.rules['install'] = install

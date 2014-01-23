@@ -1,6 +1,8 @@
 # /etc/inittab
 
-::sysinit:/etc/rc.d/startup
+::sysinit:/sbin/openrc sysinit
+::wait:/sbin/openrc boot
+::wait:/sbin/openrc 
 
 tty1::respawn:/sbin/getty 38400 tty1
 tty2::respawn:/sbin/getty 38400 tty2

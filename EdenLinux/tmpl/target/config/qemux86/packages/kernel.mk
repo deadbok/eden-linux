@@ -1,7 +1,7 @@
 #mtl
 ${local_namespace("packages.kernel")}
 
-${Package("$(PACKAGES_BUILD_DIR)/linux-$(PACKAGES_KERNEL_VERSION)", "", "3.0.9", "http://linux-kernel.uio.no/pub/linux/kernel/v3.0/linux-$(PACKAGES_KERNEL_VERSION).tar.bz2", "$(ROOTFS_DIR)/boot/kernel-$(PACKAGES_KERNEL_VERSION)")}
+${Package("$(PACKAGES_BUILD_DIR)/linux-$(PACKAGES_KERNEL_VERSION)", "", "3.10.27", "http://linux-kernel.uio.no/pub/linux/kernel/v3.0/linux-$(PACKAGES_KERNEL_VERSION).tar.xz", "$(ROOTFS_DIR)/boot/kernel-$(PACKAGES_KERNEL_VERSION)")}
 
 ${Rule('$(PACKAGES_KERNEL_SRC_DIR)/Makefile', "$(TOOLCHAIN_KERNEL-HEADERS_UNPACK)", rule_var_name=var_name("link-src"))}
 	$(LN) -sf $(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR) $(PACKAGES_KERNEL_SRC_DIR)
@@ -30,5 +30,8 @@ endif
 kernel-menuconfig:
 	$(PACKAGES_ENV) $(MAKE) -C $(PACKAGES_KERNEL_BUILD_DIR) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- menuconfig
 
+#Add kernel to target
+PACKAGES_BOARD_BUILD += $(PACKAGES_KERNEL_BUILD)
+PACKAGES_BOARD_INSTALL += $(PACKAGES_KERNEL_INSTALL)
 
 .NOTPARALLEL:

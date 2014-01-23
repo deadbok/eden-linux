@@ -13,10 +13,16 @@ class Unpack(object):
 
     def __str__(self):
         '''Stringify the tar call'''
+        #Handle bzip2
         ret = "ifeq ($(suffix " + self.filename + "), .bz2)" + '\n'
         ret += "\t$(TAR) -xjf " + self.filename + " -C " + self.unpack_dir + '\n'
+        #Handle gzip
         ret += "else ifeq ($(suffix " + self.filename + "), .gz)" + '\n'
         ret += "\t$(TAR) -xzf " + self.filename + " -C " + self.unpack_dir + '\n'
+        #Handle XZ
+        ret += "else ifeq ($(suffix " + self.filename + "), .xz)" + '\n'
+        ret += "\t$(TAR) -xJf " + self.filename + " -C " + self.unpack_dir + '\n'
+        #Unknown format
         ret += "else" + '\n'
         ret += "\t$(error Unknown archive format in: " + self.filename + ")" + '\n'
         ret += "endif" + '\n'
@@ -26,7 +32,8 @@ class Unpack(object):
 
 class UnpackRule(Rule):
     '''General rule to unpack sources.'''
-    def __init__(self, filename = "", unpack_dir = ".", target = None, rule_var_name = None):
+    def __init__(self, filename = "", unpack_dir = ".", target = None, 
+                 rule_var_name = None):
         if target == None:
             target = unpack_dir + "/Makefile"
         if rule_var_name == None:

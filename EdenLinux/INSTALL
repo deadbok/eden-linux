@@ -10,7 +10,9 @@ Needed software:
  - kpartx (multipath-tools)
  - bc
  - git
- - libguestfs
+ - losetup
+ - rsync
+ - xz
 
 	ISO image:
 	 - genisoimage (cdrkit)

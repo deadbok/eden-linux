@@ -59,5 +59,9 @@ ${busybox.rules['install']}
 #final makefile
 busybox-menuconfig:
 	$(PACKAGES_ENV) $(MAKE) -C $(PACKAGES_BUSYBOX_BUILD_DIR) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- menuconfig
-	
+
+#Add to targets
+PACKAGES_BUILD_TARGETS += $(PACKAGES_BUSYBOX_BUILD)	
+PACKAGES_INSTALL_TARGETS += $(PACKAGES_BUSYNOX_INSTALL)	
+
 .NOTPARALLEL:

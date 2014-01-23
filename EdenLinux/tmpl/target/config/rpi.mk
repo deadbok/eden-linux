@@ -29,4 +29,6 @@ ${local()}KERNEL_CONFIG = $(ROOT)/target/config/rpi/config/kernel_config
 ${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/config/busybox_config
 
 #Boot partition size
-TARGET_IMAGE_BOOT_SIZE = 128
+TARGET_IMAGE_BOOT_SIZE = 64
+#Image name
+TARGET_IMAGE_FILENAME = rpi.img

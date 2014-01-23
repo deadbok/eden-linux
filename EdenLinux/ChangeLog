@@ -1,5 +1,13 @@
+2014-01-23  oblivion  <oblivion@librebook>
+
+	* plugins/unpack.py: Handle tar.xz files
+	* plugins/autoconf.py: Added DEPENDENCIES parameter
+
 2014-01-22  oblivion  <oblivion@librebook>
 
+	* tools/write_image: Write an image with dd and a nice progress bar
+	* tmpl/packages/bootscripts.mk: Only install inittab
+	* tmpl/packages/openrc.mk: Added openrc package
 	* tmpl/target/config/rpi/packages/boot-config/boot/cmdline.txt: Config file for Raspberry Pi boot
 	* tmpl/target/config/rpi/packages/boot-config/boot/config.txt: Config file for Raspberry Pi boot
 	* tmpl/target/config/rpi/packages/boot-config/Makefile: Package to install bor configuration files
