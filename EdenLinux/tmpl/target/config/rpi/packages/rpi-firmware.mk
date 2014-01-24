@@ -14,4 +14,5 @@ ${Rule('$(ROOTFS_DIR)/boot/start.elf', "$(PACKAGES_RPI-FIRMWARE_CLONE)", rule_va
 	$(CP) -R $(DOWNLOAD_DIR)/firmware/boot/{bootcode.bin,COPYING.linux,fixup_cd.dat,fixup.dat,fixup_x.dat,kernel_emergency.img,LICENCE.broadcom,start_cd.elf,start.elf,start_x.elf} $(ROOTFS_DIR)/boot/
 
 PACKAGES_BOARD_INSTALL += $(PACKAGES_RPI-FIRMWARE_INSTALL)
+PACKAGES_NAME_BOARD += firmware
 

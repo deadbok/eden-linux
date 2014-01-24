@@ -26,11 +26,11 @@ include packages/baseconf.mk
 include packages/iana-etc.mk
 include packages/ncurses.mk
 include packages/nano.mk
+include packages/udev.mk
 
 #include packages/e2fsprogs.mk
 #include packages/zlib.mk
 #include packages/dropbear.mk
-#include packages/udev.mk
 
 #include board specific packages
 include target/config/$(TARGET)/packages/*.mk

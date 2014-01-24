@@ -18,9 +18,10 @@ ${Rule('$(ROOTFS_DIR)/run', '', rule_var_name = var_name('run'))}
 	$(MKDIR) $(ROOTFS_DIR)/run
 	
 #Install rule
-${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="EdenLinux/$(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_COPY-SRC) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
+${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="EdenLinux $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_COPY-SRC) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
 
 #Add to targets
 PACKAGES_BUILD_TARGETS += $(PACKAGES_OPENRC_INSTALL)
+PACKAGES_NAME_TARGETS += openrc
 
 .NOTPARALLEL:

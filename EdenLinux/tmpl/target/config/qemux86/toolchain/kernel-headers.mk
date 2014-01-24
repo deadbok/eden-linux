@@ -7,10 +7,13 @@ ${DownloadRule("$(TOOLCHAIN_KERNEL-HEADERS_URL)")}
 
 ${UnpackRule("$(DOWNLOAD_DIR)/$(TOOLCHAIN_KERNEL-HEADERS_FILE)", "$(TOOLCHAIN_BUILD_DIR)", "$(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR)/Makefile")}
 
-${Rule('$(TOOLCHAIN_KERNEL-HEADERS_SRC_DIR)/include/linux/version.h', "$(TOOLCHAIN_KERNEL-HEADERS_UNPACK)", rule_var_name=var_name("build"))} 
+${Rule('$(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR)/include/generated/uapi/linux/version.h', "$(TOOLCHAIN_KERNEL-HEADERS_UNPACK)", rule_var_name=var_name("build"))} 
 	CFLAGS="" CXXFLAGS="" $(MAKE) -C $(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR) mrproper
 	CFLAGS="" CXXFLAGS="" $(MAKE) -C $(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR) ARCH=$(KERNEL_ARCH) headers_check
 
-${MakeRule('CFLAGS="" CXXFLAGS=""', 'ARCH=$(KERNEL_ARCH) INSTALL_HDR_PATH=$(ROOTFS_DIR)/usr', "$(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR)", "headers_install", "$(ROOTFS_DIR)/usr/include/linux/fs.h", "$(TOOLCHAIN_KERNEL-HEADERS_BUILD)", var_name("install"))}
+${MakeRule('CFLAGS="" CXXFLAGS=""', 'ARCH=$(KERNEL_ARCH) INSTALL_HDR_PATH=$(TOOLCHAIN_ROOT_DIR)/headers/usr', "$(TOOLCHAIN_KERNEL-HEADERS_BUILD_DIR)", "headers_install", "$(TOOLCHAIN_ROOT_DIR)/headers/usr/include/linux/fs.h", "$(TOOLCHAIN_KERNEL-HEADERS_BUILD)", var_name("local-install"))}
 
+${Rule('$(ROOTFS_DIR)/usr/include/linux/fs.h', "$(TOOLCHAIN_KERNEL-HEADERS_LOCAL-INSTALL)", rule_var_name = var_name("install"))}
+	$(CP) -R $(TOOLCHAIN_ROOT_DIR)/headers/usr $(ROOTFS_DIR)/
+	
 .NOTPARALLEL:

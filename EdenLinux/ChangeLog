@@ -1,5 +1,21 @@
+2014-01-24  oblivion  <oblivion@librebook>
+
+	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Copy install through a buffer directory
+	* tmpl/toolchain/uclibc.mk: Copy install through a buffer directory
+
 2014-01-23  oblivion  <oblivion@librebook>
 
+	* tmpl/packages/udev/etc/init.d/udev-mount: Lifted from Gentoo
+	* tmpl/packages/udev/etc/init.d/udev: Lifted from Gentoo
+	* tmpl/packages/udev.mk: Add package target variables
+	* tmpl/Makefile: Add build-info rule
+	* tmpl/commands.mk: Added echo
+	* tmpl/packages/bootscripts.mk: Added package target variables
+	* tmpl/packages/busybox.mk: Added package target variables
+	* tmpl/target/config/qemux86/target/image.mk: Create qemux86 disk image
+	* tmpl/target/config/qemux86/packages/kernel.mk: Kernel 3.10.27
+													 Converted syntax
+	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Kernel 3.10.27
 	* plugins/unpack.py: Handle tar.xz files
 	* plugins/autoconf.py: Added DEPENDENCIES parameter
 

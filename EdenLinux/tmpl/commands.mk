@@ -54,3 +54,5 @@ MKFS_EXT4 = mkfs.ext4
 
 MOUNT = mount
 UMOUNT = umount
+
+ECHO = echo

@@ -8,7 +8,7 @@ include functions.mk
 UID := $(shell id -u)
 
 SERVICES :=
-
+	
 $(DOWNLOAD_DIR):
 	$(MKDIR) $(DOWNLOAD_DIR)
 	
@@ -33,8 +33,27 @@ include toolchain/toolchain.mk
 include packages/packages.mk
 include target/target.mk
 
+#Print out info about the build
+.PHONY: build-info
+${Rule("build-info", "")}:
+	@$(ECHO) " - Target: $(TARGET)"
+	@$(ECHO) " - Arch: $(ARCH)"
+	@$(ECHO) " - Kernel arch: $(KERNEL_ARCH)" 
+	@$(ECHO) " - Target tuple $(ARCH_TARGET)" 
+	@$(ECHO) " - Host: $(HOST)"
+	@$(ECHO) " - ABI: $(ABI)"
+	@$(ECHO) 
+
+	@$(ECHO) " - Image size: $(IMAGE_SIZE)mb"
+	@$(ECHO) " - Image file name: $(TARGET_IMAGE_FILENAME)"
+	@$(ECHO)
+	@$(ECHO) " - Base packages: $(PACKAGES_NAME_TARGETS)"
+	@$(ECHO) " - Board specific packages: $(PACKAGES_NAME_BOARD)"
+	@$(ECHO) "-----------------------------------------------------------------------------"
+	@$(ECHO)
+	
 .PHONY: all
-all: $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) $(PACKAGES_BUILD)
+all: build-info $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) $(PACKAGES_BUILD)
 	$(TOUCH) $(TEMP_DIR)/.all
 
 #Cry out if trying install before all
@@ -44,7 +63,7 @@ $(TEMP_DIR)/.all:
 INSTALL := $(PACKAGES_INSTALL) $(TARGET_INSTALL)
 
 .PHONY: install
-install: $(TEMP_DIR)/.all 
+install: build-info $(TEMP_DIR)/.all 
 ifeq ($(UID), 0)
 	$(MAKE) $(INSTALL)
 else

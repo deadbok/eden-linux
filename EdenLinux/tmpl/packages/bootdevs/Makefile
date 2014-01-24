@@ -46,12 +46,16 @@ $(DESTDIR)/dev/tty6: $(DESTDIR)/dev
 $(DESTDIR)/dev/rtc: $(DESTDIR)/dev	
 	-mknod $(DESTDIR)/dev/rtc c 10 135
 	
-	
-dev: $(DESTDIR)/dev/pts $(DESTDIR)/dev/zero $(DESTDIR)/dev/null $(DESTDIR)/dev/tty $(DESTDIR)/dev/console $(DESTDIR)/dev/ptmx $(DESTDIR)/dev/tty0 $(DESTDIR)/dev/tty1 $(DESTDIR)/dev/tty2 $(DESTDIR)/dev/tty3 $(DESTDIR)/dev/tty4 $(DESTDIR)/dev/tty5  $(DESTDIR)/dev/tty6 $(DESTDIR)/dev/rtc
+DEVICES += $(DESTDIR)/dev/pts $(DESTDIR)/dev/zero $(DESTDIR)/dev/null $(DESTDIR)/dev/tty 
+DEVICES += $(DESTDIR)/dev/console $(DESTDIR)/dev/ptmx $(DESTDIR)/dev/tty0 $(DESTDIR)/dev/tty1
+DEVICES += $(DESTDIR)/dev/tty2 $(DESTDIR)/dev/tty3 $(DESTDIR)/dev/tty4 $(DESTDIR)/dev/tty5
+DEVICES += $(DESTDIR)/dev/tty6 $(DESTDIR)/dev/rtc 
+
+dev: $(DEVICES) 
 	touch $(DESTDIR)/dev/*
 
 dev-clean:
-	rm -f $(VERBOSE_FLAG) $(DESTDIR)/dev/zero $(DESTDIR)/dev/null $(DESTDIR)/dev/tty $(DESTDIR)/dev/console $(DESTDIR)/dev/ptmx $(DESTDIR)/dev/tty0 $( )/dev/tty1 
+	rm -f $(VERBOSE_FLAG) $(DEVICES) 
 
 dev-distclean: dev-clean
 	
