@@ -19,16 +19,26 @@ SERVICES :=
 
 #WARNING: These are ordered according to dependencies
 include packages/openrc.mk
+
 include packages/bootscripts.mk
+
 include packages/busybox.mk
+
 include packages/bootdevs.mk
+
 include packages/baseconf.mk
+
 include packages/iana-etc.mk
+
 include packages/ncurses.mk
 include packages/nano.mk
+
 include packages/udev.mk
 
-#include packages/e2fsprogs.mk
+include packages/e2fsprogs.mk
+
+include packages/kbd.mk
+
 #include packages/zlib.mk
 #include packages/dropbear.mk
 

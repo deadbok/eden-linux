@@ -1,5 +1,8 @@
 2014-01-24  oblivion  <oblivion@librebook>
 
+	* tmpl/packages/kbd.mk: Added kbd package
+	* tmpl/packages/e2fsprogs.mk: Updated to 1.42.9
+								  Add package target variables
 	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Copy install through a buffer directory
 	* tmpl/toolchain/uclibc.mk: Copy install through a buffer directory
 
