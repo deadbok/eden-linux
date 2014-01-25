@@ -39,8 +39,10 @@ include packages/e2fsprogs.mk
 
 include packages/kbd.mk
 
-#include packages/zlib.mk
-#include packages/dropbear.mk
+include packages/zlib.mk
+include packages/dropbear.mk
+
+include packages/util-linux.mk
 
 #include board specific packages
 include target/config/$(TARGET)/packages/*.mk

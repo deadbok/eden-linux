@@ -62,16 +62,20 @@ class AutoconfPackage(Package):
         self.rules['download'] = download
 
         #Unpack rule
-        unpack = Rule(var_name("src_dir", True) + "/configure", 
+        unpack = Rule(var_name("src_dir", True) + "/README", 
                       "$(DOWNLOAD_DIR)/" + var_name("file", True), 
                       rule_var_name = var_name("unpack"))
         unpack.recipe.append(Unpack("$(DOWNLOAD_DIR)/" + var_name("file", True), 
                                     "$(abspath " + var_name("src_dir", True) + "/../)"))
         self.rules['unpack'] = unpack
 
+        #Patch rule
+        patch = PatchRule(var_name("unpack", True))
+        self.rules['patchall'] = patch
+
         #Autoconf
         autoconf = Rule(var_name("build_dir", True) + "/Makefile", 
-                        var_name("unpack", True) + " $(" + local() + "DEPENDENCIES)", 
+                        var_name("patchall", True) + " $(" + local() + "DEPENDENCIES)", 
                         rule_var_name = var_name("config"))
         autoconf.recipe.append(Autoconf("$(" + local() + "CONFIG_ENV)", 
                                         "$(" + local() + "CONFIG_PARAM)", 

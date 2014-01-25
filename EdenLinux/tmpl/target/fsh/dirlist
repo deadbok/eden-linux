@@ -28,10 +28,9 @@
 /usr/local
 /var
 /var/lib
-/var/lock
 /var/log
 /var/mail
-/var/run
 /var/spool
 /var/spool/mail
 /var/tmp
+/run/lock

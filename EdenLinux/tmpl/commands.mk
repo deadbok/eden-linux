@@ -38,6 +38,7 @@ DD = dd
 GENISOIMAGE = genisoimage $(VERBOSE_FLAG)
 
 CHMOD = chmod
+CHOWN = chown
 
 GIT_FLAGS = 
 GIT = git $(GIT_FLAGS)

@@ -1,0 +1,16 @@
+diff -rupN zlib-1.2.8/Makefile.in zlib/Makefile.in
+--- zlib-1.2.8/Makefile.in	2014-01-24 05:11:54.903473202 +0100
++++ zlib/Makefile.in	2014-01-24 11:24:01.316354631 +0100
+@@ -203,10 +203,8 @@ install-libs: $(LIBS)
+ 	  ln -s $(SHAREDLIBV) $(DESTDIR)$(sharedlibdir)/$(SHAREDLIBM); \
+ 	  ($(LDCONFIG) || true)  >/dev/null 2>&1; \
+ 	fi
+-	cp zlib.3 $(DESTDIR)$(man3dir)
+-	chmod 644 $(DESTDIR)$(man3dir)/zlib.3
+-	cp zlib.pc $(DESTDIR)$(pkgconfigdir)
+-	chmod 644 $(DESTDIR)$(pkgconfigdir)/zlib.pc
++	install -m 0644 zlib.3 $(DESTDIR)$(man3dir)
++	install -m 0644 zlib.pc $(DESTDIR)$(pkgconfigdir)
+ # The ranlib in install is needed on NeXTSTEP which checks file times
+ # ldconfig is for Linux
+ 

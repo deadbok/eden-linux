@@ -65,6 +65,8 @@ ${udev.rules['download']}
 
 ${udev.rules['unpack']}
 
+${udev.rules['patchall']}
+
 ${udev.rules['config']}
 
 ${udev.rules['build']}

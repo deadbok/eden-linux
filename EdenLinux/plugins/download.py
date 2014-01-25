@@ -13,7 +13,9 @@ class Download(object):
 
     def __str__(self):
         '''Stringify the wget call'''
-        ret = "ifeq ($(findstring http://, " + self.url + "), http://)" + '\n'
+        ret = "ifeq ($(findstring https://, " + self.url + "), https://)" + '\n'
+        ret += '\t$(WGET) ' + self.url + ' -P ' + self.download_dir + '\n'        
+        ret += "else ifeq ($(findstring http://, " + self.url + "), http://)" + '\n'
         ret += '\t$(WGET) ' + self.url + ' -P ' + self.download_dir + '\n'
         ret += "else ifeq ($(findstring ftp://, " + self.url + "), ftp://)" + '\n'
         ret += '\t$(WGET) ' + self.url + ' -P ' + self.download_dir + '\n'

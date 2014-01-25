@@ -1,5 +1,18 @@
+2014-01-25  oblivion  <oblivion@librebook>
+
+	* tmpl/packages/udev.mk: Updated to auto patchall
+	* tmpl/toolchain/binutils.mk: Updated to auto patchall
+	* tmpl/target/config/rpi/target/image.mk: Made formatting image phony, to allways start with a clean image
+
 2014-01-24  oblivion  <oblivion@librebook>
 
+	* plugins/autoconf.py: Added patchall rule
+	* tmpl/packages/iproute2.mk: Added iproute2 package to provide ip to openrc
+	* plugins/download.py: Added https handling
+	* tmpl/target/config/qemux86.mk: KERNEL_MODULES
+	* tmpl/packages/baseconf/Makefile: Added /etc/conf.d/modules generation
+	* tmpl/packages/zlib/zlib-install.patch: Patch to use install command
+	* tmpl/packages/zlib.mk: Added patching
 	* tmpl/packages/kbd.mk: Added kbd package
 	* tmpl/packages/e2fsprogs.mk: Updated to 1.42.9
 								  Add package target variables
@@ -82,6 +95,7 @@
 							 later as this won't build on an at least an Atom
 							 CPU without.
 	* tmpl/toolchain/toolchain.mk: Just some cleanup 
+	
 2014-01-14  oblivion  <oblivion@librebook>
 
 	* tmpl/packages/busybox.mk: Updated syntax

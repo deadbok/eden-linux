@@ -12,13 +12,16 @@ ${Rule('$(DOWNLOAD_DIR)/openrc/README', rule_var_name=var_name("clone"))}
 #Copy sources
 ${Rule('$(PACKAGES_OPENRC_SRC_DIR)/README', '$(PACKAGES_OPENRC_CLONE)', rule_var_name = var_name('copy-src'))}
 	$(CP) -R $(DOWNLOAD_DIR)/openrc $(PACKAGES_BUILD_DIR)/
+	
+#Create a rule to patch zlib
+${PatchRule("$(PACKAGES_OPENRC_COPY-SRC)")}
 
 #openrc needs /run
 ${Rule('$(ROOTFS_DIR)/run', '', rule_var_name = var_name('run'))}
 	$(MKDIR) $(ROOTFS_DIR)/run
 	
 #Install rule
-${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="EdenLinux $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_COPY-SRC) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
+${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="EdenLinux $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_PATCHALL) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
 
 #Add to targets
 PACKAGES_BUILD_TARGETS += $(PACKAGES_OPENRC_INSTALL)

@@ -18,6 +18,8 @@ $(DESTDIR)/etc/hosts: $(ETC_FILES)
 	sed -i 's:/dev/SWAP:$(SWAP_DEVICE):' $(DESTDIR)/etc/fstab
 	echo "127.0.0.1 localhost" > $(DESTDIR)/etc/hosts
 	ln -svf /proc/mounts $(DESTDIR)/etc/mtab
+	#Add modules
+	echo "modules=\"$(MODULES)\"" > $(DESTDIR)/etc/conf.d/modules
 
 .PHONY: install
 install: $(DESTDIR)/etc/hosts

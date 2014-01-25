@@ -1,9 +1,6 @@
 #mtl
 ${local_namespace("target")}
 
-#mtl
-${local_namespace("target")}
-
 TARGET := qemux86
 ARCH := i686
 KERNEL_ARCH := x86
@@ -13,11 +10,7 @@ BOOT_DEVICE :=
 ROOT_DEVICE := /dev/sda1
 SWAP_DEVICE := /dev/sda2
 
-${local()}PROCESSOR = armv6j
-${local()}FILE_SYSTEM = iso
-${local()}UCLIBC_CONFIG = $(ROOT)/target/config/rpi/config/uclibc_config
-${local()}KERNEL_CONFIG = $(ROOT)/target/config/rpi/config/kernel_config
-${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/config/busybox_config
+KERNEL_MODULES:= "e1000"
 
 #Boot partition size
 TARGET_IMAGE_BOOT_SIZE = 

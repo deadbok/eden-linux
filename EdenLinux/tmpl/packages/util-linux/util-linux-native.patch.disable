@@ -1,0 +1,69 @@
+Support older hosts with latest util-linux-native
+
+mkostemp is not defined on older machines.  So we detect this and
+provide a define that uses mkstemp instead.
+
+O_CLOEXEC is not defined on older machines.  It is however defined
+in the 'c.h' header.  Fix up the users to include 'c.h'.
+
+fdisks/fdisksunlabel.c was modified to use qsort_r, however
+this is not defined on older hosts.  Revert:
+  commit c69bbca9c1f6645097bd20fe3a21f5a99a2a0698
+  fdisk: (sun): use ask API, remove global variable
+
+Upstream-Status: Inappropriate [other]
+Patches revert upstream changes in order to support older
+machines.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+
+diff -ur util-linux-2.23/configure.ac /home/lmhatle/util-linux-2.23-fixed/configure.ac
+--- util-linux-2.23/configure.ac	2013-05-29 14:44:35.147853585 -0500
++++ /home/lmhatle/util-linux-2.23-fixed/configure.ac	2013-05-30 14:56:15.050799650 -0500
+@@ -323,6 +323,7 @@
+ 	llseek \
+ 	lseek64 \
+ 	mempcpy \
++	mkostemp \
+ 	nanosleep \
+ 	personality \
+ 	posix_fadvise \
+diff -ur util-linux-2.23/include/c.h /home/lmhatle/util-linux-2.23-fixed/include/c.h
+--- util-linux-2.23/include/c.h	2013-04-12 04:25:46.852156874 -0500
++++ /home/lmhatle/util-linux-2.23-fixed/include/c.h	2013-05-30 14:56:11.310799488 -0500
+@@ -236,6 +236,13 @@
+ #endif
+ 
+ /*
++ * mkostemp replacement
++ */
++#ifndef HAVE_MKOSTEMP
++#define mkostemp(template, flags) mkstemp(template)
++#endif
++
++/*
+  * MAXHOSTNAMELEN replacement
+  */
+ static inline size_t get_hostname_max(void)
+diff -ur util-linux-2.23/lib/randutils.c /home/lmhatle/util-linux-2.23-fixed/lib/randutils.c
+--- util-linux-2.23/lib/randutils.c	2013-04-12 04:25:46.855156901 -0500
++++ /home/lmhatle/util-linux-2.23-fixed/lib/randutils.c	2013-05-30 14:55:26.622799644 -0500
+@@ -16,6 +16,7 @@
+ #include <sys/syscall.h>
+ 
+ #include "randutils.h"
++#include "c.h"
+ 
+ #ifdef HAVE_TLS
+ #define THREAD_LOCAL static __thread
+diff -ur util-linux-2.23/lib/wholedisk.c /home/lmhatle/util-linux-2.23-fixed/lib/wholedisk.c
+--- util-linux-2.23/lib/wholedisk.c	2013-04-12 04:25:46.855156901 -0500
++++ /home/lmhatle/util-linux-2.23-fixed/lib/wholedisk.c	2013-05-30 14:55:31.182799350 -0500
+@@ -10,6 +10,7 @@
+ 
+ #include "blkdev.h"
+ #include "wholedisk.h"
++#include "c.h"
+ 
+ int is_whole_disk_fd(int fd, const char *name)
+ {
