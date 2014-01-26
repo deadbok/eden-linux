@@ -1,5 +1,7 @@
 #mtl
 
+#Name of the distro
+SYS_NAME := EdenLinux
 #Compress man pages
 COMPRESS_MAN_PAGES = 1
 #Strip target binaries

@@ -15,7 +15,7 @@ ${Rule("$(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)", rule_var_name= var_name("file")
 #Calculate the root partition size 
 ${local()}ROOT_SIZE := $(shell echo $(IMAGE_SIZE)\-$(TARGET_IMAGE_BOOT_SIZE) | bc)
 
-.PHONY TARGET_IMAGE_FILESYSTEM:
+.PHONY: TARGET_IMAGE_FILESYSTEM
 ${Rule('$(TEMP_DIR)/.fs', '$(TARGET_IMAGE_FILE)', rule_var_name= var_name('filesystem'))}
 	#Create an msdos partition table
 	$(PARTED) -s $(TARGET_IMAGE_FILE) mklabel msdos

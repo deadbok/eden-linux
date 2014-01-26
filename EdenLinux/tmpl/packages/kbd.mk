@@ -9,12 +9,12 @@ ${local()}CONFIG_PARAM = --prefix=/usr --host=$(ARCH_TARGET)
 ${local()}CONFIG_ENV = $(PACKAGES_ENV) ac_cv_func_setpgrp_void=yes ac_cv_func_malloc_0_nonnull=yes ac_cv_func_realloc_0_nonnull=yes
 
 ${local()}BUILD_PARAM = 
-${local()}BUILD_ENV = $(PACKAGES_ENV) 
+${local()}BUILD_ENV = $(PACKAGES_ENV) ac_cv_func_setpgrp_void=yes ac_cv_func_malloc_0_nonnull=yes ac_cv_func_realloc_0_nonnull=yes 
 
-${AutoconfPackage('$(PACKAGES_BUILD_DIR)/kbd-$(PACKAGES_KBD_VERSION)', '', '1.15', "http://www.kbd-project.org/download/kbd-$(PACKAGES_KBD_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/mke2fs")}
+${AutoconfPackage('$(PACKAGES_BUILD_DIR)/kbd-$(PACKAGES_KBD_VERSION)', '', '1.15', "http://www.kbd-project.org/download/kbd-$(PACKAGES_KBD_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/loadkeys")}
 	
 #Add to targets
 PACKAGES_BUILD_TARGETS += $(PACKAGES_KBD_BUILD)	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_KBD_INSTALL)
-PACKAGES_NAME_TARGETS += e2fsprogs
+PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:

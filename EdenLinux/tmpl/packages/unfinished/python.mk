@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("packages.python")}
 
 ${Package("$(PACKAGES_BUILD_DIR)/Python-$(PACKAGES_PYTHON_VERSION)", "$(PACKAGES_BUILD_DIR)/Python-$(PACKAGES_PYTHON_VERSION)", "2.6.6", "http://www.python.org/ftp/python/$(PACKAGES_PYTHON_VERSION)/Python-$(PACKAGES_PYTHON_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/python")}

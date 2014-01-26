@@ -39,7 +39,7 @@ ${Rule("build-info", "")}:
 	@$(ECHO) " - Target: $(TARGET)"
 	@$(ECHO) " - Arch: $(ARCH)"
 	@$(ECHO) " - Kernel arch: $(KERNEL_ARCH)" 
-	@$(ECHO) " - Target tuple $(ARCH_TARGET)" 
+	@$(ECHO) " - Target triple $(ARCH_TARGET)" 
 	@$(ECHO) " - Host: $(HOST)"
 	@$(ECHO) " - ABI: $(ABI)"
 	@$(ECHO) 

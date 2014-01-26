@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("packages.syslinux")}
 
 #${package("$(PACKAGES_BUILD_DIR)/syslinux-$(PACKAGES_SYSLINUX_VERSION)", "", "4.02", "syslinux-$(PACKAGES_SYSLINUX_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/utils/boot/syslinux/4.xx/$(PACKAGES_SYSLINUX_FILE)")}

@@ -20,8 +20,6 @@ SERVICES :=
 #WARNING: These are ordered according to dependencies
 include packages/openrc.mk
 
-include packages/bootscripts.mk
-
 include packages/busybox.mk
 
 include packages/bootdevs.mk
@@ -44,6 +42,8 @@ include packages/dropbear.mk
 
 include packages/util-linux.mk
 
+include packages/netifrc.mk
+ 
 #include board specific packages
 include target/config/$(TARGET)/packages/*.mk
 

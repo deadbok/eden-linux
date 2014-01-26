@@ -1,6 +1,37 @@
+2014-01-26  oblivion  <oblivion@librebook>
+ 
+	* tmpl/target/services.mk: Rewrote for OpenRC
+
 2014-01-25  oblivion  <oblivion@librebook>
 
+	* tmpl/packages/baseconf/etc/conf.d/network: New file. force udhcpcd 
+	* tmpl/packages/netifrc/net/ifplugd.sh: Removed long option from ifplugd calls
+	* tmpl/packages/baseconf.mk: Added automatic name
+								 Added syslogd to services
+	* tmpl/packages/bootdevs.mk: Added automatic name
+	* tmpl/packages/busybox.mk: Added automatic name
+	* tmpl/packages/bootscripts.mk: Added automatic name
+	* tmpl/packages/dropbear.mk: Added automatic name
+	* tmpl/packages/e2fsprogs.mk: Added automatic name
+	* tmpl/packages/iana-etc.mk: Added automatic name
+	* tmpl/packages/nano.mk: Added automatic name
+	* tmpl/packages/ncurses.mk: Added automatic name
+	* tmpl/packages/util-linux.mk: Added automatic name
+	* tmpl/packages/zlib.mk: Added automatic name
+	* tmpl/target/config/qemux86/packages/kernel.mk: Added automatic name
+	* tmpl/target/config/rpi/packages/boot-config.mk: Added automatic name
+	* tmpl/target/config/rpi/packages/kernel.mk: Added automatic name
+	* tmpl/target/config/rpi/packages/rpi-firmware.mk: Added automatic name
+	* tmpl/target/config/rpi.mk: Added SYS_NAME
+	* tmpl/packages/openrc.mk: Added SYS_NAME
+							   Added automatic name
+	* README: Added Credits section
+	* tmpl/target/config/qemux86.mk: Adjusted target triplets
+	* tmpl/packages/kbd.mk: KDB suddenly wants to run the configuration step again when building.
+							Had to add the configure variables to the build step aswel.
+							Added automatic name.
 	* tmpl/packages/udev.mk: Updated to auto patchall
+							 Added automatic name
 	* tmpl/toolchain/binutils.mk: Updated to auto patchall
 	* tmpl/target/config/rpi/target/image.mk: Made formatting image phony, to allways start with a clean image
 

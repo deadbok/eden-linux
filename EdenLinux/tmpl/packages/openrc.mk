@@ -1,7 +1,7 @@
 #mtl
 ${local_namespace("packages.openrc")}
 
-${Package('$(PACKAGES_BUILD_DIR)/openrc', '$(PACKAGES_BUILD_DIR)/openrc', "0.12.x", "https://github.com/OpenRC/openrc.git", '$(ROOTFS_DIR)/sbim/openrc')}
+${Package('$(PACKAGES_BUILD_DIR)/openrc', '$(PACKAGES_BUILD_DIR)/openrc', "0.12.x", "https://github.com/OpenRC/openrc.git", '$(ROOTFS_DIR)/sbin/openrc')}
 
 #Clone git repositry
 ${Rule('$(DOWNLOAD_DIR)/openrc/README', rule_var_name=var_name("clone"))}
@@ -21,10 +21,10 @@ ${Rule('$(ROOTFS_DIR)/run', '', rule_var_name = var_name('run'))}
 	$(MKDIR) $(ROOTFS_DIR)/run
 	
 #Install rule
-${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="EdenLinux $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_PATCHALL) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
+${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="$(SYS_NAME) $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_PATCHALL) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
 
 #Add to targets
 PACKAGES_BUILD_TARGETS += $(PACKAGES_OPENRC_INSTALL)
-PACKAGES_NAME_TARGETS += openrc
+PACKAGES_NAME_TARGETS += ${namespace.current}
 
 .NOTPARALLEL:

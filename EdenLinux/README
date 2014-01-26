@@ -34,7 +34,15 @@ Directories:
 	mtl		-	The Make TempLate engine converts the templates to real makefiles 
 	plugins	-	Plugin for various makefile constructs
 	tmpl	-	Makefile templates read by mtl
+	tools	-	Various tools to make life easier when using the build system
 
 Best of luck.
 
 Martin Grønholdt
+
+Credits:
+ - Buildroot
+ - Gentoo
+ - (Cross compiled) Linux From Scratch
+ 
+OpenRC and most of the init files are taken from Gentoo.

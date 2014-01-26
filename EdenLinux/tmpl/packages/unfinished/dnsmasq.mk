@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("packages.dnsmasq")}
 
 ${Package("$(PACKAGES_BUILD_DIR)/dnsmasq-$(PACKAGES_DNSMASQ_VERSION)", "", "2.59", "http://www.thekelleys.org.uk/dnsmasq/dnsmasq-$(PACKAGES_DNSMASQ_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/bin/dnsmasq")}

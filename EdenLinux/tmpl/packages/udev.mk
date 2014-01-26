@@ -11,7 +11,7 @@ ${local()}BUILD_PARAM =
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
 #Add udev to the list of init services
-SERVICES += udev
+BOOT_SERVICES += udev-mount udev
 
 #Device skeleton for udev
 $(ROOTFS_DIR)/lib/udev/devices:
@@ -71,9 +71,12 @@ ${udev.rules['config']}
 
 ${udev.rules['build']}
 
+#Add stuff to generate the symlinks for the service to start at boot
 ${py udev.rules['install'].dependencies += ' $(PACKAGES_UDEV_DEVICES)'}
 ${udev.rules['install']}
+	#Copy config filed
 	$(CP) -R $(ROOT)/${namespace.current.replace(".", "/")}/etc $(ROOTFS_DIR)/
+	#Change permissions on boot scripts
 	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev
 	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev-mount
 	#Link the service to openrc's boot run level
@@ -83,4 +86,6 @@ ${udev.rules['install']}
 #Add to targets
 PACKAGES_BUILD_TARGETS += $(PACKAGES_UDEV_BUILD)	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_UDEV_INSTALL)
-PACKAGES_NAME_TARGETS += udev
+PACKAGES_NAME_TARGETS += ${namespace.current}
+
+.NOTPARALLEL:
