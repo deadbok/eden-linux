@@ -1,7 +1,4 @@
 #mtl
-#Note: The gccgo compiler takes advantage om some features, in the gold linker,
-#but I don't now how to prevent using gold, for all linking, and therefore, gccgo
-#uses the old ld like the rest of the system
 
 ${local_namespace("toolchain.gcc-cross")}
 
@@ -17,7 +14,7 @@ ${py build = MakeRule('CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)', '', "$(TOOLCHA
 ${py build.recipe.append("$(TOUCH) $(TOOLCHAIN_GCC-CROSS_BUILD_DIR)/.build\n")}
 ${build}
 
-${py install = MakeRule('CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)', '', "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)", "install", "$(TOOLCHAIN_ROOT_DIR)/bin/$(ARCH_TARGET)-c++", "$(TOOLCHAIN_GCC-CROSS_BUILD)", "TOOLCHAIN_GCC-CROSS_INSTALL")}
+${py install = MakeRule('CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)', '', "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)", "install", "$(TOOLCHAIN_ROOT_DIR)/bin/$(ARCH_TARGET)-c++", "$(TOOLCHAIN_GCC-CROSS_BUILD)", "TOOLCHAIN_GCC-CROSS_INSTALL", True)}
 ${py install.recipe.append("$(CP) -R $(TOOLCHAIN_ROOT_DIR)/$(ARCH_TARGET)/lib/* $(ROOTFS_DIR)/lib/\n")}
 ${install}
 

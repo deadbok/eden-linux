@@ -53,14 +53,14 @@ ${Rule("build-info", "")}:
 	@$(ECHO)
 	
 .PHONY: all
-all: build-info $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) $(PACKAGES_BUILD)
+all: build-info $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) $(PACKAGES_BUILD) $(PACKAGES_INSTALL) $(TARGET_SERVICES_INSTALL) copy-root
 	$(TOUCH) $(TEMP_DIR)/.all
 
 #Cry out if trying install before all
 $(TEMP_DIR)/.all:
 	$(error Make target 'all' first)
 
-INSTALL := $(PACKAGES_INSTALL) $(TARGET_INSTALL)
+INSTALL := $(TARGET_INSTALL)
 
 .PHONY: install
 install: build-info $(TEMP_DIR)/.all 

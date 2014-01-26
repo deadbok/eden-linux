@@ -21,7 +21,7 @@ ${Rule('$(ROOTFS_DIR)/run', '', rule_var_name = var_name('run'))}
 	$(MKDIR) $(ROOTFS_DIR)/run
 	
 #Install rule
-${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="$(SYS_NAME) $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_PATCHALL) $(PACKAGES_OPENRC_RUN)', var_name("install"))} 
+${MakeRule('$(PACKAGES_ENV)', 'DESTDIR=$(ROOTFS_DIR) BRANDING="$(SYS_NAME) $(uname -s)"', "$(PACKAGES_OPENRC_BUILD_DIR)", "install", '$(ROOTFS_DIR)/sbin/openrc', '$(PACKAGES_OPENRC_PATCHALL) $(PACKAGES_OPENRC_RUN)', var_name("install"), True)} 
 
 #Add to targets
 PACKAGES_BUILD_TARGETS += $(PACKAGES_OPENRC_INSTALL)

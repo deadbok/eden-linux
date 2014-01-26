@@ -39,7 +39,9 @@ ${Rule('$(TEMP_DIR)/.fs-copy', '$(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_
 	$(MKDIR) $(ROOT_MOUNT_PATH)
 	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1 $(ROOT_MOUNT_PATH)
 	#Copy everything but the boot files
-	$(RSYNC) -aD $(ROOTFS_DIR)/* $(ROOT_MOUNT_PATH)
+	$(RSYNC) -aD $(IMAGE_ROOTFS_DIR)/* $(ROOT_MOUNT_PATH)
+	#Make everything owned by root
+	$(CHOWN) -R root:root $(strip $(ROOT_MOUNT_PATH))/*
 	#Take a break, wait for delayd writes
 	sleep 5
 	#Unmount root partition

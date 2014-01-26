@@ -22,6 +22,9 @@ BUILDSYS_DIR = build
 
 all: $(BUILDSYS_DIR)/.mtlstamp
 	$(MAKE) -C build all 2>&1 | tee build.log 
+
+buildsys: $(BUILDSYS_DIR)/.mtlstamp
+	@echo "Buildsys done files in: ./$(BUILDSYS_DIR)"
 	
 install:
 	$(MAKE) -C build install 2>&1 | tee install.log 

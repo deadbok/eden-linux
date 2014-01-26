@@ -13,6 +13,7 @@ Needed software:
  - losetup
  - rsync
  - xz
+ - fakeroot
 
 	ISO image:
 	 - genisoimage (cdrkit)

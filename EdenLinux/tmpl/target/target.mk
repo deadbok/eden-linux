@@ -6,15 +6,19 @@ include target/config/$(TARGET)/target/image.mk
 #Include boot service generation
 include target/services.mk
 
-#Get real user (not root from sudo)
-${local()}USER := $(shell who am i | sed -e 's/ .*//')
+#Get list of files to remove from image root
+${local()}REMOVE_LIST := $(shell cat $(TARGET_REMOVE_FILES))
+	
+#Copy root filesystem to image dir
+.PHONY: copy-root
+${Rule("copy-root")}:
+	#Copy root files
+	$(RSYNC) -aD --delete $(ROOTFS_DIR)/* $(IMAGE_ROOTFS_DIR)/ 
+	#Remove files from the list
+	-$(RM) -R $(addprefix $(IMAGE_ROOTFS_DIR)/,$(TARGET_REMOVE_LIST))
 
-#Ugly hack to make sure we do not need root to write to the rootfs
-.PHONY: rootfs-perm
-${Rule('rootfs-perm', '')}:
-	$(CHOWN) -R $(shell id -nu $(TARGET_USER)):$(shell id -gn $(TARGET_USER)) $(ROOTFS_DIR)	
-
-${local()}INSTALL += $(PACKAGES_INSTALL) $(TARGET_SERVICES_INSTALL) rootfs-perm $(TARGET_IMAGE_CREATE)
+#ALL that is done here has root permission
+${local()}INSTALL += $(TARGET_IMAGE_CREATE)
 
 .PHONY: target-distclean
 ${Rule("target-distclean", "")}:

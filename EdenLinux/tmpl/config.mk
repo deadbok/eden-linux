@@ -8,6 +8,8 @@ COMPRESS_MAN_PAGES = 1
 STRIP_TARGET = 1
 #Delete header files from the target
 REMOVE_HEADERS = 1
+#Name of a file that list files to be removed from the target filesystem
+TARGET_REMOVE_FILES =
 
 TARGET :=
 ARCH :=
@@ -31,6 +33,7 @@ BUILD_DIR := $(ROOT)/build
 DOWNLOAD_DIR := $(BUILD_DIR)/dl
 IMAGES_DIR := $(BUILD_DIR)/images
 ROOTFS_DIR := $(BUILD_DIR)/rootfs
+IMAGE_ROOTFS_DIR := $(BUILD_DIR)/image_rootfs
 STRIPPED_ROOTFS_DIR := $(BUILD_DIR)/stripped_rootfs
 #template_dir = templates
 ETC_DIR := $(ROOTFS_DIR)/etc

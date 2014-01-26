@@ -24,7 +24,7 @@ ${py busybox.rules['build'] = MakeRule("$(PACKAGES_ENV)", 'ARCH=$(KERNEL_ARCH) C
 ${py busybox.rules['udhcpc-script'] = Rule('$(ROOTFS_DIR)/etc/network/udhcpc.script', rule_var_name=var_name("udhcpc-script"))}
 
 #Add install rule
-${py busybox.rules['install'] = MakeRule("$(PACKAGES_ENV)", 'ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- CONFIG_PREFIX=$(ROOTFS_DIR)', "$(PACKAGES_BUSYBOX_BUILD_DIR)", "install", "$(ROOTFS_DIR)/bin/busybox", "$(PACKAGES_BUSYBOX_BUILD) $(PACKAGES_BUSYBOX_UDHCPC-SCRIPT)", var_name("install"))}
+${py busybox.rules['install'] = MakeRule("$(PACKAGES_ENV)", 'ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- CONFIG_PREFIX=$(ROOTFS_DIR)', "$(PACKAGES_BUSYBOX_BUILD_DIR)", "install", "$(ROOTFS_DIR)/bin/busybox", "$(PACKAGES_BUSYBOX_BUILD) $(PACKAGES_BUSYBOX_UDHCPC-SCRIPT)", var_name("install"), True)}
 
 #Output package variables
 ${busybox.vars()}

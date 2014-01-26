@@ -1,4 +1,29 @@
 2014-01-26  oblivion  <oblivion@librebook>
+
+	* tmpl/target/config/qemux86/target/image.mk: Make everything on the image have root owner
+	* tmpl/packages/udev.mk: More fakeroot
+	* tmpl/target/target.mk: Added copying of root to image directory
+	* tmpl/config.mk: Added TARGET_REMOVE_FILES
+					  Added IMAGE_ROOTFS_DIR
+	* tmpl/toolchain/gcc-cross.mk: Added fakeroot
+	* tmpl/toolchain/gcc-static.mk: Added fakeroot
+	* tmpl/toolchain/mpc.mk: Added fakeroot
+	* tmpl/toolchain/mpfr.mk: Added fakeroot
+	* tmpl/toolchain/uclibc.mk: Added fakeroot
+	* tmpl/packages/baseconf.mk: Added fakeroot
+	* tmpl/packages/bootdevs.mk: Added fakeroot
+	* tmpl/packages/busybox.mk: Added fakeroot
+	* tmpl/packages/netifrc.mk: Added fakeroot
+	* tmpl/packages/openrc.mk: Added fakeroot
+	* INSTALL: Added fakeroot
+	* tmpl/toolchain/gmp.mk: Cleaned syntax
+	* plugins/make.py: Added fakeroot
+	* tmpl/commands.mk: Added fakeroot
+	* tmpl/Makefile: Moved packages install to build rule
+					 Moved service installation to build rule
+	* Makefile: Added buildsys target
+
+2014-01-26  oblivion  <oblivion@librebook>
  
 	* tmpl/target/services.mk: Rewrote for OpenRC
 

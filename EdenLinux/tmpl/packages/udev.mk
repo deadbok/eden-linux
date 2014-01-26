@@ -18,37 +18,37 @@ $(ROOTFS_DIR)/lib/udev/devices:
 	$(MKDIR) -p $(ROOTFS_DIR)/lib/udev/devices
 
 $(ROOTFS_DIR)/lib/udev/devices/zero: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/zero c 1 5
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/zero c 1 5
 
 $(ROOTFS_DIR)/lib/udev/devices/null: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/null c 1 3
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/null c 1 3
 
 $(ROOTFS_DIR)/lib/udev/devices/tty: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty c 5 0
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty c 5 0
 
 $(ROOTFS_DIR)/lib/udev/devices/tty0: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty0 c 4 0
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty0 c 4 0
 
 $(ROOTFS_DIR)/lib/udev/devices/tty1: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty1 c 4 1
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty1 c 4 1
 
 $(ROOTFS_DIR)/lib/udev/devices/tty2: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty2 c 4 2
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty2 c 4 2
 	
 $(ROOTFS_DIR)/lib/udev/devices/tty3: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty3 c 4 3
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty3 c 4 3
 	
 $(ROOTFS_DIR)/lib/udev/devices/tty4: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty4 c 4 4
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty4 c 4 4
 	
 $(ROOTFS_DIR)/lib/udev/devices/tty5: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty5 c 4 5
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty5 c 4 5
 	
 $(ROOTFS_DIR)/lib/udev/devices/tty6: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty6 c 4 5
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/tty6 c 4 5
 	
 $(ROOTFS_DIR)/lib/udev/devices/console: $(ROOTFS_DIR)/lib/udev/devices
-	-$(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/console c 5 1
+	-$(FAKEROOT) $(MKNOD) $(ROOTFS_DIR)/lib/udev/devices/console c 5 1
 
 ${local()}DEVICES =  $(ROOTFS_DIR)/lib/udev/devices/zero $(ROOTFS_DIR)/lib/udev/devices/null 
 ${local()}DEVICES += $(ROOTFS_DIR)/lib/udev/devices/tty $(ROOTFS_DIR)/lib/udev/devices/tty0

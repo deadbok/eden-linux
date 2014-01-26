@@ -31,7 +31,7 @@ $(TOOLCHAIN_ROOT_DIR)/gcc-static/.dir:
 	$(MKDIR) $(TOOLCHAIN_ROOT_DIR)/gcc-static
 	$(TOUCH) $(TOOLCHAIN_ROOT_DIR)/gcc-static/.dir
 
-${MakeRule('CFLAGS="" CXXFLAGS=""', '', "$(TOOLCHAIN_GCC-STATIC_BUILD_DIR)", "install-gcc install-target-libgcc", "$(TOOLCHAIN_ROOT_DIR)/gcc-static/bin/$(ARCH_TARGET)-c++", "$(TOOLCHAIN_GCC-STATIC_BUILD)", "TOOLCHAIN_GCC-STATIC_INSTALL")}
+${MakeRule('CFLAGS="" CXXFLAGS=""', '', "$(TOOLCHAIN_GCC-STATIC_BUILD_DIR)", "install-gcc install-target-libgcc", "$(TOOLCHAIN_ROOT_DIR)/gcc-static/bin/$(ARCH_TARGET)-c++", "$(TOOLCHAIN_GCC-STATIC_BUILD)", "TOOLCHAIN_GCC-STATIC_INSTALL", True)}
 	$(TOUCH) $(TOOLCHAIN_GCC-STATIC_INSTALL)
 
 #This is a path definition, that makes sure, the static gcc, is called first.

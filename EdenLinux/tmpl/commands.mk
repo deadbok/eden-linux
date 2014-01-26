@@ -57,3 +57,5 @@ MOUNT = mount
 UMOUNT = umount
 
 ECHO = echo
+
+FAKEROOT = fakeroot --
