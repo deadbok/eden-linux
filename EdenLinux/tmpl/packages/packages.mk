@@ -48,18 +48,9 @@ include packages/netifrc.mk
 include target/config/$(TARGET)/packages/*.mk
 
 #Build toolchain, FSH dir structure, base packages, board specific packages
-${local()}BUILD := packages-build 
-.PHONY: $(${local()}BUILD)
-$(${local()}BUILD): $(TOOLCHAIN_INSTALL) $(TARGET_FSH_INSTALL) $(PACKAGES_BUILD_DIR) $(PACKAGES_BUILD_TARGETS) $(PACKAGES_BOARD_BUILD) 
-
-
 ${local()}INSTALL := $(PACKAGES_BUILD_DIR)/.installed
-$(${local()}INSTALL): $(PACKAGES_BOARD_INSTALL) $(PACKAGES_KERNEL_INSTALL) $(PACKAGES_INSTALL_TARGETS)
+$(${local()}INSTALL): $(PACKAGES_BUILD_DIR) $(PACKAGES_BOARD_INSTALL) $(PACKAGES_KERNEL_INSTALL) $(PACKAGES_INSTALL_TARGETS)
 	$(TOUCH) $(PACKAGES_BUILD_DIR)/.installed
-
-#Temporarily stop make from building any packages
-#${local()}BUILD :=
-#${local()}INSTALL :=
 
 .PHONY: packages-distclean
 packages-distclean:

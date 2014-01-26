@@ -1,7 +1,19 @@
 2014-01-26  oblivion  <oblivion@librebook>
 
+	* tmpl/target/config/qemux86/packages/boardconf.mk: Added netifrc dependency
+	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Removed mrproper step
+	* tmpl/packages/packages.mk: Removed build step.
+	* tmpl/packages/dropbear.mk: Removed build step.
+	* tmpl/packages/e2fsprogs.mk: Removed build step.
+	* tmpl/packages/iana-etc.mk: Removed build step.
+	* tmpl/packages/kbd.mk: Removed build step.
+	* tmpl/packages/nano.mk: Removed build step.
+	* tmpl/packages/ncurses.mk: Removed build step.
+	* tmpl/packages/util-linux.mk: Removed build step.
+	* tmpl/packages/zlib.mk: Removed build step.
 	* tmpl/target/config/qemux86/target/image.mk: Make everything on the image have root owner
 	* tmpl/packages/udev.mk: More fakeroot
+							 Removed build step.
 	* tmpl/target/target.mk: Added copying of root to image directory
 	* tmpl/config.mk: Added TARGET_REMOVE_FILES
 					  Added IMAGE_ROOTFS_DIR
@@ -12,10 +24,15 @@
 	* tmpl/toolchain/uclibc.mk: Added fakeroot
 	* tmpl/packages/baseconf.mk: Added fakeroot
 	* tmpl/packages/bootdevs.mk: Added fakeroot
+	
 	* tmpl/packages/busybox.mk: Added fakeroot
+								Removed build step.
 	* tmpl/packages/netifrc.mk: Added fakeroot
+								Removed build step.
 	* tmpl/packages/openrc.mk: Added fakeroot
+							   Removed build step.
 	* INSTALL: Added fakeroot
+			   Added possible package names for some software
 	* tmpl/toolchain/gmp.mk: Cleaned syntax
 	* plugins/make.py: Added fakeroot
 	* tmpl/commands.mk: Added fakeroot

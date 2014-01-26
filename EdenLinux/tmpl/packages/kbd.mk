@@ -14,7 +14,6 @@ ${local()}BUILD_ENV = $(PACKAGES_ENV) ac_cv_func_setpgrp_void=yes ac_cv_func_mal
 ${AutoconfPackage('$(PACKAGES_BUILD_DIR)/kbd-$(PACKAGES_KBD_VERSION)', '', '1.15', "http://www.kbd-project.org/download/kbd-$(PACKAGES_KBD_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/loadkeys")}
 	
 #Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_KBD_BUILD)	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_KBD_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:

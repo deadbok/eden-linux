@@ -18,8 +18,7 @@ ${py dropbear.rules['install'].recipe.append("$(LN) -s dropbearmulti $(ROOTFS_DI
 
 ${dropbear}
 
-#Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_DROPBEAR_BUILD)	
+#Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_DROPBEAR_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 

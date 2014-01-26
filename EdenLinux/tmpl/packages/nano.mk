@@ -13,8 +13,7 @@ ${local()}DEPENDENCIES = $(PACKAGES_NCURSES_INSTALL)
 
 ${AutoconfPackage('$(PACKAGES_BUILD_DIR)/nano-$(PACKAGES_NANO_VERSION)', '', '2.2.5', "http://www.nano-editor.org/dist/v2.2/nano-$(PACKAGES_NANO_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/bin/nano")}
 
-#Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_NANO_BUILD)	
+#Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_NANO_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 

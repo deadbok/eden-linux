@@ -17,8 +17,7 @@ ${py utillinux.rules['config'].recipe.insert(2, '($(CD) $(PACKAGES_UTIL-LINUX_BU
 
 ${utillinux}
 
-#Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_UTIL-LINUX_BUILD)	
+#Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_UTIL-LINUX_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:

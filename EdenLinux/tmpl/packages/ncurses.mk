@@ -14,7 +14,6 @@ ${py ncurses = AutoconfPackage('$(PACKAGES_BUILD_DIR)/ncurses-$(PACKAGES_NCURSES
 ${ncurses}
 
 #Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_NCURSES_BUILD)	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_NCURSES_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 

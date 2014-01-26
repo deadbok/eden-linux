@@ -13,7 +13,6 @@ ${local()}BUILD_ENV = $(PACKAGES_ENV)
 ${AutoconfPackage('$(PACKAGES_BUILD_DIR)/zlib-$(PACKAGES_ZLIB_VERSION)', '', '1.2.8', "http://www.zlib.net/zlib-$(PACKAGES_ZLIB_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/lib/libz.a")}
 
 ##Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_ZLIB_BUILD)	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_ZLIB_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 

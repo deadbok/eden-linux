@@ -13,7 +13,6 @@ ${local()}BUILD_ENV = $(PACKAGES_ENV)
 ${AutoconfPackage('$(PACKAGES_BUILD_DIR)/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION)', '$(PACKAGES_BUILD_DIR)/e2fsprogs-build', '1.41.6', "http://dfn.dl.sourceforge.net/sourceforge/e2fsprogs/e2fsprogs-$(PACKAGES_E2FSPROGS_VERSION).tar.gz", "$(ROOTFS_DIR)/sbin/mke2fs")}
 	
 #Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_E2FSPROGS_BUILD)	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_E2FSPROGS_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:

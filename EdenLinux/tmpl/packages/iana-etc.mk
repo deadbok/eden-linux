@@ -26,8 +26,7 @@ ${iana_etc.rules['build']}
 
 ${iana_etc.rules['install']}
 
-#Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_IANA-ETC_BUILD)	
+#Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_IANA-ETC_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:

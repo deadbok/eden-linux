@@ -83,8 +83,7 @@ ${udev.rules['install']}
 	$(LN) -sf ../../init.d/udev $(ROOTFS_DIR)/etc/runlevels/boot/udev
 	$(LN) -sf ../../init.d/udev-mount $(ROOTFS_DIR)/etc/runlevels/boot/udev-mount
 
-#Add to targets
-PACKAGES_BUILD_TARGETS += $(PACKAGES_UDEV_BUILD)	
+#Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_UDEV_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 

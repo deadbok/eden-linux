@@ -10,9 +10,9 @@ Needed software:
  - kpartx (multipath-tools)
  - bc
  - git
- - losetup
+ - losetup (util-linux)
  - rsync
- - xz
+ - xz (xz-utils)
  - fakeroot
 
 	ISO image:
@@ -21,4 +21,5 @@ Needed software:
 	  - pv
 
 note:
-en_US.UTF-8 needs to be available for uClibc to build
+en_US.UTF-8 needs to be available for uClibc to build.
+"remake" comes highly recommended for development.
