@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("target.strip")}
 
 ${Package("", "", "1.0", "", "$(TEMP_DIR)/.target-stripped")}

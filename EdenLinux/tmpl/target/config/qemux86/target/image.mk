@@ -54,4 +54,10 @@ ${Rule('$(TEMP_DIR)/.fs-copy', '$(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_
 ${Rule('$(TEMP_DIR)/.image', '$(TARGET_IMAGE_COPY)', rule_var_name= var_name('create'))}
 	$(TOUCH) $(TEMP_DIR)/.image
 
+.PHONY: image_clean
+${Rule('image_clean', '')}
+	-$(RM) $(TARGET_IMAGE_FILE)
+	
+DISTLEAN_TARGETS += image_clean
+
 .NOTPARALLEL:

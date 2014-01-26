@@ -22,7 +22,6 @@ ${local()}INSTALL += $(TARGET_IMAGE_CREATE)
 
 .PHONY: target-distclean
 ${Rule("target-distclean", "")}:
-	-$(RM) -fR $(STRIPPED_ROOTFS_DIR)
 	$(MAKE)  $(TARGET_DISTCLEAN_TARGETS)
 
 DISTCLEAN_TARGETS += target-distclean

@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("target.initramfs")}
 
 ${local()}DIR := $(BUILD_DIR)/initramfs

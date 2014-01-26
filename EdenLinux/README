@@ -1,3 +1,6 @@
+Introduction:
+=============
+
 The overall goal for this project is to build a system that builds tailor-made 
 Linux distributions. There are a whole range of these tools available on the net
 but when I began trying to add more software, found it awkward and tiresome, 
@@ -29,20 +32,21 @@ All in all you end up needing to know a lot about Make, and how the template
 engine works, instead of just knowing how make works.  
 
 Directories:
-	build	-	Where the makefiles are created and everything is build
-	docs	-	Misc docs from the net I have found useful
-	mtl		-	The Make TempLate engine converts the templates to real makefiles 
-	plugins	-	Plugin for various makefile constructs
-	tmpl	-	Makefile templates read by mtl
-	tools	-	Various tools to make life easier when using the build system
-
-Best of luck.
-
-Martin Grønholdt
+============
+ * build	-	Where the makefiles are created and everything is build
+ * docs	    -	Misc docs from the net I have found useful
+ * mtl		-	The Make TempLate engine converts the templates to real makefiles 
+ * plugins	-	Plugin for various makefile constructs
+ * tmpl	    -	Makefile templates read by mtl
+ * tools	-	Various tools to make life easier when using the build system
 
 Credits:
- - Buildroot
- - Gentoo
- - (Cross compiled) Linux From Scratch
+========
+ * Buildroot
+ * Gentoo
+ * (Cross compiled) Linux From Scratch
  
 OpenRC and most of the init files are taken from Gentoo.
+
+Best of luck.
+*Martin Grønholdt*
