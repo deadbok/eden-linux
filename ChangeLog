@@ -26,6 +26,7 @@
 	* tmpl/packages/busybox.mk: Removed udhcpc script installation. Provided by netifrc.
 	* tmpl/Makefile: Added rootfs-clean rule
 	* tmpl/target/target.mk: Man page compression
+							 Bug caused make (cat) to hang when TARGET_REMOVE_FILES was not defined
 	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Building out od tree.
 	* tmpl/toolchain/toolchain.mk: Made sure headers are installed
 	* tmpl/toolchain/gcc-cross.mk: Changed dependency to uclibc local-install to

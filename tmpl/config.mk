@@ -40,4 +40,4 @@ ETC_DIR := $(ROOTFS_DIR)/etc
 TEMP_DIR := $(BUILD_DIR)/tmp
 
 #Override with board specific values
-include target/config/qemux86.mk
+include target/config/rpi.mk

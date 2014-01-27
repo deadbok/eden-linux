@@ -32,3 +32,5 @@ ${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/config/busybox_config
 TARGET_IMAGE_BOOT_SIZE = 64
 #Image name
 TARGET_IMAGE_FILENAME = rpi.img
+#File with list of files to remove from image
+TARGET_REMOVE_FILES = $(ROOT)/target/config/rpi/remove_list

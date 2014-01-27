@@ -8,9 +8,11 @@ include target/services.mk
 #include man page compression
 include target/zip-man.mk
 
+ifdef (TARGET_REMOVE_FILES)
 #Get list of files to remove from image root
 ${local()}REMOVE_LIST := $(shell cat $(TARGET_REMOVE_FILES))
-	
+endif
+
 #Copy root filesystem to image dir
 .PHONY: copy-root
 ${Rule("copy-root")}:
