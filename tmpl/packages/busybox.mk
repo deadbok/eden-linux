@@ -20,11 +20,8 @@ ${py busybox.rules['depmod'] = Rule("$(ROOTFS_DIR)/sbin/depmod.pl", "$(PACKAGES_
 #Add build rule
 ${py busybox.rules['build'] = MakeRule("$(PACKAGES_ENV)", 'ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)-', "$(PACKAGES_BUSYBOX_BUILD_DIR)", "all", "$(PACKAGES_BUSYBOX_BUILD_DIR)/busybox", "$(PACKAGES_BUSYBOX_CONFIG)", var_name("build"))}	
 
-#Add rule for the udhcpc script (Needed at boot for network dhcp)
-${py busybox.rules['udhcpc-script'] = Rule('$(ROOTFS_DIR)/etc/network/udhcpc.script', rule_var_name=var_name("udhcpc-script"))}
-
 #Add install rule
-${py busybox.rules['install'] = MakeRule("$(PACKAGES_ENV)", 'ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- CONFIG_PREFIX=$(ROOTFS_DIR)', "$(PACKAGES_BUSYBOX_BUILD_DIR)", "install", "$(ROOTFS_DIR)/bin/busybox", "$(PACKAGES_BUSYBOX_BUILD) $(PACKAGES_BUSYBOX_UDHCPC-SCRIPT)", var_name("install"), True)}
+${py busybox.rules['install'] = MakeRule("$(PACKAGES_ENV)", 'ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(ARCH_TARGET)- CONFIG_PREFIX=$(ROOTFS_DIR)', "$(PACKAGES_BUSYBOX_BUILD_DIR)", "install", "$(ROOTFS_DIR)/bin/busybox", "$(PACKAGES_BUSYBOX_BUILD)", var_name("install"), True)}
 
 #Output package variables
 ${busybox.vars()}
@@ -46,11 +43,6 @@ ${busybox.rules['depmod']}
 
 #Output build rule
 ${busybox.rules['build']}
-
-#Output udhcpcd-script rule
-${busybox.rules['udhcpc-script']}
-	-$(MKDIR) $(ROOTFS_DIR)/etc/network
-	$(CP) $(PACKAGES_BUSYBOX_SRC_DIR)/examples/udhcp/simple.script $(ROOTFS_DIR)/etc/network/udhcpc.script
 
 #Output build install
 ${busybox.rules['install']}

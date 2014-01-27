@@ -1,3 +1,5 @@
+Compile and install to image
+============================
 Find a perfect world where everything works as expected.
 Do:
 	make
@@ -5,21 +7,24 @@ Do:
 	
 You can add VERBOSE=1 to the make command to see more info while building.
 
-Needed software:
- - parted
- - kpartx (multipath-tools)
- - bc
- - git
- - losetup (util-linux)
- - rsync
- - xz (xz-utils)
- - fakeroot
+Needed software
+===============
+ * parted
+ * kpartx (multipath-tools)
+ * bc
+ * git
+ * losetup (util-linux)
+ * rsync
+ * xz (xz-utils)
+ * fakeroot
+ * gawk
 
-	ISO image:
-	 - genisoimage (cdrkit)
-	 tools/write_image:
-	  - pv
+ISO image:
+ * genisoimage (cdrkit)
+	 
+tools/write_image:
+ * pv
 
-note:
+**note**
 en_US.UTF-8 needs to be available for uClibc to build.
 "remake" comes highly recommended for development.

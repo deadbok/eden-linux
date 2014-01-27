@@ -1,5 +1,12 @@
 2014-01-27  oblivion  <oblivion@librebook>
 
+	* mtl/mtl.py: Removed bug, cannot clean a deleted directory
+	* tmpl/packages/openrc.mk: Moved openrc to local copy
+	* tmpl/packages/netifrc/net/udhcpc.sh.Linux.in: Add start after system logger
+													Added logging to syslog
+	* tmpl/target/config/qemux86/packages/baseconf/etc/conf.d/net: Configure eth0 for udhcpc and dhcp
+	* tmpl/packages/busybox.mk: Removed udhcpc script installation. Provided by netifrc.
+	* tmpl/Makefile: Added rootfs-clean rule
 	* tmpl/target/target.mk: Man page compression
 	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Building out od tree.
 	* tmpl/toolchain/toolchain.mk: Made sure headers are installed

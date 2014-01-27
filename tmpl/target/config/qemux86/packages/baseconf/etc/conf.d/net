@@ -1,0 +1,2 @@
+modules_eth0="udhcpc"
+config_eth0="dhcp"

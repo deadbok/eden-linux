@@ -99,6 +99,11 @@ ${Rule("distclean", "")}
 	-$(RM) -Rf $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR)
 	$(MAKE) $(DISTCLEAN_TARGETS)
 
+#Delete the generated root filesysytem
+.PHONY: rootfs-clean
+${Rule('rootfs.clean', '')}
+	-$(RM) -Rf $(ROOTFS_DIR)
+
 .NOTPARALLEL:
 
 #TODO: Clean rules

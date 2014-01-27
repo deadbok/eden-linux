@@ -4,7 +4,7 @@
 udhcpc_depend()
 {
 	program start /bin/busybox
-	after interface
+	after interface logger
 	provide dhcp
 }
 
@@ -74,7 +74,7 @@ udhcpc_start()
 
 	eval "${x}" "${args}" --interface="${IFACE}" --now \
 		--script="@LIBEXECDIR@/sh/udhcpc-hook.sh" \
-		--pidfile="${pidfile}" >/dev/null
+		--pidfile="${pidfile}" --syslog >/dev/null
 	eend $? || return 1
 
 	_show_address
