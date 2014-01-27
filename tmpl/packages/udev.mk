@@ -4,7 +4,7 @@ ${local_namespace("packages.udev")}
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=$(ROOTFS_DIR)/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=/usr/share --mandir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc
 ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
 ${local()}BUILD_PARAM = 
@@ -74,14 +74,14 @@ ${udev.rules['build']}
 #Add stuff to generate the symlinks for the service to start at boot
 ${py udev.rules['install'].dependencies += ' $(PACKAGES_UDEV_DEVICES)'}
 ${udev.rules['install']}
-	#Copy config filed
+	#Copy config files
 	$(CP) -R $(ROOT)/${namespace.current.replace(".", "/")}/etc $(ROOTFS_DIR)/
 	#Change permissions on boot scripts
 	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev
 	$(CHMOD) 754 $(ROOTFS_DIR)/etc/init.d/udev-mount
 	#Link the service to openrc's boot run level
-	$(LN) -sf ../../init.d/udev $(ROOTFS_DIR)/etc/runlevels/boot/udev
-	$(LN) -sf ../../init.d/udev-mount $(ROOTFS_DIR)/etc/runlevels/boot/udev-mount
+	#$(LN) -sf ../../init.d/udev $(ROOTFS_DIR)/etc/runlevels/boot/udev
+	#$(LN) -sf ../../init.d/udev-mount $(ROOTFS_DIR)/etc/runlevels/boot/udev-mount
 
 #Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_UDEV_INSTALL)

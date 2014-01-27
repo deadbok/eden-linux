@@ -1,5 +1,9 @@
 2014-01-27  oblivion  <oblivion@librebook>
 
+	* tmpl/packages/ncurses.mk: Wrong path for man directory
+	* tmpl/target/config/qemux86/remove_list: Added gtk-doc
+	* tmpl/packages/udev.mk: Wrong path for datarootdir
+							 Force man directory
 	* mtl/mtl.py: Removed bug, cannot clean a deleted directory
 	* tmpl/packages/openrc.mk: Moved openrc to local copy
 	* tmpl/packages/netifrc/net/udhcpc.sh.Linux.in: Add start after system logger
