@@ -26,6 +26,8 @@ endif
 	$(KPARTX) -av $(LOOP_DEVICE)
 	#Create root partition filesystem
 	$(MKFS_EXT4) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1
+	#Sleep for a little while
+	sleep 2
 	#Remove loop device
 	$(KPARTX) -d $(LOOP_DEVICE)
 	$(LOSETUP) -d $(LOOP_DEVICE)
@@ -43,7 +45,7 @@ ${Rule('$(TEMP_DIR)/.fs-copy', '$(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_
 	#Make everything owned by root
 	$(CHOWN) -R root:root $(strip $(ROOT_MOUNT_PATH))/*
 	#Take a break, wait for delayd writes
-	sleep 5
+	sleep 3
 	#Unmount root partition
 	$(UMOUNT) $(ROOT_MOUNT_PATH)
 	#Remove loop device

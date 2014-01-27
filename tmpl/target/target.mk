@@ -5,6 +5,8 @@ ${local_namespace("target")}
 include target/config/$(TARGET)/target/image.mk
 #Include boot service generation
 include target/services.mk
+#include man page compression
+include target/zip-man.mk
 
 #Get list of files to remove from image root
 ${local()}REMOVE_LIST := $(shell cat $(TARGET_REMOVE_FILES))
@@ -16,6 +18,10 @@ ${Rule("copy-root")}:
 	$(RSYNC) -aD --delete $(ROOTFS_DIR)/* $(IMAGE_ROOTFS_DIR)/ 
 	#Remove files from the list
 	-$(RM) -R $(addprefix $(IMAGE_ROOTFS_DIR)/,$(TARGET_REMOVE_LIST))
+	#Compress man pages if asked
+ifeq ($(COMPRESS_MAN_PAGES),1)
+	$(MAKE) zip-man
+endif
 
 #ALL that is done here has root permission
 ${local()}INSTALL += $(TARGET_IMAGE_CREATE)

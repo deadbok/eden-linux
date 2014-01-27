@@ -7,7 +7,7 @@ ${gcc_cross}
 
 include toolchain/uclibc.mk
 
-${py autoconf =  AutoconfRule('CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)', '--prefix=$(TOOLCHAIN_ROOT_DIR) --host=$(HOST) --target=$(ARCH_TARGET) --with-sysroot=$(ROOTFS_DIR) --disable-nls --enable-shared --disable-multilib --build=$(HOST) --enable-c99 --enable-long-long --with-mpc=$(TOOLCHAIN_ROOT_DIR) --with-mpfr=$(TOOLCHAIN_ROOT_DIR) --with-gmp=$(TOOLCHAIN_ROOT_DIR) --enable-languages=c,c++ --includedir=$(ROOTFS_DIR)/usr/include $(GCC_EXTRA_CONFIG)', "$(TOOLCHAIN_GCC-CROSS_SRC_DIR)", "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)", "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)/Makefile", "$(TOOLCHAIN_GCC-CROSS_SRC_DIR)/configure $(TOOLCHAIN_UCLIBC_INSTALL)")}
+${py autoconf =  AutoconfRule('CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)', '--prefix=$(TOOLCHAIN_ROOT_DIR) --host=$(HOST) --target=$(ARCH_TARGET) --with-sysroot=$(ROOTFS_DIR) --disable-nls --enable-shared --disable-multilib --build=$(HOST) --enable-c99 --enable-long-long --with-mpc=$(TOOLCHAIN_ROOT_DIR) --with-mpfr=$(TOOLCHAIN_ROOT_DIR) --with-gmp=$(TOOLCHAIN_ROOT_DIR) --enable-languages=c,c++ --includedir=$(ROOTFS_DIR)/usr/include $(GCC_EXTRA_CONFIG)', "$(TOOLCHAIN_GCC-CROSS_SRC_DIR)", "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)", "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)/Makefile", "$(TOOLCHAIN_GCC-CROSS_SRC_DIR)/configure $(TOOLCHAIN_UCLIBC_LOCAL-INSTALL)")}
 ${autoconf}
 
 ${py build = MakeRule('CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)', '', "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)", "all", "$(TOOLCHAIN_GCC-CROSS_BUILD_DIR)/.build", "$(TOOLCHAIN_GCC-CROSS_CONFIG)", "TOOLCHAIN_GCC-CROSS_BUILD")}

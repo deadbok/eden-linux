@@ -1,5 +1,14 @@
+2014-01-27  oblivion  <oblivion@librebook>
+
+	* tmpl/target/target.mk: Man page compression
+	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Building out od tree.
+	* tmpl/toolchain/toolchain.mk: Made sure headers are installed
+	* tmpl/toolchain/gcc-cross.mk: Changed dependency to uclibc local-install to
+								   stop rebuilding when $(ROOTFS) is deleted
+
 2014-01-26  oblivion  <oblivion@librebook>
 
+	* tmpl/target/config/qemux86/packages/kernel.mk: Building out of tree
 	* tmpl/target/config/qemux86/packages/boardconf.mk: Added netifrc dependency
 	* tmpl/target/config/qemux86/toolchain/kernel-headers.mk: Removed mrproper step
 	* tmpl/packages/packages.mk: Removed build step.

@@ -4,7 +4,7 @@ ${local_namespace("packages.ncurses")}
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --with-cc="$(ARCH_TARGET)-gcc -Os" --with-linker=$(ARCH_TARGET)-ld --with-shared --without-debug --without-ada --with-build-cc=gcc --enable-overwrite --without-cxx-binding --program-prefix=
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --with-cc="$(ARCH_TARGET)-gcc -Os" --with-linker=$(ARCH_TARGET)-ld --with-shared --without-debug --without-ada --with-build-cc=gcc --enable-overwrite --without-cxx-binding --program-prefix= --mandir=$(ROOTFS_DIR)/usr/share/man
 ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
 ${local()}BUILD_PARAM = MULTI=1 PROGRAMS="ncurses dbclient ncurseskey ncursesconvert scp"

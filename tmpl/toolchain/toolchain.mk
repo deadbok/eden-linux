@@ -46,7 +46,11 @@ $(TOOLCHAIN_BUILD_DIR):
 include toolchain/gcc-cross.mk
 include target/fsh.mk
 
-${local()}INSTALL := $(TOOLCHAIN_BUILD_DIR) $(TARGET_FSH_INSTALL) $(TOOLCHAIN_GCC-CROSS_INSTALL)
+${local()}INSTALL := $(TOOLCHAIN_BUILD_DIR) $(TARGET_FSH_INSTALL) \
+					 $(TOOLCHAIN_KERNEL-HEADERS_INSTALL) \
+					 $(TOOLCHAIN_UCLIBC_INSTALL) \
+					 $(TOOLCHAIN_GCC-CROSS_INSTALL) \
+					 $(TOOLCHAIN_UCLIBC_INSTALL)
 
 .PHONY: toolchain-distclean
 ${Rule("toolchain-distclean")}

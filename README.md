@@ -1,5 +1,5 @@
-Introduction:
-=============
+Introduction
+============
 
 The overall goal for this project is to build a system that builds tailor-made 
 Linux distributions. There are a whole range of these tools available on the net
@@ -31,8 +31,15 @@ To use the template engine you need to have a good knowledge og how Make works.
 All in all you end up needing to know a lot about Make, and how the template
 engine works, instead of just knowing how make works.  
 
-Directories:
-============
+Breaking it down:
+=================
+EdenLinux consists of three sub projects:
+ * The Make file TempLate system (mtl)
+ * The make file templates
+ * The final make file build system
+
+Directories
+===========
  * build	-	Where the makefiles are created and everything is build
  * docs	    -	Misc docs from the net I have found useful
  * mtl		-	The Make TempLate engine converts the templates to real makefiles 
@@ -40,8 +47,8 @@ Directories:
  * tmpl	    -	Makefile templates read by mtl
  * tools	-	Various tools to make life easier when using the build system
 
-Credits:
-========
+Credits
+=======
  * Buildroot
  * Gentoo
  * (Cross compiled) Linux From Scratch
