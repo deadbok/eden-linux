@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("toolchain.syslinux")}
 
 #${package("$(TOOLCHAIN_BUILD_DIR)/syslinux-$(TOOLCHAIN_SYSLINUX_VERSION)", "", "4.02", "syslinux-$(TOOLCHAIN_SYSLINUX_VERSION).tar.bz2", "http://linux-kernel.uio.no/pub/linux/utils/boot/syslinux/4.xx/$(TOOLCHAIN_SYSLINUX_FILE)")}

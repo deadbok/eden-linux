@@ -1,5 +1,19 @@
 2014-01-27  oblivion  <oblivion@librebook>
 
+	* tmpl/packages/base/bootdevs.mk: Moved and changed namespace.
+	* tmpl/packages/base/busybox.mk: Moved and changed namespace.
+	* tmpl/packages/base/dropbear.mk: Moved and changed namespace.
+	* tmpl/packages/base/e2fsprogs.mk: Moved and changed namespace.
+	* tmpl/packages/base/iana-etc.mk: Moved and changed namespace.
+	* tmpl/packages/base/kbd.mk: Moved and changed namespace.
+	* tmpl/packages/base/nano.mk: Moved and changed namespace.
+	* tmpl/packages/base/ncurses.mk: Moved and changed namespace.
+	* tmpl/packages/base/netifrc.mk: Moved and changed namespace.
+	* tmpl/packages/base/openrc.mk: Moved and changed namespace.
+	* tmpl/packages/base/udev.mk: Moved and changed namespace.
+	* tmpl/packages/base/util-linux.mk: Moved and changed namespace
+	* tmpl/packages/base/zlib.mk: Moved and changed namespace
+	* tmpl/packages/packages.mk: Removed some old ramblings
 	* tmpl/packages/ncurses.mk: Wrong path for man directory
 	* tmpl/target/config/qemux86/remove_list: Added gtk-doc
 	* tmpl/packages/udev.mk: Wrong path for datarootdir

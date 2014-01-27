@@ -1,5 +1,5 @@
 #mtl
-${local_namespace("packages.util-linux")}
+${local_namespace("packages.base.util-linux")}
 
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
@@ -10,14 +10,14 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV) scanf_cv_alloc_modifier=as
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
-${py utillinux = AutoconfPackage('$(PACKAGES_BUILD_DIR)/util-linux-$(PACKAGES_UTIL-LINUX_VERSION)', '', '2.24.1', "http://www.kernel.org/pub/linux/utils/util-linux/v2.24/util-linux-$(PACKAGES_UTIL-LINUX_VERSION).tar.xz", "$(ROOTFS_DIR)/sbin/swapon")}
+${py utillinux = AutoconfPackage('$(PACKAGES_BUILD_DIR)/util-linux-$(PACKAGES_BASE_UTIL-LINUX_VERSION)', '', '2.24.1', "http://www.kernel.org/pub/linux/utils/util-linux/v2.24/util-linux-$(PACKAGES_BASE_UTIL-LINUX_VERSION).tar.xz", "$(ROOTFS_DIR)/sbin/swapon")}
 
 #Inset autogen call
-${py utillinux.rules['config'].recipe.insert(2, '($(CD) $(PACKAGES_UTIL-LINUX_BUILD_DIR); ./autogen.sh); ')}
+${py utillinux.rules['config'].recipe.insert(2, '($(CD) $(PACKAGES_BASE_UTIL-LINUX_BUILD_DIR); ./autogen.sh); ')}
 
 ${utillinux}
 
 #Add to targets	
-PACKAGES_INSTALL_TARGETS += $(PACKAGES_UTIL-LINUX_INSTALL)
+PACKAGES_INSTALL_TARGETS += $(PACKAGES_BASE_UTIL-LINUX_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:

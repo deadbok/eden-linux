@@ -1,5 +1,5 @@
 #mtl
-${local_namespace("packages.udev")}
+${local_namespace("packages.base.udev")}
 
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
@@ -57,7 +57,7 @@ ${local()}DEVICES += $(ROOTFS_DIR)/lib/udev/devices/tty3 $(ROOTFS_DIR)/lib/udev/
 ${local()}DEVICES += $(ROOTFS_DIR)/lib/udev/devices/tty5 $(ROOTFS_DIR)/lib/udev/devices/tty6 
 ${local()}DEVICES += $(ROOTFS_DIR)/lib/udev/devices/console
 
-${py udev = AutoconfPackage('$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_UDEV_VERSION)', '', '168', "http://launchpad.net/udev/main/168/+download/udev-$(PACKAGES_UDEV_VERSION).tar.bz2", "$(ROOTFS_DIR)/sbin/udevd")}
+${py udev = AutoconfPackage('$(PACKAGES_BUILD_DIR)/udev-$(PACKAGES_BASE_UDEV_VERSION)', '', '168', "http://launchpad.net/udev/main/168/+download/udev-$(PACKAGES_BASE_UDEV_VERSION).tar.bz2", "$(ROOTFS_DIR)/sbin/udevd")}
 
 ${udev.vars()}
 
@@ -72,7 +72,7 @@ ${udev.rules['config']}
 ${udev.rules['build']}
 
 #Add stuff to generate the symlinks for the service to start at boot
-${py udev.rules['install'].dependencies += ' $(PACKAGES_UDEV_DEVICES)'}
+${py udev.rules['install'].dependencies += ' $(PACKAGES_BASE_UDEV_DEVICES)'}
 ${udev.rules['install']}
 	#Copy config files
 	$(CP) -R $(ROOT)/${namespace.current.replace(".", "/")}/etc $(ROOTFS_DIR)/
@@ -84,7 +84,7 @@ ${udev.rules['install']}
 	#$(LN) -sf ../../init.d/udev-mount $(ROOTFS_DIR)/etc/runlevels/boot/udev-mount
 
 #Add to targets	
-PACKAGES_INSTALL_TARGETS += $(PACKAGES_UDEV_INSTALL)
+PACKAGES_INSTALL_TARGETS += $(PACKAGES_BASE_UDEV_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 
 .NOTPARALLEL:

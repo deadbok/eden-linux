@@ -21,7 +21,7 @@ ${local()}CFLAGS := "-g"
 ${local()}CXXFLAGS := "-g"
 endif
 
-${local()}FILE_DIR := $(BUILD_DIR)/toolchain
+${local()}FILE_DIR := $(ROOT)/toolchain
 ${local()}BUILD_DIR := $(BUILD_DIR)/toolchain_$(ARCH)_build
 ${local()}ROOT_DIR := $(BUILD_DIR)/toolchain_$(ARCH)
 

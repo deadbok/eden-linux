@@ -1,4 +1,4 @@
-#mtl
+##mtl
 ${local_namespace("toolchain.elfkickers")}
 
 ${Package('$(TOOLCHAIN_BUILD_DIR)/ELFkickers-$(TOOLCHAIN_ELFKICKERS_VERSION)', '', '3.0a', "http://www.muppetlabs.com/~breadbox/pub/software/ELFkickers-$(TOOLCHAIN_ELFKICKERS_VERSION).tar.gz", "$(TOOLCHAIN_ROOT_DIR)/bin/sstrip")}

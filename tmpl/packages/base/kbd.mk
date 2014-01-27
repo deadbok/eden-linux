@@ -1,5 +1,5 @@
 #mtl
-${local_namespace("packages.kbd")}
+${local_namespace("packages.base.kbd")}
 
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
@@ -11,9 +11,9 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV) ac_cv_func_setpgrp_void=yes ac_cv_func_ma
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) ac_cv_func_setpgrp_void=yes ac_cv_func_malloc_0_nonnull=yes ac_cv_func_realloc_0_nonnull=yes 
 
-${AutoconfPackage('$(PACKAGES_BUILD_DIR)/kbd-$(PACKAGES_KBD_VERSION)', '', '1.15', "http://www.kbd-project.org/download/kbd-$(PACKAGES_KBD_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/loadkeys")}
+${AutoconfPackage('$(PACKAGES_BUILD_DIR)/kbd-$(PACKAGES_BASE_KBD_VERSION)', '', '1.15', "http://www.kbd-project.org/download/kbd-$(PACKAGES_BASE_KBD_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/bin/loadkeys")}
 	
 #Add to targets
-PACKAGES_INSTALL_TARGETS += $(PACKAGES_KBD_INSTALL)
+PACKAGES_INSTALL_TARGETS += $(PACKAGES_BASE_KBD_INSTALL)
 PACKAGES_NAME_TARGETS += ${namespace.current}
 .NOTPARALLEL:
