@@ -19,7 +19,7 @@ include target/config/$(TARGET)/packages/*.mk
 
 #Build toolchain, FSH dir structure, base packages, board specific packages
 ${local()}INSTALL := $(PACKAGES_BUILD_DIR)/.installed
-$(${local()}INSTALL): $(PACKAGES_BUILD_DIR) $(PACKAGES_BOARD_INSTALL) $(PACKAGES_KERNEL_INSTALL) $(PACKAGES_INSTALL_TARGETS)
+$(${local()}INSTALL): $(PACKAGES_BUILD_DIR) $(PACKAGES_KERNEL_INSTALL) $(PACKAGES_INSTALL_TARGETS) $(PACKAGES_BOARD_INSTALL) 
 	$(TOUCH) $(PACKAGES_BUILD_DIR)/.installed
 
 .PHONY: packages-distclean

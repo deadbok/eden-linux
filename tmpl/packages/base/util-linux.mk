@@ -8,7 +8,9 @@ ${local()}CONFIG_PARAM = --prefix=/usr --host=$(ARCH_TARGET) --disable-libuuid -
 ${local()}CONFIG_ENV = $(PACKAGES_ENV) scanf_cv_alloc_modifier=as
 
 ${local()}BUILD_PARAM = 
-${local()}BUILD_ENV = $(PACKAGES_ENV) 
+${local()}BUILD_ENV = $(PACKAGES_ENV)
+
+${local()}DEPENDENCIES = $(PACKAGES_BASE_BUSYBOX_INSTALL) 
 
 ${py utillinux = AutoconfPackage('$(PACKAGES_BUILD_DIR)/util-linux-$(PACKAGES_BASE_UTIL-LINUX_VERSION)', '', '2.24.1', "http://www.kernel.org/pub/linux/utils/util-linux/v2.24/util-linux-$(PACKAGES_BASE_UTIL-LINUX_VERSION).tar.xz", "$(ROOTFS_DIR)/sbin/swapon")}
 

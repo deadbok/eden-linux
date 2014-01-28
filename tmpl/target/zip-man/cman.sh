@@ -6,19 +6,23 @@
 #                                                
 # Compress man pages with bzip2.
 #
+# Version 0.92 January 27, 2014
+# Little less verbose
+# Better help.
+#
 # Version 0.91 December 22, 2011:
 # Added file size display, when compressing
-#å
+#
 # Version 0.9 December 19, 2011:
 # Working version. Need to weed out the weaklings, and comment.
-VERSION="0.91"
+VERSION="0.92"
 
 # Name of the script
 MY_NAME=`basename $0`
 
 #Directories with man pages
 MAN_DIR=""
-#Verosity level
+#Verbosity level
 VERBOSE_LVL=0
 
 #Print help
@@ -27,8 +31,13 @@ function help ()
 	if [ -n "$1" ]; then
 		echo "Unknown option : $1"
 	fi
-	( echo "Usage: ${MY_NAME} [dirs]" && \
+	( echo "Usage: ${MY_NAME} options [dirs]" && \
  	cat << EOT
+ 	-v | --vebose Increase output while processing. Can be given several 
+                  times (0-2).
+                
+    -h | --help   Print this message.
+    
 	dirs          A list of space-separated _absolute_ pathnames to the
                   man directories.
 
@@ -47,19 +56,23 @@ function process_dir ()
 		if [ -d ${ENTRY} ]; then #Check for directory
 			process_dir ${ENTRY}
 		elif [ "`expr ${ENTRY} : '.*\(bz2\)'`" == "bz2" ]; then	#If extension is bz2, the file is probably compressed
-			if [ $VERBOSE_LVL -ge 1 ]; then
+			if [ $VERBOSE_LVL -ge 2 ]; then
 				echo "File '${ENTRY}' seems to be compressed"
 			fi
 		elif [ -h ${ENTRY} ]; then #Check for symlink
         	LINK=`readlink ${ENTRY}`.bz2
 			rm -f "${ENTRY}" && ln -s "${LINK}" "${FILE}"
- 			echo "Link: ${ENTRY} > ${FILE}"
+			if [ $VERBOSE_LVL -ge 1 ]; then
+ 				echo "Link: ${ENTRY} > ${FILE}"
+ 			fi
  		elif [ -f ${ENTRY} ]; then #Check for file
 			#Get original size
 			ORG_SIZE=$(wc -c < "${ENTRY}")
 			bzip2 -f9 "${ENTRY}" && chmod 644 "${FILE}"
 			COMP_SIZE=$(wc -c < "${FILE}")
-			echo "File: ${ENTRY} (${ORG_SIZE}) > ${FILE} (${COMP_SIZE})"
+			if [ $VERBOSE_LVL -ge 1 ]; then
+				echo "File: ${ENTRY} (${ORG_SIZE}) > ${FILE} (${COMP_SIZE})"
+			fi
 		fi
 	done
 }

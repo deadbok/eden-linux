@@ -15,7 +15,7 @@ ${Rule("$(IMAGES_DIR)/$(TARGET_IMAGE_FILENAME)", rule_var_name= var_name("file")
 #Calculate the root partition size 
 ${local()}ROOT_SIZE := $(shell echo $(IMAGE_SIZE)\-$(TARGET_IMAGE_BOOT_SIZE) | bc)
 
-.PHONY: TARGET_IMAGE_FILESYSTEM
+.PHONY: $(TARGET_IMAGE_FILESYSTEM)
 ${Rule('$(TEMP_DIR)/.fs', '$(TARGET_IMAGE_FILE)', rule_var_name= var_name('filesystem'))}
 	#Create an msdos partition table
 	$(PARTED) -s $(TARGET_IMAGE_FILE) mklabel msdos
@@ -34,6 +34,8 @@ endif
 	$(MKFS_VFAT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1
 	#Create root partition filesystem
 	$(MKFS_EXT4) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2
+	#Sleep for a little while
+	sleep 2
 	#Remove loop device
 	$(KPARTX) -d $(LOOP_DEVICE)
 	$(LOSETUP) -d $(LOOP_DEVICE)
@@ -48,15 +50,19 @@ ${Rule('$(TEMP_DIR)/.fs-copy', '$(TARGET_IMAGE_FILESYSTEM)', rule_var_name= var_
 	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p1 $(BOOT_MOUNT_PATH)
 	#Copy boot files
 	$(CP) -R $(ROOTFS_DIR)/boot/* $(BOOT_MOUNT_PATH)
+	#Sleep for a little while
+	sleep 3
 	#Unmount boot partition
 	$(UMOUNT) $(BOOT_MOUNT_PATH)
 	#Mount root partition
 	$(MKDIR) $(ROOT_MOUNT_PATH)
 	$(MOUNT) /dev/mapper/$(subst /dev/,,$(LOOP_DEVICE))p2 $(ROOT_MOUNT_PATH)
 	#Copy everything but the boot files
-	$(RSYNC) -aD --exclude=$(ROOTFS_DIR)/boot $(ROOTFS_DIR)/* $(ROOT_MOUNT_PATH)
+	$(RSYNC) -aD --exclude=$(IMAGE_ROOTFS_DIR)/boot $(IMAGE_ROOTFS_DIR)/* $(ROOT_MOUNT_PATH)
+	#Make everything owned by root
+	$(CHOWN) -R root:root $(strip $(ROOT_MOUNT_PATH))/*
 	#Take a break, wait for delayd writes
-	sleep 5
+	sleep 3
 	#Unmount root partition
 	$(UMOUNT) $(ROOT_MOUNT_PATH)
 	#Remove loop device

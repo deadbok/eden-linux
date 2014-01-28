@@ -1,5 +1,16 @@
+2014-01-28  oblivion  <oblivion@librebook>
+
+	* tmpl/packages/packages.mk: Changes build order
+	* tmpl/target/config/rpi/packages/boardconf.mk: Added for the Pi
+	* tmpl/packages/base/util-linux.mk: Added dependency on busybox, to make
+										util-linux will overwrite the busybox
+										versions.
+	* tmpl/target/target.mk: 
 2014-01-27  oblivion  <oblivion@librebook>
 
+	* tmpl/target/config/rpi/target/image.mk: Updated to use IMAGE_ROOTFS_DIR
+	* tmpl/target/zip-man/cman.sh: Adjusted verbosity
+	* tmpl/target/config/rpi.mk: Define TARGET_REMOVE_FILES
 	* tmpl/packages/base/bootdevs.mk: Moved and changed namespace.
 	* tmpl/packages/base/busybox.mk: Moved and changed namespace.
 	* tmpl/packages/base/dropbear.mk: Moved and changed namespace.

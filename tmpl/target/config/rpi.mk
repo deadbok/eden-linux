@@ -22,15 +22,16 @@ BOOT_DEVICE := /dev/mmcblk0p1
 ROOT_DEVICE := /dev/mmcblk0p2
 SWAP_DEVICE := /dev/mmcblk0p3
 
-${local()}PROCESSOR = armv6j
-${local()}FILE_SYSTEM = iso
+#Modules to load on boot
+KERNEL_MODULES :=
+
 ${local()}UCLIBC_CONFIG = $(ROOT)/target/config/rpi/config/uclibc_config
 ${local()}KERNEL_CONFIG = $(ROOT)/target/config/rpi/config/kernel_config
 ${local()}BUSYBOX_CONFIG = $(ROOT)/target/config/rpi/config/busybox_config
 
 #Boot partition size
-TARGET_IMAGE_BOOT_SIZE = 64
+TARGET_IMAGE_BOOT_SIZE = 48
 #Image name
 TARGET_IMAGE_FILENAME = rpi.img
 #File with list of files to remove from image
-TARGET_REMOVE_FILES = $(ROOT)/target/config/rpi/remove_list
+TARGET_REMOVE_FILES := $(ROOT)/target/config/rpi/remove_list

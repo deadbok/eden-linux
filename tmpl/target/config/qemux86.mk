@@ -10,7 +10,8 @@ BOOT_DEVICE :=
 ROOT_DEVICE := /dev/sda1
 SWAP_DEVICE := /dev/sda2
 
-KERNEL_MODULES:= "e1000"
+#Modules to load on boot
+KERNEL_MODULES := "e1000"
 
 #Boot partition size
 TARGET_IMAGE_BOOT_SIZE = 

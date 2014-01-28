@@ -1,3 +1,0 @@
-#Add modules to be loaded at boot below each module separated by a newline
-parport
-pcnet32
