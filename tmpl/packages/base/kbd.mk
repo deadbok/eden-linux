@@ -4,7 +4,7 @@ ${local_namespace("packages.base.kbd")}
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${local()}CONFIG_PARAM = --prefix=/usr --host=$(ARCH_TARGET) 
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) 
 #Override some autoconf variables to force certain checks regarding malloc to pass
 ${local()}CONFIG_ENV = $(PACKAGES_ENV) ac_cv_func_setpgrp_void=yes ac_cv_func_malloc_0_nonnull=yes ac_cv_func_realloc_0_nonnull=yes
 

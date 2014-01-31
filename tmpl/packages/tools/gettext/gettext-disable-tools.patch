@@ -1,0 +1,12 @@
+diff -rupN gettext-0.18.3.1/Makefile.in gettext.new/Makefile.in
+--- gettext-0.18.3.1/Makefile.in	2013-08-15 18:34:36.000000000 +0200
++++ gettext.new/Makefile.in	2014-01-29 07:37:21.399650304 +0100
+@@ -298,7 +298,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
+ ACLOCAL_AMFLAGS = -I m4
+-SUBDIRS = gnulib-local gettext-runtime gettext-tools
++SUBDIRS = gnulib-local gettext-runtime
+ 
+ # DJGPP port.
+ 

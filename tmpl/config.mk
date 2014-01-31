@@ -39,5 +39,8 @@ STRIPPED_ROOTFS_DIR := $(BUILD_DIR)/stripped_rootfs
 ETC_DIR := $(ROOTFS_DIR)/etc
 TEMP_DIR := $(BUILD_DIR)/tmp
 
+#List of packages to install
+PACKAGE_LIST = 
+
 #Override with board specific values
-include target/config/rpi.mk
+include target/config/qemux86.mk

@@ -15,6 +15,7 @@ ${local()}STRIP := $(ARCH_TARGET)-strip
 
 ${local()}CFLAGS := "-O2"
 ${local()}CXXFLAGS := "-O2"
+${local()}LDFLAGS = "-Wl,-rpath,$(TOOLCHAIN_ROOT_DIR)/lib"
 
 ifdef DEBUG
 ${local()}CFLAGS := "-g"

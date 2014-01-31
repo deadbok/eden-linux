@@ -82,6 +82,9 @@ ${udev.rules['install']}
 	#Link the service to openrc's boot run level
 	#$(LN) -sf ../../init.d/udev $(ROOTFS_DIR)/etc/runlevels/boot/udev
 	#$(LN) -sf ../../init.d/udev-mount $(ROOTFS_DIR)/etc/runlevels/boot/udev-mount
+	#Move pkgconfig to the right directory
+	$(MV) $(ROOTFS_DIR)/usr/share/pkgconfig/udev.pc $(ROOTFS_DIR)/usr/lib/pkgconfig/udev.pc
+	$(RM) -R $(ROOTFS_DIR)/usr/share/pkgconfig
 
 #Add to targets	
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_BASE_UDEV_INSTALL)

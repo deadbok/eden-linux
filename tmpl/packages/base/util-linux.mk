@@ -4,7 +4,7 @@ ${local_namespace("packages.base.util-linux")}
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${local()}CONFIG_PARAM = --prefix=/usr --host=$(ARCH_TARGET) --disable-libuuid --disable-losetup --disable-cytune --disable-fsck --disable-partx --disable-uuidd --disable-mountpoint --disable-fallocate --disable-unshare --disable-nsenter --disable-setpriv --disable-eject --disable-agetty --disable-cramfs --disable-bfs --disable-fdformat --disable-hwclock --disable-wdctl --disable-switch_root --disable-pivot_root --disable-kill --disable-last --disable-utmpdump --disable-utmpdump --disable-mesg --disable-raw --disable-rename --disable-login --disable-nologin --disable-sulogin --disable-su --disable-runuser --disable-ul --disable-more --disable-pg --disable-setterm --disable-schedutils --disable-wall --disable-bash-completion
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-libuuid --disable-losetup --disable-cytune --disable-fsck --disable-partx --disable-uuidd --disable-mountpoint --disable-fallocate --disable-unshare --disable-nsenter --disable-setpriv --disable-eject --disable-agetty --disable-cramfs --disable-bfs --disable-fdformat --disable-hwclock --disable-wdctl --disable-switch_root --disable-pivot_root --disable-kill --disable-last --disable-utmpdump --disable-utmpdump --disable-mesg --disable-raw --disable-rename --disable-login --disable-nologin --disable-sulogin --disable-su --disable-runuser --disable-ul --disable-more --disable-pg --disable-setterm --disable-schedutils --disable-wall --disable-bash-completion
 ${local()}CONFIG_ENV = $(PACKAGES_ENV) scanf_cv_alloc_modifier=as
 
 ${local()}BUILD_PARAM = 

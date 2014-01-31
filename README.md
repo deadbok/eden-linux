@@ -18,8 +18,8 @@ The idea is that when you have a basic Autoconf package, you can write one
 simple line of code, and the template engine generates the actual makefile,
 with all the rules needed to build and install the software on the target.
 
-As it stands, this is working. The thing is done in Python, and it for the
-template language as well. I am a bit disappointed with the complexity of what
+As it stands, this is working. The thing is done in Python, and uses Python for
+the template language as well. I am a bit disappointed with the complexity of what
 I've come up with this far, it really isn't cleaner or simpler than Buildroot.
 
 The main problem is the complexity of tweaking and building a Linux distribution
@@ -29,7 +29,7 @@ pretty complex matter in itself. The template engine does succeed in simplifying
 the makefiles, but it also ads more complexity on top of the use of makefiles.
 To use the template engine you need to have a good knowledge og how Make works.
 All in all you end up needing to know a lot about Make, and how the template
-engine works, instead of just knowing how make works.  
+engine works, instead of just knowing how make works.
 
 Breaking it down:
 =================

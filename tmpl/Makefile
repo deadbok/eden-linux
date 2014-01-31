@@ -53,6 +53,8 @@ include toolchain/toolchain.mk
 include packages/packages.mk
 #Include target specific operations and packages
 include target/target.mk
+#Include needed host tools
+include host/host.mk
 
 #Print out info about the build
 .PHONY: build-info
@@ -67,15 +69,27 @@ ${Rule("build-info", "")}:
 	@$(ECHO) " - Image size: $(IMAGE_SIZE)mb"
 	@$(ECHO) " - Image file name: $(TARGET_IMAGE_FILENAME)"
 	@$(ECHO)
+	@$(ECHO) " - Host tools: $(HOST_NAME_TARGETS)"
 	@$(ECHO) " - Base packages: $(PACKAGES_NAME_TARGETS)"
 	@$(ECHO) " - Board specific packages: $(PACKAGES_NAME_BOARD)"
 	@$(ECHO) "-----------------------------------------------------------------------------"
 	@$(ECHO)
 
 #Build and install everything to $(ROOTFS_DIR)
+#Run the package solver to sort the software build
+#Call the build process
 .PHONY: all
-all: build-info $(DOWNLOAD_DIR) $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) $(TARGET_FSH_INSTALL) $(PACKAGES_INSTALL) $(TARGET_SERVICES_INSTALL) copy-root
+all: build-info 
+	$(MAKE) -f packages/pkgsolver.mk
+	$(MAKE) build
 	$(TOUCH) $(TEMP_DIR)/.all
+
+#Do the actual build step in another rule, hopefully make reads all files again
+#as it loads Makefile, packages/pkg-list.mk might have changed after running
+#the package solver.
+build:  $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) \
+		$(HOST_INSTALL) $(TOOLCHAIN_INSTALL) $(TARGET_FSH_INSTALL) \
+		$(PACKAGES_INSTALL) $(TARGET_SERVICES_INSTALL) copy-root
 
 #Cry out if trying install before all
 $(TEMP_DIR)/.all:

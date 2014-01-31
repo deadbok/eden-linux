@@ -1,3 +1,22 @@
+2014-01-30  oblivion  <oblivion@librebook>
+
+	* tmpl/commands.mk: Moved LDFLAGS to toolchain.mk
+	* tmpl/Makefile: Added dependency solving
+	* tmpl/config.mk: Added PACKAGE_LIST
+	* tmpl/target/config/qemux86/pkg-list: List of packages to build for qemux86
+	* tmpl/packages/pkgsolver.mk: Added to solve package dependencies
+	* tmpl/packages/tools/mc.mk: Added for Midnight Commander
+	* tmpl/packages/tools/gettext.mk: Added for Midnight Commander
+	* tmpl/packages/libs/pcre.mk: Added for Midnight Commander
+	* tmpl/packages/libs/libpng.mk: Added for Midnight Commander
+	* tmpl/packages/libs/libffi.mk: Added for Midnight Commander
+	* tmpl/packages/libs/glib.mk: Added for Midnight Commander
+	* tmpl/packages/dev/slang.mk: Added for Midnight Commander
+	* tmpl/host/host.mk: Added support for building host tools
+	* tmpl/host/pkgsolver/pkgsolver.py: New member of the insane asylum! Sorts
+										the a list of packages according to
+										dependencies.
+
 2014-01-28  oblivion  <oblivion@librebook>
 
 	* tmpl/packages/packages.mk: Changes build order

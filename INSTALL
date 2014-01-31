@@ -9,6 +9,7 @@ You can add VERBOSE=1 to the make command to see more info while building.
 
 Needed software
 ===============
+ * python 2.7 (for now)
  * parted
  * kpartx (multipath-tools)
  * bc
@@ -18,6 +19,9 @@ Needed software
  * xz (xz-utils)
  * fakeroot
  * gawk
+ 
+package pcre:
+ * automake-1.4
 
 ISO image:
  * genisoimage (cdrkit)

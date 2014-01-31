@@ -4,13 +4,13 @@ ${local_namespace("toolchain.mpfr")}
 include toolchain/gmp.mk
 
 ${local()}INSTALL_PARAM = 
-${local()}INSTALL_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)
+${local()}INSTALL_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(TOOLCHAIN_LDFLAGS)
 
 ${local()}CONFIG_PARAM = --prefix=$(TOOLCHAIN_ROOT_DIR) --enable-shared --with-gmp=$(TOOLCHAIN_ROOT_DIR)
-${local()}CONFIG_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)
+${local()}CONFIG_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(TOOLCHAIN_LDFLAGS)
 
 ${local()}BUILD_PARAM = 
-${local()}BUILD_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(LDFLAGS)
+${local()}BUILD_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(TOOLCHAIN_LDFLAGS)
 
 ${py mpfr = AutoconfPackage('$(TOOLCHAIN_BUILD_DIR)/mpfr-$(TOOLCHAIN_MPFR_VERSION)', '', '3.1.2', "http://www.mpfr.org/mpfr-$(TOOLCHAIN_MPFR_VERSION)/mpfr-$(TOOLCHAIN_MPFR_VERSION).tar.bz2", "$(TOOLCHAIN_ROOT_DIR)/lib/libmpfr.la")}
 ${py mpfr.rules['config'].dependencies += ' $(TOOLCHAIN_GMP_INSTALL)'}

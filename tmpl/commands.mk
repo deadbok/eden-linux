@@ -24,7 +24,6 @@ RM_FLAGS = -f $(VERBOSE_FLAG)
 RM = rm $(RM_FLAGS)
 
 LD = ld
-LDFLAGS = "-Wl,-rpath,$(TOOLCHAIN_ROOT_DIR)/lib"
 
 WGET = wget
 

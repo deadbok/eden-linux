@@ -18,6 +18,9 @@ TARGET_IMAGE_BOOT_SIZE =
 #Image name
 TARGET_IMAGE_FILENAME = qemux86.img
 
+#Package list
+PACKAGE_LIST = $(ROOT)/target/config/qemux86/pkg-list
+
 TARGET_REMOVE_FILES = $(ROOT)/target/config/qemux86/remove_list
 
 ${local()}UCLIBC_CONFIG = $(ROOT)/target/config/qemux86/config/uclibc_config
