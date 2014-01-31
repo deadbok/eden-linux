@@ -7,6 +7,8 @@ include target/config/$(TARGET)/target/image.mk
 include target/services.mk
 #include man page compression
 include target/zip-man.mk
+#include binary stripping
+include target/strip.mk
 
 ifdef TARGET_REMOVE_FILES
 #Get list of files to remove from image root
@@ -23,6 +25,9 @@ ${Rule("copy-root")}:
 	#Compress man pages if asked
 ifeq ($(COMPRESS_MAN_PAGES),1)
 	$(MAKE) zip-man
+endif
+ifeq ($(STRIP_TARGET),1)
+	$(MAKE) strip-all
 endif
 
 #ALL that is done here has root permission

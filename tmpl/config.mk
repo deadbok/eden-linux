@@ -32,8 +32,6 @@ ROOT = $(shell pwd)
 BUILD_DIR := $(ROOT)/build
 DOWNLOAD_DIR := $(BUILD_DIR)/dl
 IMAGES_DIR := $(BUILD_DIR)/images
-ROOTFS_DIR := $(BUILD_DIR)/rootfs
-IMAGE_ROOTFS_DIR := $(BUILD_DIR)/image_rootfs
 STRIPPED_ROOTFS_DIR := $(BUILD_DIR)/stripped_rootfs
 #template_dir = templates
 ETC_DIR := $(ROOTFS_DIR)/etc
@@ -44,3 +42,6 @@ PACKAGE_LIST =
 
 #Override with board specific values
 include target/config/qemux86.mk
+
+ROOTFS_DIR := $(BUILD_DIR)/rootfs-$(TARGET)
+IMAGE_ROOTFS_DIR := $(BUILD_DIR)/image_rootfs-$(TARGET)

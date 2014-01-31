@@ -1,3 +1,8 @@
+2014-01-31  oblivion  <oblivion@librebook>
+
+	* README.md: Updated directories
+	* tmpl/config.mk: Target specific root and image root directory names
+
 2014-01-30  oblivion  <oblivion@librebook>
 
 	* tmpl/commands.mk: Moved LDFLAGS to toolchain.mk

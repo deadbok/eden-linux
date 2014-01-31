@@ -40,7 +40,17 @@ EdenLinux consists of three sub projects:
 
 Directories
 ===========
- * build	-	Where the makefiles are created and everything is build
+ * build Where the makefiles are created and everything is build
+ 	* dl All downloaded sources
+ 	* host_$(HOST) Compiled tools that run on the host
+ 	* host_$(HOST)_build Where host tools are compiled
+ 	* images The final disk images
+ 	* image_rootfs_$(TARGET) The final root file system for the target
+ 	* packages_$(ARCH)_build Where all target packages are build
+ 	* rootfs_$(ARCH) The raw root file system for the target arch
+ 	* tmp Housekeeping files mostly
+ 	* toolchain_$(ARCH) Compiled toolchain for target arch
+ 	* toolchain_$(ARCH)_build Where the toolchain for the target arch is build
  * docs	    -	Misc docs from the net I have found useful
  * mtl		-	The Make TempLate engine converts the templates to real makefiles 
  * plugins	-	Plugin for various makefile constructs

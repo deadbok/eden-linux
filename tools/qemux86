@@ -1,3 +1,3 @@
 #!/bin/sh
 
-qemu-kvm -hda build/build/images/qemux86.img -kernel build/build/rootfs/boot/kernel-3.10.27 -append 'root=/dev/sda1' -serial stdio -net nic -net user -soundhw ac97 -display $1
+qemu-kvm -hda build/build/images/qemux86.img -kernel build/build/rootfs-qemux86/boot/kernel-3.10.27 -append 'root=/dev/sda1' -serial stdio -net nic -net user -soundhw ac97 -display $1
