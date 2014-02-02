@@ -11,19 +11,18 @@ Package solver
 ==============
  * Handle circular dependencies
  
- Toolchain
- =========
-  * Rename dirs to toolchain_$(TARGET)
+Toolchain
+=========
   
- Packages
- ========
-  * Rename dirs to packages_$(TARGET)
+Packages
+========
+ * Rename dirs to packages_$(TARGET)
   
-  DOCS
-  ====
-   * mtl
-   * plugins
-   * Build system
-   * Build system variables
+DOCS
+====
+ * mtl
+ * plugins
+ * Build system
+ * Build system variables
    
   
