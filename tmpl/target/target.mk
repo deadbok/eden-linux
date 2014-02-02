@@ -30,8 +30,12 @@ ifeq ($(STRIP_TARGET),1)
 	$(MAKE) strip-all
 endif
 
+.PHONY: img-perm
+${Rule('img-perm')}: $(TARGET_IMAGE_CREATE)
+	$(CHMOD) a+rw $(TARGET_IMAGE_FILE)
+
 #ALL that is done here has root permission
-${local()}INSTALL += $(TARGET_IMAGE_CREATE)
+${local()}INSTALL += $(TARGET_IMAGE_CREATE) img-perm
 
 .PHONY: target-distclean
 ${Rule("target-distclean", "")}:

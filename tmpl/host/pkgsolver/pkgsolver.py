@@ -39,7 +39,7 @@ def get_dependencies(filename, package_directory):
             ret = list()
         else:
             # Isolate the dependencies
-            make_dep = re.findall(r'\$\(([A-Z0-9_]*)\)', depline[0])
+            make_dep = re.findall(r'\$\(([A-Z0-9_-]*)\)', depline[0])
             # Convert from make notation to full_filename
             dependencies = list()
             for dependency in make_dep:

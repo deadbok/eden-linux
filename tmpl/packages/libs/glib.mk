@@ -20,7 +20,7 @@ ${glib.rules['download']}
 
 #Auttreconf needs to be run before configure
 ${glib.rules['unpack']}
-	($(CD) $(PACKAGES_BASE_UTIL-LINUX_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_LIBS_GLIB_BUILD_DIR); autoreconf);
 
 ${glib.rules['patchall']}
 

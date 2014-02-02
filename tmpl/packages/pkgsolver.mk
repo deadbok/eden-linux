@@ -7,7 +7,7 @@ include commands.mk
 include config.mk
 
 ifdef  VERBOSE
-export VERBOSE_FLAG = --verbose
+export VERBOSE_FLAG = -vv
 else
 export VERBOSE_FLAG =
 endif
