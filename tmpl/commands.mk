@@ -58,3 +58,5 @@ UMOUNT = umount
 ECHO = echo
 
 FAKEROOT = fakeroot --
+
+AUTORECONF = $(PACKAGES_ENV) autoreconf -i -f $(VERBOSE_FLAG)

@@ -1,0 +1,29 @@
+Plugins
+=======
+ * Download rule should be able to rename the downloaded file, in case of github
+   they are named just the version number
+
+Build system
+============
+ * build-info uses the old pkg-list not the one the rest of the system uses
+
+Package solver
+==============
+ * Handle circular dependencies
+ 
+ Toolchain
+ =========
+  * Rename dirs to toolchain_$(TARGET)
+  
+ Packages
+ ========
+  * Rename dirs to packages_$(TARGET)
+  
+  DOCS
+  ====
+   * mtl
+   * plugins
+   * Build system
+   * Build system variables
+   
+  

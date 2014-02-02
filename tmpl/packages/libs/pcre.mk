@@ -10,7 +10,7 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
-${py pcre = AutoconfPackage('$(PACKAGES_BUILD_DIR)/pcre-$(PACKAGES_LIBS_PCRE_VERSION)', '', '8.34', "http://downloads.sourceforge.net/pcre/pcre-$(PACKAGES_LIBS_PCRE_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/lib/libpcre.a", "$(PACKAGES_ENV)")}
+${py pcre = AutoconfPackage('$(PACKAGES_BUILD_DIR)/pcre-$(PACKAGES_LIBS_PCRE_VERSION)', '', '8.34', "http://downloads.sourceforge.net/pcre/pcre-$(PACKAGES_LIBS_PCRE_VERSION).tar.bz2", "$(ROOTFS_DIR)/usr/lib/libpcre.so", "$(PACKAGES_ENV)")}
 
 ${pcre.vars()}
 

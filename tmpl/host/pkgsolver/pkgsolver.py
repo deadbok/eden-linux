@@ -7,13 +7,16 @@ pkg-solver
 Given a file with a list of packages, output a list of packages to build
 ordered by dependencies.
 
+Version 0.32 January 31, 2014
+Fixed regexp bug.
+
 Version 0.31 January 31, 2014:
 Fixed an indentation bug.
 
 Version 0.3 January 30, 2014:
 First version.
 '''
-VERSION = '0.3'
+VERSION = '0.32'
 
 import argparse
 import re
@@ -36,7 +39,7 @@ def get_dependencies(filename, package_directory):
             ret = list()
         else:
             # Isolate the dependencies
-            make_dep = re.findall(r'\$\(([A-Z_]*)\)', depline[0])
+            make_dep = re.findall(r'\$\(([A-Z0-9_]*)\)', depline[0])
             # Convert from make notation to full_filename
             dependencies = list()
             for dependency in make_dep:

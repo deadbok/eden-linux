@@ -47,14 +47,15 @@ $(TEMP_DIR):
 #Include commands used by the buildsystem
 include commands.mk
 
+#Include needed host tools
+include host/host.mk
 #Include everything needed for the toolchain
 include toolchain/toolchain.mk
 #Include packages to compile with the toolchain
 include packages/packages.mk
 #Include target specific operations and packages
 include target/target.mk
-#Include needed host tools
-include host/host.mk
+
 
 #Print out info about the build
 .PHONY: build-info
@@ -87,9 +88,10 @@ all: build-info
 #Do the actual build step in another rule, hopefully make reads all files again
 #as it loads Makefile, packages/pkg-list.mk might have changed after running
 #the package solver.
-build:  $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) \
-		$(HOST_INSTALL) $(TOOLCHAIN_INSTALL) $(TARGET_FSH_INSTALL) \
+build:  $(IMAGES_DIR) $(ROOTFS_DIR) $(TEMP_DIR) $(TOOLCHAIN_INSTALL) \
+		 $(HOST_INSTALL) $(TARGET_FSH_INSTALL) \
 		$(PACKAGES_INSTALL) $(TARGET_SERVICES_INSTALL) copy-root
+
 
 #Cry out if trying install before all
 $(TEMP_DIR)/.all:

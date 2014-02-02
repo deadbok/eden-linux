@@ -13,5 +13,6 @@ ${local()}BUILD_ENV = CFLAGS="" CXXFLAGS="" LDFLAGS=$(TOOLCHAIN_LDFLAGS)
 ${py mpc = AutoconfPackage('$(TOOLCHAIN_BUILD_DIR)/mpc-$(TOOLCHAIN_MPC_VERSION)', '', '0.9', "http://www.multiprecision.org/mpc/download/mpc-$(TOOLCHAIN_MPC_VERSION).tar.gz", "$(TOOLCHAIN_ROOT_DIR)/lib/libmpc.la")}
 ${py mpc.rules['config'].dependencies += ' $(TOOLCHAIN_MPFR_INSTALL)'} 
 include toolchain/mpfr.mk
-      
+
+${mpc}    
 .NOTPARALLEL:

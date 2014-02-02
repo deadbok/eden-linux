@@ -1,5 +1,22 @@
+2014-02-02  oblivion  <oblivion@librebook>
+
+	* tmpl/packages/libs/glib.mk: Added autoreconf and sysroot
+	* tmpl/packages/tools/mc.mk: Cleaned up.
+								 Added sysroot.	
+	* tmpl/toolchain/toolchain.mk: Change linker from gcc to ld to please libtool
+
+2014-02-01  oblivion  <oblivion@librebook>
+
+	* tmpl/packages/packages.mk: Added host commands to the environment
+	* tmpl/Makefile: Build host tools after toolchain
+	* tmpl/host/libtool.mk: Trying to wrestle libtool into working
+	* tmpl/toolchain/toolchain.mk: Line breaks. Don't expose the static gcc path
+	                               Changed toolchain path to iclude target name
+	* tmpl/toolchain/mpc.mk: Oooops cleaned out here to much.
+
 2014-01-31  oblivion  <oblivion@librebook>
 
+	* TODO: Uhhhhhhhhh......
 	* README.md: Updated directories
 	* tmpl/config.mk: Target specific root and image root directory names
 

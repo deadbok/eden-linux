@@ -4,14 +4,15 @@ ${local_namespace("packages")}
 ${local()}FILE_DIR = $(ROOT)/packages
 ${local()}BUILD_DIR = $(BUILD_DIR)/packages_$(ARCH)_build
 
-${local()}LDFLAGS = "-Wl,-rpath,$(ROOTFS_DIR)/lib:$(ROOTFS_DIR)/usr/lib"
+${local()}LDFLAGS = -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(ROOTFS_DIR)/usr/lib -L$(ROOTFS_DIR)/lib -L$(ROOTFS_DIR)/usr/lib
 
 $(PACKAGES_BUILD_DIR):
 	$(MKDIR) $(PACKAGES_BUILD_DIR)
 	
-${local()}ENV = PATH=$(TOOLCHAIN_PATH) $(TOOLCHAIN_CMDS) \
+${local()}ENV = PATH="$(TOOLCHAIN_PATH):$(HOST_PATH):$(PATH)" \
+				$(TOOLCHAIN_CMDS) $(HOST_CMDS)\
 				CFLAGS="$(TARGET_CFLAGS)" CXXFLAGS="$(TARGET_CXXFLAGS)" \
-				LDFLAGS="$(TARGET_LDFLAGS) $(PACKAGES_LDFLAGS)"\
+				LDFLAGS="$(PACKAGES_LDFLAGS) $(TARGET_LDFLAGS)"\
 				PKG_CONFIG_LIBDIR="$(ROOTFS_DIR)/usr/lib/pkgconfig" \
 				PKG_CONFIG_DIR="" \
 				PKG_CONFIG_SYSROOT_DIR="$(ROOTFS_DIR)"

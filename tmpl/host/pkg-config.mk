@@ -1,11 +1,11 @@
-##mtl
+#mtl
 
 ${local_namespace("host.pkg-config")}
 
 ${local()}INSTALL_PARAM =
 ${local()}INSTALL_ENV = 
 
-${local()}CONFIG_PARAM = --prefix=$(HOST_ROOT_DIR) 
+${local()}CONFIG_PARAM = --prefix=$(HOST_ROOT_DIR) --host=$(HOST) --build=$(HOST) --target=$(ARCH_TARGET)
 ${local()}CONFIG_ENV = 
 
 ${local()}BUILD_PARAM = 

@@ -17,4 +17,4 @@ all: packages/pkg-list.mk
 .PHONY: packages/pkg-list.mk
 ${Rule('packages/pkg-list.mk', dependencies='$(PACKAGE_LIST)')}
 	$(TOUCH) $(ROOT)/packages/pkg-list.mk
-	python2 $(ROOT)/host/pkgsolver/pkgsolver.py $(VERBOSE_FLAG) $(ROOT)/packages $(PACKAGE_LIST) pkg-list.mk
+	python2 $(ROOT)/host/pkgsolver/pkgsolver.py -v $(VERBOSE_FLAG) $(ROOT)/packages $(PACKAGE_LIST) pkg-list.mk

@@ -23,14 +23,20 @@ ${local()}CXXFLAGS := "-g"
 endif
 
 ${local()}FILE_DIR := $(ROOT)/toolchain
-${local()}BUILD_DIR := $(BUILD_DIR)/toolchain_$(ARCH)_build
-${local()}ROOT_DIR := $(BUILD_DIR)/toolchain_$(ARCH)
+${local()}BUILD_DIR := $(BUILD_DIR)/toolchain_$(ARCH_TARGET)_build
+${local()}ROOT_DIR := $(BUILD_DIR)/toolchain_$(ARCH_TARGET)
 
-${local()}PATH := $(TOOLCHAIN_ROOT_DIR)/bin:$(TOOLCHAIN_ROOT_DIR)/gcc-static/bin:$(PATH)
+${local()}PATH := $(TOOLCHAIN_ROOT_DIR)/bin
 ${local()}FLAGS := CFLAGS=$(TOOLCHAIN_CFLAGS) CXXFLAGS=$(TOOLCHAIN_CXXFLAGS)
-${local()}CMDS := CC="$(TOOLCHAIN_CC) -I $(TOOLCHAIN_ROOT_DIR)/usr/include" CXX="$(TOOLCHAIN_CXX) -I $(TOOLCHAIN_ROOT_DIR)/usr/include" GO="$(TOOLCHAIN_GO)" AR="$(TOOLCHAIN_AR)" LD="$(TOOLCHAIN_CC)" RANLIB="$(TOOLCHAIN_RANLIB)" READELF="$(TOOLCHAIN_READELF)" STRIP="$(TOOLCHAIN_STRIP)"
+${local()}CMDS := CC="$(TOOLCHAIN_CC) -I $(TOOLCHAIN_ROOT_DIR)/usr/include" \
+				  CXX="$(TOOLCHAIN_CXX) -I $(TOOLCHAIN_ROOT_DIR)/usr/include" \
+                  GO="$(TOOLCHAIN_GO)" AR="$(TOOLCHAIN_AR)" \
+                  LD="$(TOOLCHAIN_LD) -shared" RANLIB="$(TOOLCHAIN_RANLIB)" \
+				  READELF="$(TOOLCHAIN_READELF)" STRIP="$(TOOLCHAIN_STRIP)"
+
 #Environtment for calling the toolchain
-${local()}ENV := $(TOOLCHAIN_CMDS) PATH=$(TOOLCHAIN_PATH) $(TOOLCHAIN_FLAGS)
+${local()}ENV := $(TOOLCHAIN_CMDS) $(TOOLCHAIN_FLAGS) \
+				 PATH="$(TOOLCHAIN_PATH):$(HOST_PATH):$(PATH)"
 
 
 #Take care of ARCH specific flags for gcc

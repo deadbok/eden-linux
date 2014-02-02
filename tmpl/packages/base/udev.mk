@@ -4,8 +4,8 @@ ${local_namespace("packages.base.udev")}
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR) CROSS_COMPILE=$(ARCH_TARGET)- CC="$(ARCH_TARGET)-gcc" LD="$(ARCH_TARGET)-gcc"
 ${local()}INSTALL_ENV = $(PACKAGES_ENV)
 
-${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=/usr/share --mandir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc
-${local()}CONFIG_ENV = $(PACKAGES_ENV)
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-static --enable-shared  --disable-extras --disable-introspection --disable-gtk-doc --disable-gtk-doc-html --datarootdir=/usr/share --mandir=/usr/share --libexecdir=/lib/udev --sbindir=/sbin --sysconfdir=/etc --with-sysroot=$(ROOTFS_DIR)
+${local()}CONFIG_ENV = $(PACKAGES_ENV) enable_shared='no'
 
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
@@ -64,6 +64,8 @@ ${udev.vars()}
 ${udev.rules['download']}
 
 ${udev.rules['unpack']}
+	($(AUTORECONF) $(PACKAGES_BASE_UDEV_BUILD_DIR));
+	($(CP) $(HOST_ROOT_DIR)/bin/libtool $(PACKAGES_BASE_UDEV_BUILD_DIR));
 
 ${udev.rules['patchall']}
 

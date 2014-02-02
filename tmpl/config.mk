@@ -41,7 +41,17 @@ TEMP_DIR := $(BUILD_DIR)/tmp
 PACKAGE_LIST = 
 
 #Override with board specific values
+#ALL variables before here may be overwritten by the target specific include file
 include target/config/qemux86.mk
+
+#
+#Place stuff below to have access to the target specific variabled
+#
 
 ROOTFS_DIR := $(BUILD_DIR)/rootfs-$(TARGET)
 IMAGE_ROOTFS_DIR := $(BUILD_DIR)/image_rootfs-$(TARGET)
+
+#Package list
+PACKAGE_LIST = $(ROOT)/target/config/$(TARGET)/pkg-list
+
+TARGET_REMOVE_FILES = $(ROOT)/target/config/$(TARGET)/remove_list

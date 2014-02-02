@@ -10,7 +10,7 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
-${AutoconfPackage('$(PACKAGES_BUILD_DIR)/libpng-$(PACKAGES_LIBS_LIBPNG_VERSION)', '', '1.6.8', "http://downloads.sourceforge.net/libpng/libpng-$(PACKAGES_LIBS_LIBPNG_VERSION).tar.xz", "$(ROOTFS_DIR)/usr/lib/libpng.a", "$(PACKAGES_ENV)")}
+${AutoconfPackage('$(PACKAGES_BUILD_DIR)/libpng-$(PACKAGES_LIBS_LIBPNG_VERSION)', '', '1.6.8', "http://downloads.sourceforge.net/libpng/libpng-$(PACKAGES_LIBS_LIBPNG_VERSION).tar.xz", "$(ROOTFS_DIR)/usr/lib/libpng.so", "$(PACKAGES_ENV)")}
 
 #Add to targets
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_LIBS_LIBPNG_INSTALL)

@@ -10,7 +10,7 @@ ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 ${local()}BUILD_PARAM = 
 ${local()}BUILD_ENV = $(PACKAGES_ENV) 
 
-${AutoconfPackage('$(PACKAGES_BUILD_DIR)/libffi-$(PACKAGES_LIBS_LIBFFI_VERSION)', '', '3.0.13', "ftp://sourceware.org/pub/libffi/libffi-$(PACKAGES_LIBS_LIBFFI_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/lib/libffi.a", "$(PACKAGES_ENV)")}
+${AutoconfPackage('$(PACKAGES_BUILD_DIR)/libffi-$(PACKAGES_LIBS_LIBFFI_VERSION)', '', '3.0.13', "ftp://sourceware.org/pub/libffi/libffi-$(PACKAGES_LIBS_LIBFFI_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/lib/libffi.so", "$(PACKAGES_ENV)")}
 
 #Add to targets
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_LIBS_LIBFFI_INSTALL)
