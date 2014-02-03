@@ -1,6 +1,7 @@
 2014-02-03  oblivion  <oblivion@librebook>
-
-	* tmpl/packages/libs/mpg123.mk: Removes libtool dependency
+	
+	* tmpl/target/config/qemux86/pkg-list: Added lcdproc 
+	* tmpl/packages/tools/lcdprog.mk: New file.	
 	* tmpl/packages/libs/alsa-lib.mk: New file.
 	* tmpl/packages/media/alsa-utils.mk: New file.
 	* tmpl/packages/base/ncurses.mk: Version 5.9.

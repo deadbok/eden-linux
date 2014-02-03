@@ -23,7 +23,7 @@ ${utillinux.rules['download']}
 
 #Auttreconf needs to be run before configure
 ${utillinux.rules['unpack']}
-	($(CD) $(PACKAGES_BASE_UTIL-LINUX_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_BASE_UTIL-LINUX_BUILD_DIR); $(AUTORECONF));
 
 ${utillinux.rules['patchall']}
 

@@ -23,7 +23,7 @@ ${alsautils.rules['download']}
 #Autoreconf needs to be run before configure
 #Rule needs README to check against
 ${alsautils.rules['unpack']}
-	($(CD) $(PACKAGES_MEDIA_ALSA-UTILS_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_MEDIA_ALSA-UTILS_BUILD_DIR); $(AUTORECONF));
 	$(TOUCH) $(PACKAGES_MEDIA_ALSA-UTILS_BUILD_DIR)/README
 	
 

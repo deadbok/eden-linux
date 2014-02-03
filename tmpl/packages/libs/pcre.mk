@@ -18,7 +18,7 @@ ${pcre.rules['download']}
 
 #Auttoreconf needs to be run before configure
 ${pcre.rules['unpack']}
-	($(CD) $(PACKAGES_LIBS_PCRE_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_LIBS_PCRE_BUILD_DIR); $(AUTORECONF));
 
 ${pcre.rules['patchall']}
 

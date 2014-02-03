@@ -20,7 +20,7 @@ ${mpd.rules['download']}
 
 #Auttreconf needs to be run before configure
 ${mpd.rules['unpack']}
-	($(CD) $(PACKAGES_MEDIA_MPD_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_MEDIA_MPD_BUILD_DIR); $(AUTORECONF));
 
 ${mpd.rules['patchall']}
 

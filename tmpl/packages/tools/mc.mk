@@ -25,7 +25,7 @@ ${mc.rules['download']}
 
 #Auttreconf needs to be run before configure
 ${mc.rules['unpack']}
-	($(CD) $(PACKAGES_TOOLS_MC_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_TOOLS_MC_BUILD_DIR); $(AUTORECONF));
 
 ${mc.rules['patchall']}
 

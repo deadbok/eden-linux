@@ -20,7 +20,7 @@ ${alsalib.rules['download']}
 
 #Auttreconf needs to be run before configure
 ${alsalib.rules['unpack']}
-	($(CD) $(PACKAGES_LIBS_ALSA-LIB_BUILD_DIR); autoreconf);
+	($(CD) $(PACKAGES_LIBS_ALSA-LIB_BUILD_DIR); $(AUTORECONF));
 	$(TOUCH) $(PACKAGES_LIBS_ALSA-LIB_BUILD_DIR)/README
 
 ${alsalib.rules['patchall']}

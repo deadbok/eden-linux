@@ -1,3 +1,4 @@
 tools/mc
 media/mpd
 media/alsa-utils
+tools/lcdproc
