@@ -26,7 +26,9 @@ ${ncurses.rules['build']}
 
 #Ncurses installs stuff in wierd places
 ${ncurses.rules['install']}
+	$(MKDIR) $(ROOTFS_DIR)/$(ROOTFS_DIR)/usr/lib/pkgconfig
 	$(CP) $(ROOTFS_DIR)/$(ROOTFS_DIR)/usr/lib/pkgconfig/* $(ROOTFS_DIR)/usr/lib/pkgconfig/
+
 #TODO: Anything else than wipe /home/*
 	-$(RM) -Rf $(ROOTFS_DIR)/home/*
 
