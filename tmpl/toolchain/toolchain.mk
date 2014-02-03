@@ -28,8 +28,8 @@ ${local()}ROOT_DIR := $(BUILD_DIR)/toolchain_$(ARCH_TARGET)
 
 ${local()}PATH := $(TOOLCHAIN_ROOT_DIR)/bin
 ${local()}FLAGS := CFLAGS=$(TOOLCHAIN_CFLAGS) CXXFLAGS=$(TOOLCHAIN_CXXFLAGS)
-${local()}CMDS := CC="$(TOOLCHAIN_CC) -I $(TOOLCHAIN_ROOT_DIR)/usr/include" \
-				  CXX="$(TOOLCHAIN_CXX) -I $(TOOLCHAIN_ROOT_DIR)/usr/include" \
+${local()}CMDS := CC="$(TOOLCHAIN_CC) -I$(TOOLCHAIN_ROOT_DIR)/usr/include" \
+				  CXX="$(TOOLCHAIN_CXX) -I$(TOOLCHAIN_ROOT_DIR)/usr/include" \
                   GO="$(TOOLCHAIN_GO)" AR="$(TOOLCHAIN_AR)" \
                   LD="$(TOOLCHAIN_LD) -shared" RANLIB="$(TOOLCHAIN_RANLIB)" \
 				  READELF="$(TOOLCHAIN_READELF)" STRIP="$(TOOLCHAIN_STRIP)"

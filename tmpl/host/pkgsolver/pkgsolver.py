@@ -7,6 +7,12 @@ pkg-solver
 Given a file with a list of packages, output a list of packages to build
 ordered by dependencies.
 
+Version 0.34 February 03, 2014
+Comments using '#' in the input file
+
+Version 0.33 February 02, 2014
+Fixed another regexp bug.
+
 Version 0.32 January 31, 2014
 Fixed regexp bug.
 
@@ -16,7 +22,7 @@ Fixed an indentation bug.
 Version 0.3 January 30, 2014:
 First version.
 '''
-VERSION = '0.32'
+VERSION = '0.34'
 
 import argparse
 import re
@@ -67,19 +73,23 @@ def read_list(filename, package_directory):
         packages = dict()
         # Read each filename
         for name in listfile:
-            name = name.strip()
-            # Ignore empty lines
-            if (name != ""):
-                name = name + '.mk'
-                # Create a dictionary with filenames as key, and an empty list of
-                # dependencies
-                try:
-                    packages[name] = get_dependencies(name, package_directory)
-                except IOError as exception:
-                    print('Cannot read package file ' + name +
-                          ' needed by the package list')
-                    print(exception.strerror)
-                    sys.exit(1)
+            # ignore comments
+            if not name.startswith('#'):
+                # Remove distubing spaces
+                name = name.strip()
+                # Ignore empty lines
+                if (name != ""):
+                    name = name + '.mk'
+                    # Create a dictionary with filenames as key, and an empty
+                    # list of dependencies
+                    try:
+                        packages[name] = get_dependencies(name,
+                                                          package_directory)
+                    except IOError as exception:
+                        print('Cannot read package file ' + name +
+                              ' needed by the package list')
+                        print(exception.strerror)
+                        sys.exit(1)
 
     return(packages)
 

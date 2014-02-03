@@ -4,7 +4,13 @@ ${local_namespace("packages.media.alsa-utils")}
 ${local()}INSTALL_PARAM = DESTDIR=$(ROOTFS_DIR)
 ${local()}INSTALL_ENV = $(PACKAGES_ENV) 
 
-${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) --host=$(ARCH_TARGET) --disable-largefile --disable-alsaconf --with-curses=ncurses
+#--with-curses=ncurses
+${local()}CONFIG_PARAM = --prefix=/usr --target=$(ARCH_TARGET) \
+						 --host=$(ARCH_TARGET) --disable-largefile \
+						 --disable-alsaconf --disable-nls \
+						 --with-curses=ncursesw \
+						 #NCURSESW_CFLAGS=-I$(ROOTFS_DIR)/usr/include \
+						 #NCURSESW_LIBS=-L$(ROOTFS_DIR)/usr/lib
 ${local()}CONFIG_ENV = $(PACKAGES_ENV)
 
 ${local()}BUILD_PARAM = 

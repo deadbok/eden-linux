@@ -4,7 +4,7 @@ ${local_namespace("packages")}
 ${local()}FILE_DIR = $(ROOT)/packages
 ${local()}BUILD_DIR = $(BUILD_DIR)/packages_$(ARCH)_build
 
-${local()}LDFLAGS = -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(ROOTFS_DIR)/usr/lib -L$(ROOTFS_DIR)/lib -L$(ROOTFS_DIR)/usr/lib
+#${local()}LDFLAGS = -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(ROOTFS_DIR)/usr/lib -L$(ROOTFS_DIR)/lib -L$(ROOTFS_DIR)/usr/lib
 
 $(PACKAGES_BUILD_DIR):
 	$(MKDIR) $(PACKAGES_BUILD_DIR)

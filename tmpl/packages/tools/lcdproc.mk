@@ -14,6 +14,8 @@ ${local()}BUILD_ENV = $(PACKAGES_ENV)
 
 ${local()}DEPENDENCIES =
 
+SERVICES += LCDd lcdproc
+
 ${py lcdproc = AutoconfPackage('$(PACKAGES_BUILD_DIR)/lcdproc-$(PACKAGES_TOOLS_LCDPROC_VERSION)', '', '0.5.6', "http://downloads.sourceforge.net/project/lcdproc/lcdproc/0.5.6/lcdproc-$(PACKAGES_TOOLS_LCDPROC_VERSION).tar.gz", "$(ROOTFS_DIR)/usr/bin/lcdproc")}
 
 ${lcdproc.vars()}
@@ -30,6 +32,7 @@ ${lcdproc.rules['config']}
 ${lcdproc.rules['build']}
 
 ${lcdproc.rules['install']}
+	$(CP) -R $(ROOT)/${namespace.current.replace(".", "/")}/etc $(ROOTFS_DIR)/
 
 #Add to targets
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_TOOLS_LCDPROC_INSTALL)

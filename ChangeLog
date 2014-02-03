@@ -1,4 +1,16 @@
 2014-02-03  oblivion  <oblivion@librebook>
+
+	* tmpl/target/fsh/dirlist: Added /usr/lib/pkgconfig
+	* tmpl/packages/tools/lcdproc/etc/init.d/lcdproc: openrc-run instead of runscript
+	* tmpl/packages/base/dropbear/etc/init.d/dropbear: Corrected bin path from /usr/sbin
+	* tmpl/packages/tools/mc.mk: Removed glib hack
+	* tmpl/host/pkgsolver/pkgsolver.py: Add handling # as a comment in the input list
+	* tmpl/packages/base/dropbear.mk: Added service
+	* tmpl/packages/media/mpd.mk: Added service
+	* tmpl/packages/tools/lcdproc.mk: Added service
+	* tmpl/packages/media/alsa-utils/etc/init.d/alsasound: openrc-run instead of runscript
+
+2014-02-03  oblivion  <oblivion@librebook>
 	
 	* tmpl/target/config/qemux86/pkg-list: Added lcdproc 
 	* tmpl/packages/tools/lcdprog.mk: New file.	

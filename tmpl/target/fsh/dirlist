@@ -21,6 +21,7 @@
 /usr/bin
 /usr/include
 /usr/lib
+/usr/lib/pkgconfig/
 /usr/sbin
 /usr/share
 /usr/src

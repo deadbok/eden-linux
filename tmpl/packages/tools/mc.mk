@@ -31,13 +31,13 @@ ${mc.rules['patchall']}
 
 #We modify glib to work around libtool trying to link to the host libintl
 ${mc.rules['config']}
-	(sed -i~ -e "s;/usr;$(ROOTFS_DIR)/usr;" $(ROOTFS_DIR)/usr/lib/libglib-2.0.la);
+	#(sed -i~ -e "s;/usr;$(ROOTFS_DIR)/usr;" $(ROOTFS_DIR)/usr/lib/libglib-2.0.la);
 
 ${mc.rules['build']}
 
 #Unhack glib
 ${mc.rules['install']}
-	(sed -i~ -e "s;$(ROOTFS_DIR)/usr;/usr;" $(ROOTFS_DIR)/usr/lib/libglib-2.0.la);
+	#(sed -i~ -e "s;$(ROOTFS_DIR)/usr;/usr;" $(ROOTFS_DIR)/usr/lib/libglib-2.0.la);
 
 #Add to targets
 PACKAGES_INSTALL_TARGETS += $(PACKAGES_TOOLS_MC_INSTALL)

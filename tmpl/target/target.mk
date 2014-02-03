@@ -39,8 +39,7 @@ ${local()}INSTALL += $(TARGET_IMAGE_CREATE) img-perm
 
 .PHONY: target-distclean
 ${Rule("target-distclean", "")}:
-	$(MAKE)  $(TARGET_DISTCLEAN_TARGETS)
-	$(RM) -Rf $(IMAGE_ROOTFS_DIR)
+	-$(RM) -Rf $(IMAGE_ROOTFS_DIR)
 
 DISTCLEAN_TARGETS += target-distclean
 
