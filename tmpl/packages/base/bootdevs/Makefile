@@ -41,7 +41,7 @@ $(DESTDIR)/dev/tty5: $(DESTDIR)/dev
 	-mknod $(DESTDIR)/dev/tty5 c 4 5
 	
 $(DESTDIR)/dev/tty6: $(DESTDIR)/dev
-	-mknod $(DESTDIR)/dev/tty6 c 4 5
+	-mknod $(DESTDIR)/dev/tty6 c 4 6
 
 $(DESTDIR)/dev/rtc: $(DESTDIR)/dev	
 	-mknod $(DESTDIR)/dev/rtc c 10 135
